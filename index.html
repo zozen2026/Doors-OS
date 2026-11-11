@@ -52,8 +52,8 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen Store</span>
         </div>
 
-        <!-- 3. Chrome Browser (Internal Hub) -->
-        <div onclick="openApp('chrome')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
+        <!-- 3. System Browser Hub -->
+        <div onclick="openApp('browser')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-amber-300/30">
                 <i class="fa-brands fa-chrome text-2xl text-white"></i>
             </div>
@@ -187,7 +187,7 @@
             <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-store text-indigo-400"></i> Zozen Store
             </button>
-            <button onclick="openApp('chrome'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('browser'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-chrome text-amber-400"></i> Browser Hub
             </button>
             <button onclick="openApp('gemini'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
@@ -216,7 +216,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v5.2</span>
+            <span>Doors OS v6.0</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -234,7 +234,7 @@
 
         <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
             <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved"></i> Stable App Bridge
+                <i class="fa-solid fa-shield-halved"></i> Sovereign Hub Active
             </span>
             <span id="clock" class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">00:00</span>
         </div>
@@ -310,7 +310,7 @@
 
         window.zIndexCounter = 10;
 
-        // Apps Configuration: Internal Apps use iframes, External Services open in clean App-Mode windows to bypass connection restrictions
+        // Apps Configuration: All external web services route safely through our In-System Browser Hub or clean independent window modes to eliminate connection refractions
         const appData = {
             'zozen': { 
                 title: 'Zozen App', 
@@ -324,54 +324,53 @@
                 url: 'https://zozen2026.github.io/Zozen-store/',
                 mode: 'internal'
             },
-            'chrome': { 
+            'browser': { 
                 title: 'Browser Hub', 
                 icon: 'fa-chrome text-amber-400', 
-                url: 'https://www.google.com',
-                mode: 'internal',
-                isBrowser: true
+                url: 'https://html5test.com', // تم استخدام صفحة متوافقة تمنع أخطاء الحظر وتتيح التصفح
+                mode: 'browser'
             },
             'gemini': { 
                 title: 'Google Gemini', 
                 icon: 'fa-wand-magic-sparkles text-blue-400', 
                 url: 'https://gemini.google.com',
-                mode: 'app'
+                mode: 'external'
             },
             'telegram': { 
                 title: 'Telegram Web', 
                 icon: 'fa-telegram text-sky-400', 
                 url: 'https://web.telegram.org',
-                mode: 'app'
+                mode: 'external'
             },
             'youtube': { 
                 title: 'YouTube', 
                 icon: 'fa-youtube text-red-500', 
                 url: 'https://www.youtube.com',
-                mode: 'app'
+                mode: 'external'
             },
             'facebook': { 
                 title: 'Facebook', 
                 icon: 'fa-facebook-f text-blue-500', 
                 url: 'https://www.facebook.com',
-                mode: 'app'
+                mode: 'external'
             },
             'tiktok': { 
                 title: 'TikTok', 
                 icon: 'fa-tiktok text-white', 
                 url: 'https://www.tiktok.com',
-                mode: 'app'
+                mode: 'external'
             },
             'instagram': { 
                 title: 'Instagram', 
                 icon: 'fa-instagram text-pink-500', 
                 url: 'https://www.instagram.com',
-                mode: 'app'
+                mode: 'external'
             },
             'whatsapp': { 
                 title: 'WhatsApp Web', 
                 icon: 'fa-whatsapp text-emerald-500', 
                 url: 'https://web.whatsapp.com',
-                mode: 'app'
+                mode: 'external'
             },
             'settings': {
                 title: 'System Settings',
@@ -383,8 +382,8 @@
         function openApp(appKey) {
             const app = appData[appKey];
 
-            // Open external apps in secure app-mode popups to avoid connection block
-            if (app.mode === 'app') {
+            // Open restricted external sites cleanly without connection break error
+            if (app.mode === 'external') {
                 const width = 1050;
                 const height = 700;
                 const left = (screen.width - width) / 2;
@@ -411,14 +410,14 @@
             winDiv.onclick = () => bringToFront(winDiv);
 
             let browserToolbar = '';
-            if (app.isBrowser) {
+            if (app.mode === 'browser') {
                 browserToolbar = `
                     <div class="h-9 bg-slate-900 border-b border-slate-800 px-3 flex items-center gap-2">
                         <button onclick="document.getElementById('iframe-${appKey}').contentWindow.history.back()" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></button>
                         <button onclick="document.getElementById('iframe-${appKey}').contentWindow.history.forward()" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-arrow-right text-xs"></i></button>
                         <button onclick="document.getElementById('iframe-${appKey}').src = document.getElementById('iframe-${appKey}').src" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-rotate text-xs"></i></button>
-                        <input type="text" value="${app.url}" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-xs text-slate-200 focus:outline-none focus:border-amber-500" readonly>
-                        <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Browser Hub</span>
+                        <input type="text" id="url-bar-${appKey}" value="${app.url}" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-xs text-slate-200 focus:outline-none focus:border-amber-500" readonly>
+                        <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">System Browser</span>
                     </div>
                 `;
             }
@@ -471,7 +470,7 @@
                 <div class="p-6 flex-1 flex gap-6 bg-slate-950 text-slate-200 text-xs">
                     <div class="w-1/3 border-r border-slate-800 pr-4 space-y-2">
                         <button class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-xl"><i class="fa-solid fa-palette mr-2"></i> Appearance</button>
-                        <button onclick="alert('System is up to date: v5.2 Sovereign')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-shield-halved mr-2"></i> Security & Updates</button>
+                        <button onclick="alert('System is up to date: v6.0 Sovereign')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-shield-halved mr-2"></i> Security & Updates</button>
                         <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-user mr-2"></i> User Profile</button>
                     </div>
                     <div class="w-2/3 space-y-4">
