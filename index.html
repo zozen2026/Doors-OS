@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors OS</title>
+    <title>Doors OS - Sovereign Web Environment</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         body { 
-            font-family: 'Tajawal', sans-serif; 
+            font-family: 'Inter', sans-serif; 
             user-select: none; 
             overflow: hidden;
         }
@@ -32,9 +32,9 @@
         }
     </style>
 </head>
-<body class="h-screen w-screen bg-slate-950 text-white flex flex-col justify-between relative bg-cover bg-center" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
+<body id="os-body" class="h-screen w-screen text-white flex flex-col justify-between relative bg-cover bg-center transition-all duration-500" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
 
-    <!-- سطح المكتب واختصارات النظام -->
+    <!-- Desktop Icons Grid -->
     <div class="p-6 grid grid-cols-4 sm:grid-cols-4 gap-5 w-fit z-0">
         <!-- 1. Zozen -->
         <div onclick="openApp('zozen')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
@@ -44,12 +44,12 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen</span>
         </div>
 
-        <!-- 2. متجر Zozen -->
+        <!-- 2. Zozen Store -->
         <div onclick="openApp('store')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-indigo-400/30">
                 <i class="fa-solid fa-store text-2xl text-white"></i>
             </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">متجر Zozen</span>
+            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen Store</span>
         </div>
 
         <!-- 3. YouTube -->
@@ -68,7 +68,7 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Google Chrome</span>
         </div>
 
-        <!-- 5. فيسبوك -->
+        <!-- 5. Facebook -->
         <div onclick="openApp('facebook')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-blue-400/30">
                 <i class="fa-brands fa-facebook-f text-2xl text-white"></i>
@@ -76,7 +76,7 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Facebook</span>
         </div>
 
-        <!-- 6. تيك توك -->
+        <!-- 6. TikTok -->
         <div onclick="openApp('tiktok')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-zinc-700">
                 <i class="fa-brands fa-tiktok text-2xl text-white"></i>
@@ -84,7 +84,7 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">TikTok</span>
         </div>
 
-        <!-- 7. إنستغرام -->
+        <!-- 7. Instagram -->
         <div onclick="openApp('instagram')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-pink-400/30">
                 <i class="fa-brands fa-instagram text-2xl text-white"></i>
@@ -92,60 +92,114 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Instagram</span>
         </div>
 
-        <!-- 8. واتساب -->
+        <!-- 8. WhatsApp -->
         <div onclick="openApp('whatsapp')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-emerald-400/30">
                 <i class="fa-brands fa-whatsapp text-2xl text-white"></i>
             </div>
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">WhatsApp</span>
         </div>
+
+        <!-- 9. Settings -->
+        <div onclick="openApp('settings')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
+            <div class="w-14 h-14 bg-slate-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-500/30">
+                <i class="fa-solid fa-gear text-2xl text-slate-200"></i>
+            </div>
+            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Settings</span>
+        </div>
     </div>
 
-    <!-- حاوية النوافذ الداخلية -->
+    <!-- Windows Container -->
     <div id="windows-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
-    <!-- قائمة ابدأ (Start Menu) -->
-    <div id="start-menu" class="absolute bottom-16 right-4 w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-200">
+    <!-- Right-Click Context Menu (Windows Style) -->
+    <div id="context-menu" class="absolute hidden w-52 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
+        <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-rotate"></i> Refresh System
+        </button>
+        <button onclick="changeWallpaper()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-image"></i> Change Wallpaper
+        </button>
+        <div class="h-px bg-slate-800 my-1"></div>
+        <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-user-circle"></i> Account / Sign In
+        </button>
+        <button onclick="openApp('settings')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-sliders"></i> System Settings
+        </button>
+    </div>
+
+    <!-- Auth / Account Modal -->
+    <div id="auth-modal" class="absolute inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-slate-900 border border-slate-700 w-96 rounded-2xl p-6 shadow-2xl text-slate-200 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">D</div>
+                <h3 class="font-bold text-base text-white">Doors OS Account</h3>
+                <p id="auth-subtitle" class="text-xs text-slate-400">Sign in or create a sovereign account</p>
+            </div>
+            <div id="auth-form-content" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">Email / Username</label>
+                    <input type="text" id="auth-user" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500" placeholder="user@doors.os">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Password</label>
+                    <input type="password" id="auth-pass" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500" placeholder="••••••••">
+                </div>
+                <button onclick="handleAuthSubmit()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg">Sign In</button>
+                <div class="text-center pt-2">
+                    <span id="auth-toggle-text" class="text-slate-400">Don't have an account? <button onclick="toggleAuthMode()" class="text-orange-400 font-bold hover:underline">Create Account</button></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-200">
         <div class="flex items-center gap-3 pb-3 border-b border-slate-800 mb-3">
             <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
             <div>
-                <h3 class="font-bold text-sm">Doors OS Environment</h3>
-                <span class="text-xs text-orange-400">● نظام بيئي متكامل</span>
+                <h3 id="current-user-display" class="font-bold text-sm">Guest User</h3>
+                <span class="text-xs text-orange-400">● Sovereign Ecosystem</span>
             </div>
         </div>
         <div class="space-y-1 text-sm max-h-60 overflow-y-auto">
-            <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-bolt text-orange-400"></i> Zozen
             </button>
-            <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-store text-indigo-400"></i> Zozen Store
             </button>
-            <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-youtube text-red-400"></i> YouTube
             </button>
-            <button onclick="openApp('chrome'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('chrome'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-chrome text-amber-400"></i> Google Chrome
             </button>
-            <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-facebook-f text-blue-400"></i> Facebook
             </button>
-            <button onclick="openApp('tiktok'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('tiktok'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-tiktok text-white"></i> TikTok
             </button>
-            <button onclick="openApp('instagram'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('instagram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-instagram text-pink-400"></i> Instagram
             </button>
-            <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+            <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp
+            </button>
+            <button onclick="openApp('settings'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition border-t border-slate-800 mt-1 pt-2">
+                <i class="fa-solid fa-gear text-slate-400"></i> System Settings
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v3.1</span>
-            <span class="text-orange-400 font-bold">متصل</span>
+            <span>Doors OS v4.0</span>
+            <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
 
-    <!-- شريط المهام (Taskbar) -->
+    <!-- Taskbar -->
     <div class="h-14 bg-slate-900/80 backdrop-blur-md border-t border-slate-800 px-4 flex items-center justify-between z-40">
         <div class="flex items-center gap-3">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
@@ -153,7 +207,7 @@
                 <span>Doors</span>
             </button>
             
-            <div id="taskbar-apps" class="flex items-center gap-1 border-r border-slate-700 pr-3 overflow-x-auto"></div>
+            <div id="taskbar-apps" class="flex items-center gap-1 border-l border-slate-700 pl-3 overflow-x-auto"></div>
         </div>
 
         <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
@@ -165,11 +219,66 @@
     </div>
 
     <script>
-        // ساعة النظام
+        // System Clock
         setInterval(() => {
             const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
         }, 1000);
+
+        // Right-Click Context Menu Logic
+        const contextMenu = document.getElementById('context-menu');
+        window.addEventListener('click', () => contextMenu.classList.add('hidden'));
+        window.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            contextMenu.style.top = `${e.clientY}px`;
+            contextMenu.style.left = `${e.clientX}px`;
+            contextMenu.classList.remove('hidden');
+        });
+
+        function refreshDesktop() {
+            location.reload();
+        }
+
+        // Wallpapers rotation
+        const wallpapers = [
+            "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)",
+            "radial-gradient(circle at center, #3b1e29 0%, #160909 100%)",
+            "radial-gradient(circle at center, #1e3b29 0%, #09160d 100%)",
+            "linear-gradient(to bottom right, #0f172a, #311042)"
+        ];
+        let currentWp = 0;
+        function changeWallpaper() {
+            currentWp = (currentWp + 1) % wallpapers.length;
+            document.getElementById('os-body').style.backgroundImage = wallpapers[currentWp];
+        }
+
+        // Auth Modal Logic
+        let isSignUpMode = false;
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            const sub = document.getElementById('auth-subtitle');
+            const toggleText = document.getElementById('auth-toggle-text');
+            if (isSignUpMode) {
+                sub.innerText = "Register a new Sovereign account";
+                toggleText.innerHTML = `Already have an account? <button onclick="toggleAuthMode()" class="text-orange-400 font-bold hover:underline">Sign In</button>`;
+            } else {
+                sub.innerText = "Sign in or create a sovereign account";
+                toggleText.innerHTML = `Don't have an account? <button onclick="toggleAuthMode()" class="text-orange-400 font-bold hover:underline">Create Account</button>`;
+            }
+        }
+        function handleAuthSubmit() {
+            const user = document.getElementById('auth-user').value;
+            if(!user) { alert("Please enter a valid username/email"); return; }
+            document.getElementById('current-user-display').innerText = user;
+            alert(isSignUpMode ? "Account created successfully!" : "Signed in successfully!");
+            closeAuthModal();
+        }
 
         function toggleStartMenu() {
             const menu = document.getElementById('start-menu');
@@ -179,7 +288,7 @@
 
         window.zIndexCounter = 10;
 
-        // تعريف التطبيقات والروابط
+        // Apps Configuration
         const appData = {
             'zozen': { 
                 title: 'Zozen App', 
@@ -228,33 +337,36 @@
                 icon: 'fa-whatsapp text-emerald-500', 
                 url: 'https://web.whatsapp.com',
                 mode: 'app'
+            },
+            'settings': {
+                title: 'System Settings',
+                icon: 'fa-gear text-slate-300',
+                mode: 'settings'
             }
         };
 
         function openApp(appKey) {
             const app = appData[appKey];
 
-            // فتح التطبيقات الخارجية في نوافذ مستقلة نظيفة بدون شريط متصفح
             if (app.mode === 'app') {
                 const width = 1050;
                 const height = 700;
                 const left = (screen.width - width) / 2;
                 const top = (screen.height - height) / 2;
-                
-                window.open(
-                    app.url, 
-                    `_blank_${appKey}`, 
-                    `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,personalbar=no`
-                );
+                window.open(app.url, `_blank_${appKey}`, `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`);
                 return;
             }
 
-            // التطبيقات الداخلية (Zozen والمتجر) تفتح في نوافذ Doors المحلية
+            // Custom Settings App Window
+            if (app.mode === 'settings') {
+                createSettingsWindow(appKey, app);
+                return;
+            }
+
+            // Internal Doors Windows (Zozen & Store)
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
-                if (existingWin.style.display === 'none') {
-                    existingWin.style.display = 'flex';
-                }
+                if (existingWin.style.display === 'none') existingWin.style.display = 'flex';
                 bringToFront(existingWin);
                 return;
             }
@@ -271,19 +383,63 @@
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="minimizeWindow('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition" title="تصغير">
-                            <i class="fa-solid fa-minus text-xs"></i>
-                        </button>
-                        <button onclick="toggleMaximize('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition" title="تكبير">
-                            <i class="fa-regular fa-square text-xs"></i>
-                        </button>
-                        <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition" title="إغلاق">
-                            <i class="fa-solid fa-xmark text-xs"></i>
-                        </button>
+                        <button onclick="minimizeWindow('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-minus text-xs"></i></button>
+                        <button onclick="toggleMaximize('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-regular fa-square text-xs"></i></button>
+                        <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                     </div>
                 </div>
                 <div class="flex-1 bg-slate-950">
                     <iframe src="${app.url}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            `;
+
+            document.getElementById('windows-container').appendChild(winDiv);
+            bringToFront(winDiv);
+            addTaskbarIcon(appKey);
+        }
+
+        // Settings App Window UI
+        function createSettingsWindow(appKey, app) {
+            const existingWin = document.getElementById(`win-${appKey}`);
+            if (existingWin) {
+                if (existingWin.style.display === 'none') existingWin.style.display = 'flex';
+                bringToFront(existingWin);
+                return;
+            }
+
+            const winDiv = document.createElement('div');
+            winDiv.id = `win-${appKey}`;
+            winDiv.className = 'window absolute top-20 left-28 w-[700px] h-[480px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
+            winDiv.onclick = () => bringToFront(winDiv);
+
+            winDiv.innerHTML = `
+                <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid ${app.icon}"></i>
+                        <span class="font-bold text-sm text-slate-200">${app.title}</span>
+                    </div>
+                    <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
+                </div>
+                <div class="p-6 flex-1 flex gap-6 bg-slate-950 text-slate-200 text-xs">
+                    <div class="w-1/3 border-r border-slate-800 pr-4 space-y-2">
+                        <button class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-xl"><i class="fa-solid fa-palette mr-2"></i> Appearance</button>
+                        <button onclick="alert('System is up to date: v4.0 Sovereign')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-shield-halved mr-2"></i> Security & Updates</button>
+                        <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-user mr-2"></i> User Profile</button>
+                    </div>
+                    <div class="w-2/3 space-y-4">
+                        <h3 class="font-bold text-sm text-white">Wallpaper Customization</h3>
+                        <p class="text-slate-400">Select your preferred environment background style:</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="changeWallpaper()" class="p-3 bg-slate-900 border border-slate-700 hover:border-orange-500 rounded-xl text-left transition">
+                                <div class="w-full h-10 bg-gradient-to-r from-slate-900 to-slate-950 rounded-lg mb-2"></div>
+                                <span class="font-bold">Cycle Wallpaper</span>
+                            </button>
+                            <button onclick="refreshDesktop()" class="p-3 bg-slate-900 border border-slate-700 hover:border-orange-500 rounded-xl text-left transition">
+                                <div class="w-full h-10 bg-orange-600/20 rounded-lg mb-2 flex items-center justify-center"><i class="fa-solid fa-rotate text-orange-400"></i></div>
+                                <span class="font-bold">Reload System Shell</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `;
 
@@ -337,12 +493,15 @@
             }
 
             function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
             }
 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
+            function mouseMoveHandler(e) { onMouseMove(e); }
+            function mouseUpHandler(e) { onMouseUp(e); }
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
         }
     </script>
 </body>
