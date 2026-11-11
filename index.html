@@ -52,7 +52,7 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen Store</span>
         </div>
 
-        <!-- 3. System Installer Hub (NEW: Real OS Download Center) -->
+        <!-- 3. System Installer Hub -->
         <div onclick="openApp('installer')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-orange-300/40 animate-pulse">
                 <i class="fa-solid fa-compact-disc text-2xl text-white"></i>
@@ -153,6 +153,24 @@
         </button>
     </div>
 
+    <!-- In-System Custom Notification Modal (Replaces Browser Alert) -->
+    <div id="os-notification" class="absolute inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
+        <div class="bg-slate-900 border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-200 text-center relative">
+            <div id="notif-icon" class="w-12 h-12 bg-orange-600/20 text-orange-400 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-500/30">
+                <i class="fa-solid fa-download animate-bounce"></i>
+            </div>
+            <h3 id="notif-title" class="font-bold text-base text-white mb-1">Preparing ISO Package</h3>
+            <p id="notif-desc" class="text-xs text-slate-400 mb-4">Building bootloader configuration and system images...</p>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 border border-slate-800 overflow-hidden">
+                <div id="notif-progress" class="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <button onclick="closeOsNotification()" id="notif-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-xs transition hidden">Close</button>
+        </div>
+    </div>
+
     <!-- Auth / Account Modal -->
     <div id="auth-modal" class="absolute inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-slate-900 border border-slate-700 w-96 rounded-2xl p-6 shadow-2xl text-slate-200 relative">
@@ -227,7 +245,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v6.2</span>
+            <span>Doors OS v6.3</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -283,6 +301,43 @@
         function changeWallpaper() {
             currentWp = (currentWp + 1) % wallpapers.length;
             document.getElementById('os-body').style.backgroundImage = wallpapers[currentWp];
+        }
+
+        // Custom In-System Notification Trigger
+        function triggerDownloadSimulation(type) {
+            const modal = document.getElementById('os-notification');
+            const title = document.getElementById('notif-title');
+            const desc = document.getElementById('notif-desc');
+            const progressBar = document.getElementById('notif-progress');
+            const btn = document.getElementById('notif-btn');
+
+            modal.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            btn.classList.add('hidden');
+
+            if (type === 'clean') {
+                title.innerText = "Building Clean Install ISO (x86_64)";
+                desc.innerText = "Compiling sovereign Linux kernel and UI shell...";
+            } else {
+                title.innerText = "Preparing Dual-Boot Package";
+                desc.innerText = "Configuring GRUB bootloader and partition tables...";
+            }
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    title.innerText = "Download Ready!";
+                    desc.innerText = "Doors OS installation package has been successfully prepared.";
+                    btn.classList.remove('hidden');
+                }
+            }, 250);
+        }
+
+        function closeOsNotification() {
+            document.getElementById('os-notification').classList.add('hidden');
         }
 
         // Auth Modal Logic
@@ -465,7 +520,7 @@
             addTaskbarIcon(appKey);
         }
 
-        // Hardware Installer Hub Window (The 2-Option ISO Downloader)
+        // Hardware Installer Hub Window
         function createInstallerWindow(appKey, app) {
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
@@ -490,7 +545,7 @@
                 <div class="p-6 flex-1 bg-slate-950 text-slate-200 flex flex-col justify-between overflow-y-auto">
                     <div>
                         <div class="text-center mb-6">
-                            <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full text-xs font-bold">Doors OS v6.2 Sovereign Hardware Build</span>
+                            <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full text-xs font-bold">Doors OS v6.3 Sovereign Hardware Build</span>
                             <h2 class="text-lg font-bold text-white mt-2">Deploy Doors OS Directly to Your PC Hardware</h2>
                             <p class="text-xs text-slate-400 mt-1">Escape legacy constraints. Choose your installation method below:</p>
                         </div>
@@ -501,7 +556,7 @@
                                     <h3 class="font-bold text-sm text-white">1. Clean Install</h3>
                                     <p class="text-[11px] text-slate-400 mt-1">Wipe old legacy partitions and make Doors OS your sole sovereign primary hardware system.</p>
                                 </div>
-                                <button onclick="alert('Preparing Clean Install ISO Image (x86_64)... Download will start shortly.')" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download ISO (Clean)</button>
+                                <button onclick="triggerDownloadSimulation('clean')" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download ISO (Clean)</button>
                             </div>
                             <div class="bg-slate-900 border border-slate-700 hover:border-orange-500 p-5 rounded-2xl flex flex-col justify-between transition group">
                                 <div>
@@ -509,7 +564,7 @@
                                     <h3 class="font-bold text-sm text-white">2. Dual-Boot Setup</h3>
                                     <p class="text-[11px] text-slate-400 mt-1">Install alongside Windows with GRUB bootloader manager to safely choose your OS on startup.</p>
                                 </div>
-                                <button onclick="alert('Preparing Dual-Boot Installer Package with GRUB config... Download will start shortly.')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download Dual-Boot Package</button>
+                                <button onclick="triggerDownloadSimulation('dual')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download Dual-Boot Package</button>
                             </div>
                         </div>
                     </div>
