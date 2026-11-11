@@ -372,7 +372,7 @@
 
         window.zIndexCounter = 10;
 
-        // Apps Configuration
+        // Apps Configuration (تم تحويل التطبيقات الخارجية إلى mode: 'standalone' لتجنب الشاشة السوداء)
         const appData = {
             'zozen': { 
                 title: 'Zozen App', 
@@ -401,43 +401,43 @@
                 title: 'Google Gemini', 
                 icon: 'fa-wand-magic-sparkles text-blue-400', 
                 url: 'https://gemini.google.com',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'telegram': { 
                 title: 'Telegram Web', 
                 icon: 'fa-telegram text-sky-400', 
                 url: 'https://web.telegram.org',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'youtube': { 
                 title: 'YouTube', 
                 icon: 'fa-youtube text-red-500', 
-                url: 'https://www.youtube.com/embed',
-                mode: 'internal'
+                url: 'https://www.youtube.com',
+                mode: 'standalone'
             },
             'facebook': { 
                 title: 'Facebook', 
                 icon: 'fa-facebook-f text-blue-500', 
                 url: 'https://www.facebook.com',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'tiktok': { 
                 title: 'TikTok', 
                 icon: 'fa-tiktok text-white', 
                 url: 'https://www.tiktok.com',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'instagram': { 
                 title: 'Instagram', 
                 icon: 'fa-instagram text-pink-500', 
                 url: 'https://www.instagram.com',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'whatsapp': { 
                 title: 'WhatsApp Web', 
                 icon: 'fa-whatsapp text-emerald-500', 
                 url: 'https://web.whatsapp.com',
-                mode: 'internal'
+                mode: 'standalone'
             },
             'settings': {
                 title: 'System Settings',
@@ -456,6 +456,16 @@
 
             if (app.mode === 'settings') {
                 createSettingsWindow(appKey, app);
+                return;
+            }
+
+            // التعامل مع وضع الـ Standalone لفتح التطبيق بنافذة مستقلة خالية من قيود الحماية والشاشة السوداء
+            if (app.mode === 'standalone') {
+                const width = 1100;
+                const height = 700;
+                const left = (screen.width - width) / 2;
+                const top = (screen.height - height) / 2;
+                window.open(app.url, `_blank_${appKey}`, `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`);
                 return;
             }
 
