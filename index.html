@@ -153,7 +153,7 @@
         </button>
     </div>
 
-    <!-- In-System Custom Notification Modal (Replaces Browser Alert) -->
+    <!-- In-System Custom Notification Modal -->
     <div id="os-notification" class="absolute inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
         <div class="bg-slate-900 border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-200 text-center relative">
             <div id="notif-icon" class="w-12 h-12 bg-orange-600/20 text-orange-400 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-500/30">
@@ -162,7 +162,6 @@
             <h3 id="notif-title" class="font-bold text-base text-white mb-1">Preparing ISO Package</h3>
             <p id="notif-desc" class="text-xs text-slate-400 mb-4">Building bootloader configuration and system images...</p>
             
-            <!-- Progress Bar -->
             <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 border border-slate-800 overflow-hidden">
                 <div id="notif-progress" class="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
             </div>
@@ -172,7 +171,7 @@
     </div>
 
     <!-- Auth / Account Modal -->
-    <div id="auth-modal" class="absolute inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <div id="auth-modal" class="absolute inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
         <div class="bg-slate-900 border border-slate-700 w-96 rounded-2xl p-6 shadow-2xl text-slate-200 relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-6">
@@ -276,7 +275,7 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
         }, 1000);
 
-        // Right-Click Context Menu Logic
+        // Context Menu Logic
         const contextMenu = document.getElementById('context-menu');
         window.addEventListener('click', () => contextMenu.classList.add('hidden'));
         window.addEventListener('contextmenu', (e) => {
@@ -290,7 +289,6 @@
             location.reload();
         }
 
-        // Wallpapers rotation
         const wallpapers = [
             "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)",
             "radial-gradient(circle at center, #3b1e29 0%, #160909 100%)",
@@ -303,7 +301,6 @@
             document.getElementById('os-body').style.backgroundImage = wallpapers[currentWp];
         }
 
-        // Custom In-System Notification Trigger
         function triggerDownloadSimulation(type) {
             const modal = document.getElementById('os-notification');
             const title = document.getElementById('notif-title');
@@ -340,7 +337,6 @@
             document.getElementById('os-notification').classList.add('hidden');
         }
 
-        // Auth Modal Logic
         let isSignUpMode = false;
         function openAuthModal() {
             document.getElementById('auth-modal').classList.remove('hidden');
@@ -405,43 +401,43 @@
                 title: 'Google Gemini', 
                 icon: 'fa-wand-magic-sparkles text-blue-400', 
                 url: 'https://gemini.google.com',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'telegram': { 
                 title: 'Telegram Web', 
                 icon: 'fa-telegram text-sky-400', 
                 url: 'https://web.telegram.org',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'youtube': { 
                 title: 'YouTube', 
                 icon: 'fa-youtube text-red-500', 
-                url: 'https://www.youtube.com',
-                mode: 'standalone'
+                url: 'https://www.youtube.com/embed',
+                mode: 'internal'
             },
             'facebook': { 
                 title: 'Facebook', 
                 icon: 'fa-facebook-f text-blue-500', 
                 url: 'https://www.facebook.com',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'tiktok': { 
                 title: 'TikTok', 
                 icon: 'fa-tiktok text-white', 
                 url: 'https://www.tiktok.com',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'instagram': { 
                 title: 'Instagram', 
                 icon: 'fa-instagram text-pink-500', 
                 url: 'https://www.instagram.com',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'whatsapp': { 
                 title: 'WhatsApp Web', 
                 icon: 'fa-whatsapp text-emerald-500', 
                 url: 'https://web.whatsapp.com',
-                mode: 'standalone'
+                mode: 'internal'
             },
             'settings': {
                 title: 'System Settings',
@@ -455,15 +451,6 @@
 
             if (app.mode === 'installer') {
                 createInstallerWindow(appKey, app);
-                return;
-            }
-
-            if (app.mode === 'standalone') {
-                const width = 1050;
-                const height = 700;
-                const left = (screen.width - width) / 2;
-                const top = (screen.height - height) / 2;
-                window.open(app.url, `_blank_${appKey}`, `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`);
                 return;
             }
 
@@ -500,7 +487,7 @@
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -537,39 +524,32 @@
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-white">${app.title}</span>
                     </div>
                     <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                 </div>
-                <div class="p-6 flex-1 bg-slate-950 text-slate-200 flex flex-col justify-between overflow-y-auto">
-                    <div>
-                        <div class="text-center mb-6">
-                            <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1 rounded-full text-xs font-bold">Doors OS v6.3 Sovereign Hardware Build</span>
-                            <h2 class="text-lg font-bold text-white mt-2">Deploy Doors OS Directly to Your PC Hardware</h2>
-                            <p class="text-xs text-slate-400 mt-1">Escape legacy constraints. Choose your installation method below:</p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-900 border border-slate-700 hover:border-orange-500 p-5 rounded-2xl flex flex-col justify-between transition group">
-                                <div>
-                                    <div class="w-10 h-10 bg-orange-600/20 rounded-xl flex items-center justify-center text-orange-400 font-bold mb-3 group-hover:bg-orange-600 group-hover:text-white transition"><i class="fa-solid fa-power-off"></i></div>
-                                    <h3 class="font-bold text-sm text-white">1. Clean Install</h3>
-                                    <p class="text-[11px] text-slate-400 mt-1">Wipe old legacy partitions and make Doors OS your sole sovereign primary hardware system.</p>
-                                </div>
-                                <button onclick="triggerDownloadSimulation('clean')" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download ISO (Clean)</button>
-                            </div>
-                            <div class="bg-slate-900 border border-slate-700 hover:border-orange-500 p-5 rounded-2xl flex flex-col justify-between transition group">
-                                <div>
-                                    <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-400 font-bold mb-3 group-hover:bg-indigo-600 group-hover:text-white transition"><i class="fa-solid fa-clone"></i></div>
-                                    <h3 class="font-bold text-sm text-white">2. Dual-Boot Setup</h3>
-                                    <p class="text-[11px] text-slate-400 mt-1">Install alongside Windows with GRUB bootloader manager to safely choose your OS on startup.</p>
-                                </div>
-                                <button onclick="triggerDownloadSimulation('dual')" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-lg">Download Dual-Boot Package</button>
-                            </div>
-                        </div>
+                <div class="p-6 flex-1 overflow-y-auto space-y-6">
+                    <div class="text-center space-y-2">
+                        <h2 class="text-xl font-bold text-orange-400">Deploy Doors OS on Native Hardware</h2>
+                        <p class="text-xs text-slate-400 max-w-lg mx-auto">Download the standalone installation image to transform your x86_64 PC into an independent computing environment.</p>
                     </div>
-                    <div class="pt-4 border-t border-slate-900 text-center text-[10px] text-slate-500">
-                        Powered by independent Chromium/Linux kernel architecture. Zero Microsoft dependency.
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <div class="text-orange-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-download"></i> Full Bare-Metal ISO</div>
+                                <p class="text-xs text-slate-400">Erases existing partition and installs Doors OS as the primary sovereign operating system.</p>
+                            </div>
+                            <button onclick="triggerDownloadSimulation('clean')" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded-xl text-xs transition">Download Bare-Metal ISO</button>
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <div class="text-amber-400 font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-cubes"></i> Dual-Boot Installer</div>
+                                <p class="text-xs text-slate-400">Installs alongside Windows or Linux with GRUB bootloader configuration.</p>
+                            </div>
+                            <button onclick="triggerDownloadSimulation('dual')" class="mt-4 w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-xs transition">Download Dual-Boot Installer</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -579,7 +559,7 @@
             addTaskbarIcon(appKey);
         }
 
-        // Settings App Window UI
+        // Settings Window
         function createSettingsWindow(appKey, app) {
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
@@ -590,37 +570,27 @@
 
             const winDiv = document.createElement('div');
             winDiv.id = `win-${appKey}`;
-            winDiv.className = 'window absolute top-20 left-28 w-[700px] h-[480px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
+            winDiv.className = 'window absolute top-20 left-32 w-[650px] h-[450px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
             winDiv.onclick = () => bringToFront(winDiv);
 
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
                     <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                 </div>
-                <div class="p-6 flex-1 flex gap-6 bg-slate-950 text-slate-200 text-xs">
-                    <div class="w-1/3 border-r border-slate-800 pr-4 space-y-2">
-                        <button class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-xl"><i class="fa-solid fa-palette mr-2"></i> Appearance</button>
-                        <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl text-orange-400 font-bold"><i class="fa-solid fa-compact-disc mr-2"></i> Hardware ISO</button>
-                        <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-user mr-2"></i> User Profile</button>
+                <div class="p-6 flex-1 text-xs text-slate-300 space-y-4">
+                    <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">System Information</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><span class="text-slate-500">OS Name:</span> Doors OS</div>
+                        <div><span class="text-slate-500">Version:</span> 6.3 Sovereign</div>
+                        <div><span class="text-slate-500">Kernel:</span> Linux 6.8.0-custom</div>
+                        <div><span class="text-slate-500">Architecture:</span> x86_64</div>
                     </div>
-                    <div class="w-2/3 space-y-4">
-                        <h3 class="font-bold text-sm text-white">Wallpaper Customization</h3>
-                        <p class="text-slate-400">Select your preferred environment background style:</p>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="changeWallpaper()" class="p-3 bg-slate-900 border border-slate-700 hover:border-orange-500 rounded-xl text-left transition">
-                                <div class="w-full h-10 bg-gradient-to-r from-slate-900 to-slate-950 rounded-lg mb-2"></div>
-                                <span class="font-bold">Cycle Wallpaper</span>
-                            </button>
-                            <button onclick="refreshDesktop()" class="p-3 bg-slate-900 border border-slate-700 hover:border-orange-500 rounded-xl text-left transition">
-                                <div class="w-full h-10 bg-orange-600/20 rounded-lg mb-2 flex items-center justify-center"><i class="fa-solid fa-rotate text-orange-400"></i></div>
-                                <span class="font-bold">Reload System Shell</span>
-                            </button>
-                        </div>
-                    </div>
+                    <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2 pt-4">Customization</h3>
+                    <button onclick="changeWallpaper()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl border border-slate-700">Switch Desktop Wallpaper</button>
                 </div>
             `;
 
@@ -629,18 +599,14 @@
             addTaskbarIcon(appKey);
         }
 
-        function bringToFront(winEl) {
-            winEl.style.zIndex = ++window.zIndexCounter;
-        }
-
-        function closeWindow(winId, appKey) {
-            document.getElementById(winId)?.remove();
-            document.getElementById(`tb-${appKey}`)?.remove();
+        // Window Control Helpers
+        function bringToFront(win) {
+            window.zIndexCounter += 1;
+            win.style.zIndex = window.zIndexCounter;
         }
 
         function minimizeWindow(winId) {
-            const win = document.getElementById(winId);
-            if (win) win.style.display = 'none';
+            document.getElementById(winId).style.display = 'none';
         }
 
         function toggleMaximize(winId) {
@@ -648,41 +614,64 @@
             win.classList.toggle('window-maximized');
         }
 
-        function addTaskbarIcon(appKey) {
-            const taskbarApps = document.getElementById('taskbar-apps');
-            if (document.getElementById(`tb-${appKey}`)) return;
-
-            const btn = document.createElement('button');
-            btn.id = `tb-${appKey}`;
-            btn.className = 'w-10 h-10 hover:bg-white/10 rounded-xl flex items-center justify-center transition text-lg bg-slate-800/60 border border-slate-700/50';
-            btn.onclick = () => openApp(appKey);
-            btn.innerHTML = `<i class="fa-solid ${appData[appKey].icon}"></i>`;
-            taskbarApps.appendChild(btn);
+        function closeWindow(winId, appKey) {
+            const win = document.getElementById(winId);
+            if (win) win.remove();
+            removeTaskbarIcon(appKey);
         }
 
+        // Taskbar Management
+        function addTaskbarIcon(appKey) {
+            const container = document.getElementById('taskbar-apps');
+            if (document.getElementById(`tb-${appKey}`)) return;
+
+            const app = appData[appKey];
+            const btn = document.createElement('button');
+            btn.id = `tb-${appKey}`;
+            btn.onclick = () => {
+                const win = document.getElementById(`win-${appKey}`);
+                if (win) {
+                    if (win.style.display === 'none') {
+                        win.style.display = 'flex';
+                        bringToFront(win);
+                    } else {
+                        win.style.display = 'none';
+                    }
+                }
+            };
+            btn.className = 'h-9 px-3 bg-slate-800/60 hover:bg-slate-700/80 rounded-lg text-slate-200 text-xs flex items-center gap-2 border border-slate-700/50 transition';
+            btn.innerHTML = `<i class="${app.icon}"></i> <span>${app.title}</span>`;
+            container.appendChild(btn);
+        }
+
+        function removeTaskbarIcon(appKey) {
+            const btn = document.getElementById(`tb-${appKey}`);
+            if (btn) btn.remove();
+        }
+
+        // Dragging Logic
+        let activeDragWin = null;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
         function startDrag(e, winId) {
-            const win = document.getElementById(winId);
-            if (win.classList.contains('window-maximized')) return;
+            activeDragWin = document.getElementById(winId);
+            dragOffsetX = e.clientX - activeDragWin.offsetLeft;
+            dragOffsetY = e.clientY - activeDragWin.offsetTop;
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+        }
 
-            bringToFront(win);
-            let startX = e.clientX - win.offsetLeft;
-            let startY = e.clientY - win.offsetTop;
+        function onDrag(e) {
+            if (!activeDragWin || activeDragWin.classList.contains('window-maximized')) return;
+            activeDragWin.style.left = `${e.clientX - dragOffsetX}px`;
+            activeDragWin.style.top = `${e.clientY - dragOffsetY}px`;
+        }
 
-            function onMouseMove(e) {
-                win.style.left = (e.clientX - startX) + 'px';
-                win.style.top = (e.clientY - startY) + 'px';
-            }
-
-            function onMouseUp() {
-                document.removeEventListener('mousemove', mouseMoveHandler);
-                document.removeEventListener('mouseup', mouseUpHandler);
-            }
-
-            function mouseMoveHandler(e) { onMouseMove(e); }
-            function mouseUpHandler(e) { onMouseUp(e); }
-
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
+        function stopDrag() {
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+            activeDragWin = null;
         }
     </script>
 </body>
