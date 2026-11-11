@@ -34,8 +34,8 @@
 </head>
 <body class="h-screen w-screen bg-slate-950 text-white flex flex-col justify-between relative bg-cover bg-center" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
 
-    <!-- سطح المكتب واختصارات النظام (تطبيقات النظام وشبكات التواصل) -->
-    <div class="p-6 grid grid-cols-4 sm:grid-cols-6 gap-5 w-fit z-0">
+    <!-- سطح المكتب واختصارات النظام -->
+    <div class="p-6 grid grid-cols-4 sm:grid-cols-4 gap-5 w-fit z-0">
         <!-- 1. Zozen -->
         <div onclick="openApp('zozen')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-orange-400/30">
@@ -99,14 +99,6 @@
             </div>
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">WhatsApp</span>
         </div>
-
-        <!-- 9. أداة تثبيت النظام -->
-        <div onclick="openApp('installer')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-700">
-                <i class="fa-solid fa-download text-2xl text-emerald-400"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">تثبيت Doors</span>
-        </div>
     </div>
 
     <!-- حاوية النوافذ الداخلية -->
@@ -121,7 +113,7 @@
                 <span class="text-xs text-orange-400">● نظام بيئي متكامل</span>
             </div>
         </div>
-        <div class="space-y-1 text-sm max-h-64 overflow-y-auto">
+        <div class="space-y-1 text-sm max-h-60 overflow-y-auto">
             <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-bolt text-orange-400"></i> Zozen
             </button>
@@ -146,12 +138,9 @@
             <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp
             </button>
-            <button onclick="openApp('installer'); toggleStartMenu();" class="w-full text-right px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition text-emerald-400 font-bold border-t border-slate-800 mt-1 pt-2">
-                <i class="fa-solid fa-download"></i> تثبيت النظام خارجياً
-            </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v3.0</span>
+            <span>Doors OS v3.1</span>
             <span class="text-orange-400 font-bold">متصل</span>
         </div>
     </div>
@@ -169,7 +158,7 @@
 
         <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
             <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved"></i> Social Hub Ready
+                <i class="fa-solid fa-shield-halved"></i> Standalone OS
             </span>
             <span id="clock" class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">00:00</span>
         </div>
@@ -190,7 +179,7 @@
 
         window.zIndexCounter = 10;
 
-        // تعريف التطبيقات والروابط الحية
+        // تعريف التطبيقات والروابط
         const appData = {
             'zozen': { 
                 title: 'Zozen App', 
@@ -205,7 +194,7 @@
                 mode: 'internal'
             },
             'youtube': { 
-                title: 'YouTube App', 
+                title: 'YouTube', 
                 icon: 'fa-youtube text-red-500', 
                 url: 'https://www.youtube.com',
                 mode: 'app'
@@ -239,18 +228,13 @@
                 icon: 'fa-whatsapp text-emerald-500', 
                 url: 'https://web.whatsapp.com',
                 mode: 'app'
-            },
-            'installer': {
-                title: 'أداة تثبيت Doors OS',
-                icon: 'fa-download text-emerald-400',
-                mode: 'installer'
             }
         };
 
         function openApp(appKey) {
             const app = appData[appKey];
 
-            // فتح تطبيقات التواصل والخدمات الخارجية في نوافذ تطبيقية مستقلة نظيفة
+            // فتح التطبيقات الخارجية في نوافذ مستقلة نظيفة بدون شريط متصفح
             if (app.mode === 'app') {
                 const width = 1050;
                 const height = 700;
@@ -265,13 +249,7 @@
                 return;
             }
 
-            // معالج نافذة برنامج التثبيت الخارجي
-            if (app.mode === 'installer') {
-                createInstallerWindow(appKey, app);
-                return;
-            }
-
-            // التطبيقات الداخلية (Zozen والمتجر)
+            // التطبيقات الداخلية (Zozen والمتجر) تفتح في نوافذ Doors المحلية
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
                 if (existingWin.style.display === 'none') {
@@ -312,61 +290,6 @@
             document.getElementById('windows-container').appendChild(winDiv);
             bringToFront(winDiv);
             addTaskbarIcon(appKey);
-        }
-
-        // واجهة مثبت النظام الخارجي
-        function createInstallerWindow(appKey, app) {
-            const existingWin = document.getElementById(`win-${appKey}`);
-            if (existingWin) {
-                if (existingWin.style.display === 'none') existingWin.style.display = 'flex';
-                bringToFront(existingWin);
-                return;
-            }
-
-            const winDiv = document.createElement('div');
-            winDiv.id = `win-${appKey}`;
-            winDiv.className = 'window absolute top-20 left-32 w-[650px] h-[480px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
-            winDiv.onclick = () => bringToFront(winDiv);
-
-            winDiv.innerHTML = `
-                <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
-                        <span class="font-bold text-sm text-slate-200">${app.title}</span>
-                    </div>
-                    <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                </div>
-                <div class="p-6 flex-1 flex flex-col justify-between text-center bg-slate-950">
-                    <div>
-                        <div class="w-16 h-16 bg-emerald-600/20 border border-emerald-500/40 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-400 text-2xl">
-                            <i class="fa-solid fa-cloud-arrow-down"></i>
-                        </div>
-                        <h2 class="text-lg font-bold text-white mb-2">تثبيت Doors OS كبرنامج خارجي مستقل</h2>
-                        <p class="text-xs text-slate-400 leading-relaxed max-w-md mx-auto">
-                            نظام Doors يضم الآن شبكات التواصل الاجتماعي الكبرى! يمكنك تثبيته كتطبيق مستقل على حاسوبك وموبايلك للوصول السريع لكل خدماتك في مكان واحد.
-                        </p>
-                    </div>
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-right space-y-2 text-xs">
-                        <div class="flex justify-between"><span>الحالة:</span> <span class="text-emerald-400">جاهز للتثبيت والاستخدام</span></div>
-                        <div class="flex justify-between"><span>التطبيقات المتاحة:</span> <span class="text-orange-400">يوتيوب، فيسبوك، تيك توك، واتساب</span></div>
-                    </div>
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button onclick="triggerInstallPrompt()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-lg flex items-center gap-2">
-                            <i class="fa-solid fa-desktop"></i> إرشادات التثبيت
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('windows-container').appendChild(winDiv);
-            bringToFront(winDiv);
-            addTaskbarIcon(appKey);
-        }
-
-        function triggerInstallPrompt() {
-            alert("لتثبيت نظام Doors OS كتطبيق دائم على جهازك:\n\n1. من المتصفح (حاسوب أو موبايل)، افتح القائمة (النقاط الثلاث).\n2. اضغط على 'تثبيت التطبيق' (Install App) أو 'إضافة إلى الشاشة الرئيسية'.\n3. سيتم تثبيت Doors كبرنامج مستقل يحمل جميع تطبيقاتك الاجتماعية وتطبيقات Zozen بلمسة زر واحدة!");
         }
 
         function bringToFront(winEl) {
