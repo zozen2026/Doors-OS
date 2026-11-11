@@ -52,7 +52,15 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen Store</span>
         </div>
 
-        <!-- 3. Google Gemini -->
+        <!-- 3. Google Chrome (In-System Browser) -->
+        <div onclick="openApp('chrome')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
+            <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-amber-300/30">
+                <i class="fa-brands fa-chrome text-2xl text-white"></i>
+            </div>
+            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Chrome Browser</span>
+        </div>
+
+        <!-- 4. Google Gemini -->
         <div onclick="openApp('gemini')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-blue-400/30" style="background: linear-gradient(135deg, #1a73e8 0%, #8ab4f8 50%, #c5221f 100%);">
                 <i class="fa-solid fa-wand-magic-sparkles text-2xl text-white"></i>
@@ -60,7 +68,7 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Gemini</span>
         </div>
 
-        <!-- 4. Telegram -->
+        <!-- 5. Telegram -->
         <div onclick="openApp('telegram')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-sky-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-sky-300/30">
                 <i class="fa-brands fa-telegram text-2xl text-white"></i>
@@ -68,20 +76,12 @@
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Telegram</span>
         </div>
 
-        <!-- 5. YouTube -->
+        <!-- 6. YouTube -->
         <div onclick="openApp('youtube')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
             <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-red-400/30">
                 <i class="fa-brands fa-youtube text-2xl text-white"></i>
             </div>
             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">YouTube</span>
-        </div>
-
-        <!-- 6. Google Chrome -->
-        <div onclick="openApp('chrome')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-amber-300/30">
-                <i class="fa-brands fa-chrome text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Google Chrome</span>
         </div>
 
         <!-- 7. Facebook -->
@@ -187,6 +187,9 @@
             <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-store text-indigo-400"></i> Zozen Store
             </button>
+            <button onclick="openApp('chrome'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-chrome text-amber-400"></i> Chrome Browser
+            </button>
             <button onclick="openApp('gemini'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-wand-magic-sparkles text-blue-400"></i> Google Gemini
             </button>
@@ -195,9 +198,6 @@
             </button>
             <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-youtube text-red-400"></i> YouTube
-            </button>
-            <button onclick="openApp('chrome'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-chrome text-amber-400"></i> Google Chrome
             </button>
             <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-brands fa-facebook-f text-blue-400"></i> Facebook
@@ -216,7 +216,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v5.0</span>
+            <span>Doors OS v5.1</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -234,7 +234,7 @@
 
         <div class="flex items-center gap-4 text-xs text-slate-300 font-medium">
             <span class="bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved"></i> 100% Sovereign In-System
+                <i class="fa-solid fa-shield-halved"></i> Browser Hub Active
             </span>
             <span id="clock" class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">00:00</span>
         </div>
@@ -310,7 +310,7 @@
 
         window.zIndexCounter = 10;
 
-        // Apps Configuration (All set to internal windows to keep users inside Doors OS!)
+        // Apps Configuration
         const appData = {
             'zozen': { 
                 title: 'Zozen App', 
@@ -321,6 +321,12 @@
                 title: 'Zozen Store', 
                 icon: 'fa-store text-indigo-400', 
                 url: 'https://zozen2026.github.io/Zozen-store/'
+            },
+            'chrome': { 
+                title: 'Google Chrome Browser', 
+                icon: 'fa-chrome text-amber-400', 
+                url: 'https://www.google.com',
+                isBrowser: true
             },
             'gemini': { 
                 title: 'Google Gemini', 
@@ -336,11 +342,6 @@
                 title: 'YouTube', 
                 icon: 'fa-youtube text-red-500', 
                 url: 'https://www.youtube.com'
-            },
-            'chrome': { 
-                title: 'Google Chrome', 
-                icon: 'fa-chrome text-amber-400', 
-                url: 'https://www.google.com'
             },
             'facebook': { 
                 title: 'Facebook', 
@@ -372,13 +373,11 @@
         function openApp(appKey) {
             const app = appData[appKey];
 
-            // Custom Settings App Window
             if (app.mode === 'settings') {
                 createSettingsWindow(appKey, app);
                 return;
             }
 
-            // All applications now open INSIDE Doors OS Windows (No leaving the system!)
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
                 if (existingWin.style.display === 'none') existingWin.style.display = 'flex';
@@ -388,8 +387,22 @@
 
             const winDiv = document.createElement('div');
             winDiv.id = `win-${appKey}`;
-            winDiv.className = 'window absolute top-16 left-20 w-[900px] h-[600px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
+            winDiv.className = 'window absolute top-16 left-20 w-[950px] h-[620px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
             winDiv.onclick = () => bringToFront(winDiv);
+
+            // إذا كان متصفح كروم، نضيف له شريط عنوان خاص به داخل النافذة لكي يتنقل المستخدم بحرية
+            let browserToolbar = '';
+            if (app.isBrowser) {
+                browserToolbar = `
+                    <div class="h-9 bg-slate-900 border-b border-slate-800 px-3 flex items-center gap-2">
+                        <button onclick="document.getElementById('iframe-${appKey}').contentWindow.history.back()" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+                        <button onclick="document.getElementById('iframe-${appKey}').contentWindow.history.forward()" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+                        <button onclick="document.getElementById('iframe-${appKey}').src = document.getElementById('iframe-${appKey}').src" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-slate-800"><i class="fa-solid fa-rotate text-xs"></i></button>
+                        <input type="text" value="${app.url}" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-xs text-slate-200 focus:outline-none focus:border-amber-500" readonly>
+                        <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Doors Browser Hub</span>
+                    </div>
+                `;
+            }
 
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
@@ -397,17 +410,15 @@
                         <i class="fa-solid ${app.icon}"></i>
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
-                    <div class="flex items-center gap-2 text-xs text-slate-400 bg-slate-950 px-3 py-1 rounded-lg border border-slate-800">
-                        <i class="fa-solid fa-shield-halved text-orange-400"></i> Locked Inside Doors OS
-                    </div>
                     <div class="flex items-center gap-2">
                         <button onclick="minimizeWindow('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-minus text-xs"></i></button>
                         <button onclick="toggleMaximize('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-regular fa-square text-xs"></i></button>
                         <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                     </div>
                 </div>
+                ${browserToolbar}
                 <div class="flex-1 bg-slate-950 relative">
-                    <iframe src="${app.url}" class="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; camera; microphone" allowfullscreen></iframe>
+                    <iframe id="iframe-${appKey}" src="${app.url}" class="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; camera; microphone" allowfullscreen></iframe>
                 </div>
             `;
 
@@ -441,7 +452,7 @@
                 <div class="p-6 flex-1 flex gap-6 bg-slate-950 text-slate-200 text-xs">
                     <div class="w-1/3 border-r border-slate-800 pr-4 space-y-2">
                         <button class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-xl"><i class="fa-solid fa-palette mr-2"></i> Appearance</button>
-                        <button onclick="alert('System is up to date: v5.0 Sovereign')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-shield-halved mr-2"></i> Security & Updates</button>
+                        <button onclick="alert('System is up to date: v5.1 Sovereign')" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-shield-halved mr-2"></i> Security & Updates</button>
                         <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-slate-800 rounded-xl"><i class="fa-solid fa-user mr-2"></i> User Profile</button>
                     </div>
                     <div class="w-2/3 space-y-4">
