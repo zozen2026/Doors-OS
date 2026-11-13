@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors v1.0 - Sovereign Hardware Environment</title>
+    <title>Doors v1.0 - Sovereign White Environment</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -27,14 +27,14 @@
         .desktop-item:active {
             cursor: grabbing;
         }
-        /* Custom Scrollbar */
+        /* Custom Scrollbar for Light Theme */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
-        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.8); }
+        ::-webkit-scrollbar-thumb { background: rgba(203, 213, 225, 1); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
     </style>
 </head>
-<body id="os-body" class="relative bg-cover bg-center bg-no-repeat transition-all duration-500" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
+<body id="os-body" class="relative bg-cover bg-center bg-no-repeat transition-all duration-500 bg-slate-100 text-slate-800" style="background-image: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);">
 
     <!-- Desktop Area -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
@@ -42,38 +42,38 @@
     <!-- Hidden File Input for Studio Wallpaper -->
     <input type="file" id="studio-wallpaper-input" accept="image/*" class="hidden" onchange="handleStudioWallpaperUpload(event)">
 
-    <!-- 1. Background Context Menu -->
-    <div id="context-menu" class="absolute hidden w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
+    <!-- 1. Background Context Menu (Light Theme) -->
+    <div id="context-menu" class="absolute hidden w-56 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
         <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-rotate"></i> Refresh System
         </button>
         
         <div class="relative group">
             <button class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center justify-between transition">
-                <span class="flex items-center gap-3"><i class="fa-solid fa-plus text-orange-400"></i> New +</span>
+                <span class="flex items-center gap-3"><i class="fa-solid fa-plus text-orange-500"></i> New +</span>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </button>
-            <div class="absolute left-full top-0 ml-1.5 hidden group-hover:block w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 text-slate-200 text-xs z-50">
+            <div class="absolute left-full top-0 ml-1.5 hidden group-hover:block w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 text-slate-700 text-xs z-50">
                 <button onclick="createNewDesktopItem('folder')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-folder text-amber-400"></i> New Folder
+                    <i class="fa-solid fa-folder text-amber-500"></i> New Folder
                 </button>
                 <button onclick="createNewDesktopItem('txt')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-file-lines text-sky-400"></i> Text Document (.txt)
+                    <i class="fa-solid fa-file-lines text-sky-500"></i> Text Document (.txt)
                 </button>
                 <button onclick="createNewDesktopItem('sheet')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-file-excel text-emerald-400"></i> Spreadsheet (.xls)
+                    <i class="fa-solid fa-file-excel text-emerald-500"></i> Spreadsheet (.xls)
                 </button>
             </div>
         </div>
 
         <button onclick="document.getElementById('studio-wallpaper-input').click()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-images text-orange-400"></i> Set Wallpaper from Studio
+            <i class="fa-solid fa-images text-orange-500"></i> Set Wallpaper from Studio
         </button>
         <button onclick="openApp('settings')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-sliders"></i> Personalize & Settings
         </button>
-        <div class="h-px bg-slate-800 my-1"></div>
-        <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition font-bold">
+        <div class="h-px bg-slate-200 my-1"></div>
+        <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 text-orange-600 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition font-bold">
             <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 ISO
         </button>
         <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
@@ -81,138 +81,175 @@
         </button>
     </div>
 
-    <!-- 2. Item Context Menu -->
-    <div id="item-context-menu" class="absolute hidden w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
+    <!-- 2. Item Context Menu (Light Theme) -->
+    <div id="item-context-menu" class="absolute hidden w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
         <button onclick="itemActionOpen()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-folder-open text-orange-400"></i> Open
+            <i class="fa-solid fa-folder-open text-orange-500"></i> Open
         </button>
         <button onclick="itemActionCopy()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-copy text-sky-400"></i> Copy
+            <i class="fa-solid fa-copy text-sky-500"></i> Copy
         </button>
         <button onclick="itemActionRename()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-pen text-indigo-400"></i> Change Name
+            <i class="fa-solid fa-pen text-indigo-500"></i> Change Name
         </button>
-        <div id="delete-divider" class="h-px bg-slate-800 my-1"></div>
-        <button id="delete-btn-action" onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-400 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+        <div id="delete-divider" class="h-px bg-slate-200 my-1"></div>
+        <button id="delete-btn-action" onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-500 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-trash"></i> Delete
         </button>
     </div>
 
+    <!-- Nice Search Modal (محرك البحث الجديد بخيارين) -->
+    <div id="nice-search-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-start justify-center pt-28 z-50">
+        <div class="bg-white border border-slate-200 w-[500px] rounded-2xl p-5 shadow-2xl text-slate-800">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+                <div class="flex items-center gap-2 font-bold text-sm text-orange-600">
+                    <i class="fa-solid fa-magnifying-glass"></i> Nice Search Hub
+                </div>
+                <button onclick="toggleNiceSearch()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <!-- أزرار اختيار وضع البحث -->
+            <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+                <button id="search-mode-system" onclick="setSearchMode('system')" class="py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-desktop"></i> بحث في النظام
+                </button>
+                <button id="search-mode-web" onclick="setSearchMode('web')" class="py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-globe"></i> بحث في الويب
+                </button>
+            </div>
+
+            <!-- حقل الإدخال -->
+            <div class="relative mb-3">
+                <input type="text" id="nice-search-input" oninput="executeNiceSearch()" placeholder="اكتب للبحث..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
+            </div>
+
+            <!-- نتائج البحث -->
+            <div id="nice-search-results" class="max-h-60 overflow-y-auto space-y-1 text-xs">
+                <div class="text-center py-6 text-slate-400">ابدأ الكتابة للبحث...</div>
+            </div>
+        </div>
+    </div>
+
     <!-- In-System Custom Notification Modal -->
-    <div id="os-notification" class="absolute inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
-        <div class="bg-slate-900 border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-200 text-center relative">
-            <div id="notif-icon" class="w-12 h-12 bg-orange-600/20 text-orange-400 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-500/30">
+    <div id="os-notification" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
+        <div class="bg-white border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-800 text-center relative">
+            <div id="notif-icon" class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-200">
                 <i class="fa-solid fa-download animate-bounce"></i>
             </div>
-            <h3 id="notif-title" class="font-bold text-base text-white mb-1">Preparing ISO Package</h3>
-            <p id="notif-desc" class="text-xs text-slate-400 mb-4">Building bootloader configuration and system images...</p>
+            <h3 id="notif-title" class="font-bold text-base text-slate-900 mb-1">Preparing ISO Package</h3>
+            <p id="notif-desc" class="text-xs text-slate-500 mb-4">Building bootloader configuration and system images...</p>
             
-            <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 border border-slate-800 overflow-hidden">
+            <div class="w-full bg-slate-100 rounded-full h-2.5 mb-4 border border-slate-200 overflow-hidden">
                 <div id="notif-progress" class="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
             </div>
 
-            <button onclick="closeOsNotification()" id="notif-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 rounded-xl text-xs transition hidden">Close / Done</button>
+            <button onclick="closeOsNotification()" id="notif-btn" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 rounded-xl text-xs transition hidden">Close / Done</button>
         </div>
     </div>
 
-    <!-- Auth / Account Modal -->
-    <div id="auth-modal" class="absolute inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-slate-900 border border-slate-700 w-96 rounded-2xl p-6 shadow-2xl text-slate-200 relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+    <!-- Auth / Account Modal (Light Theme) -->
+    <div id="auth-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-6">
                 <div id="modal-avatar" class="w-12 h-12 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">D</div>
-                <h3 class="font-bold text-base text-white">Doors v1.0 Sovereign Account</h3>
-                <p id="auth-subtitle" class="text-xs text-slate-400">Your session remains active across restarts</p>
+                <h3 class="font-bold text-base text-slate-900">Doors v1.0 Sovereign Account</h3>
+                <p id="auth-subtitle" class="text-xs text-slate-500">Your session remains active across restarts</p>
             </div>
             <div id="auth-form-content" class="space-y-4 text-xs">
                 <div>
-                    <label class="block text-slate-400 mb-1">Email / Username</label>
-                    <input type="text" id="auth-user" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500" placeholder="user@doors.os">
+                    <label class="block text-slate-500 mb-1">Email / Username</label>
+                    <input type="text" id="auth-user" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-orange-500" placeholder="user@doors.os">
                 </div>
                 <div>
-                    <label class="block text-slate-400 mb-1">Password</label>
-                    <input type="password" id="auth-pass" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-orange-500" placeholder="••••••••">
+                    <label class="block text-slate-500 mb-1">Password</label>
+                    <input type="password" id="auth-pass" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-orange-500" placeholder="••••••••">
                 </div>
                 <button onclick="handleAuthSubmit()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg">Sign In & Save Session</button>
-                <div class="text-center pt-2 flex justify-between items-center border-t border-slate-800">
-                    <span class="text-emerald-400 text-[11px]"><i class="fa-solid fa-shield-halved"></i> Persistent Storage Active</span>
-                    <button onclick="handleLogout()" class="text-red-400 font-bold hover:underline">Sign Out</button>
+                <div class="text-center pt-2 flex justify-between items-center border-t border-slate-100">
+                    <span class="text-emerald-600 text-[11px]"><i class="fa-solid fa-shield-halved"></i> Persistent Storage Active</span>
+                    <button onclick="handleLogout()" class="text-red-500 font-bold hover:underline">Sign Out</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Start Menu (قائمة البدء تظهر فوق الشريط السفلي مباشرة) -->
-    <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-200">
-        <div class="flex items-center gap-3 pb-3 border-b border-slate-800 mb-3">
+    <!-- Start Menu (Light Theme) -->
+    <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-800">
+        <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-3">
             <div id="user-avatar-letter" class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
             <div class="overflow-hidden">
                 <h3 id="current-user-display" class="font-bold text-sm truncate">Guest User</h3>
-                <span id="session-status-badge" class="text-xs text-slate-400">● Local Guest Session</span>
+                <span id="session-status-badge" class="text-xs text-slate-500">● Local Guest Session</span>
             </div>
         </div>
         <div class="space-y-1 text-sm max-h-60 overflow-y-auto">
-            <button onclick="openApp('installer'); toggleStartMenu();" class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-lg flex items-center gap-3 transition mb-1">
+            <button onclick="openApp('installer'); toggleStartMenu();" class="w-full text-left px-3 py-2 bg-orange-50 text-orange-600 font-bold rounded-lg flex items-center gap-3 transition mb-1 border border-orange-100">
                 <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 (ISO)
             </button>
-            <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-bolt text-orange-400"></i> Zozen
+            <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-solid fa-bolt text-orange-500"></i> Zozen
             </button>
-            <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-store text-indigo-400"></i> Zozen Store
+            <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-solid fa-store text-indigo-500"></i> Zozen Store
             </button>
-            <button onclick="openApp('browser'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-chrome text-amber-400"></i> Browser Hub
+            <button onclick="openApp('browser'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-chrome text-amber-500"></i> Browser Hub
             </button>
-            <button onclick="openApp('gemini'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-wand-magic-sparkles text-blue-400"></i> Google Gemini
+            <button onclick="openApp('gemini'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i> Google Gemini
             </button>
-            <button onclick="openApp('telegram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-telegram text-sky-400"></i> Telegram
+            <button onclick="openApp('telegram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-telegram text-sky-500"></i> Telegram
             </button>
-            <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-youtube text-red-400"></i> YouTube
+            <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-youtube text-red-500"></i> YouTube
             </button>
-            <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-facebook-f text-blue-400"></i> Facebook
+            <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-facebook-f text-blue-600"></i> Facebook
             </button>
-            <button onclick="openApp('tiktok'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-tiktok text-white"></i> TikTok
+            <button onclick="openApp('tiktok'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-tiktok text-black"></i> TikTok
             </button>
-            <button onclick="openApp('instagram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-instagram text-pink-400"></i> Instagram
+            <button onclick="openApp('instagram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-instagram text-pink-500"></i> Instagram
             </button>
-            <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-whatsapp text-emerald-400"></i> WhatsApp
+            <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
+                <i class="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp
             </button>
-            <button onclick="openApp('settings'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition border-t border-slate-800 mt-1 pt-2">
-                <i class="fa-solid fa-gear text-slate-400"></i> System Settings
+            <button onclick="openApp('settings'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition border-t border-slate-100 mt-1 pt-2">
+                <i class="fa-solid fa-gear text-slate-500"></i> System Settings
             </button>
         </div>
-        <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+        <div class="pt-3 mt-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
             <span>Doors v1.0</span>
-            <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
+            <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-600 font-bold hover:underline">Account</button>
         </div>
     </div>
 
-    <!-- Taskbar (مثبت في أسفل الشاشة تماماً بقوة) -->
-    <div id="os-taskbar" class="h-14 bg-slate-900/90 backdrop-blur-md border-t border-slate-800 px-4 flex items-center justify-between z-40 fixed bottom-0 left-0 right-0">
+    <!-- Taskbar (Light Theme) -->
+    <div id="os-taskbar" class="h-14 bg-white/90 backdrop-blur-md border-t border-slate-200 px-4 flex items-center justify-between z-40 fixed bottom-0 left-0 right-0 text-slate-800">
         <div class="flex items-center gap-3">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
                 <i class="fa-solid fa-door-open text-lg"></i>
                 <span>Doors</span>
             </button>
+            <!-- زر فتح محرك Nice Search -->
+            <button onclick="toggleNiceSearch()" class="h-10 px-3.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-2 transition text-slate-700">
+                <i class="fa-solid fa-magnifying-glass text-orange-600"></i>
+                <span>Nice Search</span>
+            </button>
         </div>
 
-        <div class="flex items-center gap-3 text-xs text-slate-300 font-medium">
-            <button onclick="openAuthModal()" id="taskbar-user-pill" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-xl flex items-center gap-2 transition">
-                <i class="fa-solid fa-user-check text-orange-400"></i>
+        <div class="flex items-center gap-3 text-xs text-slate-600 font-medium">
+            <button onclick="openAuthModal()" id="taskbar-user-pill" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl flex items-center gap-2 transition">
+                <i class="fa-solid fa-user-check text-orange-600"></i>
                 <span id="taskbar-username">Guest User</span>
             </button>
-            <span class="hidden sm:flex bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
+            <span class="hidden sm:flex bg-orange-50 text-orange-600 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
                 <i class="fa-solid fa-microchip"></i> Hardware-Ready OS
             </span>
-            <span id="clock" class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">00:00</span>
+            <span id="clock" class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">00:00</span>
         </div>
     </div>
 
@@ -229,8 +266,98 @@
             { id: 'tiktok', title: 'TikTok', icon: 'fa-brands fa-tiktok text-white', bg: 'bg-black border-zinc-700', type: 'app' },
             { id: 'instagram', title: 'Instagram', icon: 'fa-brands fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 border-pink-400/30', type: 'app' },
             { id: 'whatsapp', title: 'WhatsApp', icon: 'fa-brands fa-whatsapp text-white', bg: 'bg-emerald-600 border-emerald-400/30', type: 'app' },
-            { id: 'settings', title: 'Settings', icon: 'fa-solid fa-gear text-slate-200', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
+            { id: 'settings', title: 'Settings', icon: 'fa-solid fa-gear text-white', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
         ];
+
+        let currentSearchMode = 'system'; // 'system' or 'web'
+
+        function toggleNiceSearch() {
+            const modal = document.getElementById('nice-search-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('nice-search-input').focus();
+                executeNiceSearch();
+            }
+        }
+
+        function setSearchMode(mode) {
+            currentSearchMode = mode;
+            const btnSys = document.getElementById('search-mode-system');
+            const btnWeb = document.getElementById('search-mode-web');
+            const input = document.getElementById('nice-search-input');
+
+            if (mode === 'system') {
+                btnSys.className = "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2";
+                btnWeb.className = "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
+                input.placeholder = "ابحث عن التطبيقات والمجلدات في الجهاز...";
+            } else {
+                btnWeb.className = "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2";
+                btnSys.className = "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
+                input.placeholder = "ابحث مباشرة في شبكة الويب (Google)...";
+            }
+            executeNiceSearch();
+        }
+
+        function executeNiceSearch() {
+            const query = document.getElementById('nice-search-input').value.trim();
+            const resultsContainer = document.getElementById('nice-search-results');
+            resultsContainer.innerHTML = '';
+
+            if (currentSearchMode === 'system') {
+                let userItems = [];
+                try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
+                const allItems = [...defaultDesktopApps, ...userItems];
+
+                const filtered = allItems.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
+
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">لم يتم العثور على نتائج في النظام</div>`;
+                    return;
+                }
+
+                filtered.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "flex items-center justify-between p-2.5 hover:bg-slate-100 rounded-xl cursor-pointer transition text-slate-700";
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
+                                <i class="${item.icon || 'fa-solid fa-folder'}"></i>
+                            </div>
+                            <span class="font-medium">${item.title}</span>
+                        </div>
+                        <span class="text-[11px] bg-slate-100 text-slate-500 px-2 py-1 rounded">فتح</span>
+                    `;
+                    div.onclick = () => {
+                        toggleNiceSearch();
+                        if (item.type === 'app' || !item.type) openApp(item.id);
+                        else alert(`Opening ${item.title}`);
+                    };
+                    resultsContainer.appendChild(div);
+                });
+
+            } else {
+                // وضع البحث في الويب
+                if (!query) {
+                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">اكتب ما تريد البحث عنه في الويب واضغط Enter</div>`;
+                    return;
+                }
+
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-3 bg-orange-50 hover:bg-orange-100 rounded-xl cursor-pointer transition text-orange-700 border border-orange-100";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-globe text-lg text-orange-600"></i>
+                        <span class="font-semibold">بحث في Google عن: "${query}"</span>
+                    </div>
+                    <span class="text-xs font-bold text-orange-600">انتقال ➔</span>
+                `;
+                div.onclick = () => {
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                    toggleNiceSearch();
+                };
+                resultsContainer.appendChild(div);
+            }
+        }
 
         function renderDesktopGrid() {
             const area = document.getElementById('desktop-area');
@@ -265,7 +392,7 @@
                 }
 
                 const div = document.createElement('div');
-                div.className = "desktop-item flex flex-col items-center group p-2 rounded-xl hover:bg-white/10 transition";
+                div.className = "desktop-item flex flex-col items-center group p-2 rounded-xl hover:bg-black/5 transition";
                 div.style.left = posX + 'px';
                 div.style.top = posY + 'px';
                 div.setAttribute('data-id', item.id);
@@ -276,13 +403,13 @@
                 if (item.type === 'app' || !item.type) {
                     iconHtml = `<div class="w-14 h-14 ${item.bg || 'bg-slate-800'} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border"><i class="${item.icon} text-2xl"></i></div>`;
                 } else {
-                    let iconClass = "fa-solid fa-folder text-amber-400";
-                    if (item.type === 'txt') iconClass = "fa-solid fa-file-lines text-sky-400";
-                    if (item.type === 'sheet') iconClass = "fa-solid fa-file-excel text-emerald-400";
-                    iconHtml = `<div class="w-14 h-14 bg-slate-800/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-700"><i class="${iconClass} text-2xl"></i></div>`;
+                    let iconClass = "fa-solid fa-folder text-amber-500";
+                    if (item.type === 'txt') iconClass = "fa-solid fa-file-lines text-sky-500";
+                    if (item.type === 'sheet') iconClass = "fa-solid fa-file-excel text-emerald-500";
+                    iconHtml = `<div class="w-14 h-14 bg-white/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-200"><i class="${iconClass} text-2xl"></i></div>`;
                 }
 
-                div.innerHTML = `${iconHtml}<span class="text-xs mt-2 text-slate-200 font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[70px] text-center">${item.title}</span>`;
+                div.innerHTML = `${iconHtml}<span class="text-xs mt-2 text-slate-800 font-medium drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] truncate max-w-[70px] text-center">${item.title}</span>`;
 
                 setupIconInteraction(div, item);
                 area.appendChild(div);
@@ -408,7 +535,7 @@
                 if(contextMenu) {
                     contextMenu.style.top = `${e.clientY}px`;
                     contextMenu.style.left = `${e.clientX}px`;
-                    contextMenu.classList.add('hidden');
+                    contextMenu.classList.remove('hidden');
                 }
             }
         });
@@ -500,7 +627,7 @@
             let contentUrl = "https://www.google.com";
 
             if (appId === 'zozen' || appId === 'store') {
-                contentUrl = "https://zozen.vercel.app"; // رابط زوزين الصحيح[cite: 1]
+                contentUrl = "https://zozen.vercel.app";
             } else if (appId === 'browser') contentUrl = "https://www.google.com";
             else if (appId === 'gemini') contentUrl = "https://gemini.google.com";
             else if (appId === 'youtube') contentUrl = "https://www.youtube.com";
@@ -572,18 +699,19 @@
             if (notif) notif.classList.add('hidden');
         }
 
-        setInterval(() => {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const clockEl = document.getElementById('clock');
-            if (clockEl) clockEl.innerText = timeString;
-        }, 1000);
-
-        window.onload = function() {
+        // تحديث الساعة وتشييك النظام عند التحميل
+        window.addEventListener('DOMContentLoaded', () => {
             renderDesktopGrid();
             applySavedWallpaper();
             initSystemSession();
-        };
+
+            setInterval(() => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const clock = document.getElementById('clock');
+                if (clock) clock.innerText = timeString;
+            }, 1000);
+        });
     </script>
 </body>
 </html>
