@@ -41,7 +41,7 @@
 
     <!-- Dynamic Desktop Icons Grid -->
     <div id="desktop-grid" class="p-6 grid grid-cols-4 sm:grid-cols-6 gap-5 w-fit z-0 transition-opacity duration-300">
-        <!-- يتم تعبئة الأيقونات ديناميكياً بواسطة JavaScript -->
+        <!-- يتم تعبئة الأيقونات ديناميكياً -->
     </div>
 
     <!-- Hidden File Input for Studio Wallpaper -->
@@ -50,7 +50,7 @@
     <!-- Windows Container -->
     <div id="windows-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
-    <!-- Right-Click Context Menu with "New +" Submenu -->
+    <!-- 1. Background Context Menu (عند النقر بالفراغ) -->
     <div id="context-menu" class="absolute hidden w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
         <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-rotate"></i> Refresh System
@@ -62,7 +62,6 @@
                 <span class="flex items-center gap-3"><i class="fa-solid fa-plus text-orange-400"></i> New +</span>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
             </button>
-            <!-- Submenu -->
             <div class="absolute left-full top-0 ml-1.5 hidden group-hover:block w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 text-slate-200 text-xs z-50">
                 <button onclick="createNewDesktopItem('folder')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
                     <i class="fa-solid fa-folder text-amber-400"></i> New Folder
@@ -88,6 +87,26 @@
         </button>
         <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-user-circle"></i> Account / Sign In
+        </button>
+    </div>
+
+    <!-- 2. Item Context Menu (عند النقر بالزر الأيمن على أيقونة / مجلد / ملف) -->
+    <div id="item-context-menu" class="absolute hidden w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
+        <button onclick="itemActionOpen()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-folder-open text-orange-400"></i> Open
+        </button>
+        <button onclick="itemActionCopy()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-copy text-sky-400"></i> Copy
+        </button>
+        <button onclick="itemActionShortcut()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-link text-amber-400"></i> Create Shortcut
+        </button>
+        <button onclick="itemActionRename()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-pen text-indigo-400"></i> Change Name
+        </button>
+        <div class="h-px bg-slate-800 my-1"></div>
+        <button onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-400 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-trash"></i> Delete
         </button>
     </div>
 
@@ -183,7 +202,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v6.6</span>
+            <span>Doors OS v6.7</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -234,7 +253,6 @@
             const grid = document.getElementById('desktop-grid');
             if (!grid) return;
 
-            // استرجاع العناصر المخصصة التي أضافها المستخدم عبر New +
             let userItems = [];
             try {
                 userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || [];
@@ -245,7 +263,9 @@
             grid.innerHTML = allItems.map(item => {
                 if (item.type === 'app') {
                     return `
-                        <div onclick="openApp('${item.id}')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
+                        <div ondblclick="openApp('${item.id}')" onclick="openApp('${item.id}')" 
+                             class="desktop-item flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition"
+                             data-id="${item.id}" data-type="app" data-title="${item.title}">
                             <div class="w-14 h-14 ${item.bg} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border">
                                 <i class="fa-solid ${item.icon} text-2xl"></i>
                             </div>
@@ -253,13 +273,14 @@
                         </div>
                     `;
                 } else {
-                    // Custom user created item (Folder, Txt, Sheet)
                     let iconClass = "fa-folder text-amber-400";
                     if (item.type === 'txt') iconClass = "fa-file-lines text-sky-400";
                     if (item.type === 'sheet') iconClass = "fa-file-excel text-emerald-400";
 
                     return `
-                        <div onclick="alert('Opening user item: ${item.title}')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition relative">
+                        <div ondblclick="alert('Opening ${item.title}')" onclick="alert('Selected ${item.title}')" 
+                             class="desktop-item flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition relative"
+                             data-id="${item.id}" data-type="${item.type}" data-title="${item.title}">
                             <div class="w-14 h-14 bg-slate-800/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-700">
                                 <i class="fa-solid ${iconClass} text-2xl"></i>
                             </div>
@@ -294,7 +315,125 @@
         }
 
         // ==========================================
-        // 2. WALLPAPERS & SESSIONS
+        // 2. CONTEXT MENUS LOGIC (Background vs Item)
+        // ==========================================
+        const contextMenu = document.getElementById('context-menu');
+        const itemContextMenu = document.getElementById('item-context-menu');
+        let currentSelectedItem = null;
+
+        window.addEventListener('click', () => {
+            contextMenu.classList.add('hidden');
+            itemContextMenu.classList.add('hidden');
+        });
+
+        window.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            contextMenu.classList.add('hidden');
+            itemContextMenu.classList.add('hidden');
+
+            // هل النقر بالزر الأيمن تم على أيقونة سطح المكتب؟
+            const itemElement = e.target.closest('.desktop-item');
+            if (itemElement) {
+                currentSelectedItem = {
+                    id: itemElement.dataset.id,
+                    type: itemElement.dataset.type,
+                    title: itemElement.dataset.title
+                };
+                itemContextMenu.style.top = `${e.clientY}px`;
+                itemContextMenu.style.left = `${e.clientX}px`;
+                itemContextMenu.classList.remove('hidden');
+            } else {
+                // النقر على الفراغ في الخلفية
+                contextMenu.style.top = `${e.clientY}px`;
+                contextMenu.style.left = `${e.clientX}px`;
+                contextMenu.classList.remove('hidden');
+            }
+        });
+
+        // عمليات قائمة الأيقونة (Item Actions)
+        function itemActionOpen() {
+            if (!currentSelectedItem) return;
+            if (currentSelectedItem.type === 'app') {
+                openApp(currentSelectedItem.id);
+            } else {
+                alert(`Opening ${currentSelectedItem.title}`);
+            }
+            itemContextMenu.classList.add('hidden');
+        }
+
+        function itemActionCopy() {
+            if (!currentSelectedItem) return;
+            navigator.clipboard.writeText(currentSelectedItem.title);
+            alert(`Copied "${currentSelectedItem.title}" to clipboard!`);
+            itemContextMenu.classList.add('hidden');
+        }
+
+        function itemActionShortcut() {
+            if (!currentSelectedItem) return;
+            if (currentSelectedItem.type !== 'app') {
+                alert("Shortcuts can only be created for apps.");
+                return;
+            }
+            let userItems = [];
+            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
+            
+            userItems.push({
+                id: currentSelectedItem.id,
+                title: currentSelectedItem.title + " - Shortcut",
+                type: 'app',
+                icon: 'fa-bolt text-white',
+                bg: 'bg-orange-700 border-orange-400/30'
+            });
+            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+            renderDesktopGrid();
+            itemContextMenu.classList.add('hidden');
+        }
+
+        function itemActionRename() {
+            if (!currentSelectedItem) return;
+            const newName = prompt("Enter new name:", currentSelectedItem.title);
+            if (!newName) return;
+
+            if (currentSelectedItem.type === 'app') {
+                alert("Core system apps cannot be renamed.");
+                return;
+            }
+
+            let userItems = [];
+            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
+            
+            userItems = userItems.map(item => {
+                if (item.id === currentSelectedItem.id) {
+                    item.title = newName;
+                }
+                return item;
+            });
+            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+            renderDesktopGrid();
+            itemContextMenu.classList.add('hidden');
+        }
+
+        function itemActionDelete() {
+            if (!currentSelectedItem) return;
+            if (currentSelectedItem.type === 'app') {
+                alert("System apps cannot be deleted.");
+                return;
+            }
+            if (confirm(`Are you sure you want to delete "${currentSelectedItem.title}"?`)) {
+                let userItems = [];
+                try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
+                
+                userItems = userItems.filter(item => item.id !== currentSelectedItem.id);
+                localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+                renderDesktopGrid();
+            }
+            itemContextMenu.classList.add('hidden');
+        }
+
+        function refreshDesktop() { location.reload(); }
+
+        // ==========================================
+        // 3. WALLPAPERS & SESSIONS
         // ==========================================
         const builtInWallpapers = [
             { name: "Sovereign Midnight", value: "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)" },
@@ -317,12 +456,6 @@
             } else if (savedGradient) {
                 osBody.style.backgroundImage = savedGradient;
             }
-        }
-
-        function setPresetWallpaper(cssValue) {
-            localStorage.removeItem('doors_os_custom_wallpaper');
-            localStorage.setItem('doors_os_wallpaper_css', cssValue);
-            applySavedWallpaper();
         }
 
         function handleStudioWallpaperUpload(event) {
@@ -422,7 +555,7 @@
         }
 
         // ==========================================
-        // 3. CLOCK & CONTEXT MENU
+        // 4. CLOCK & NOTIFICATIONS
         // ==========================================
         function updateClock() {
             const now = new Date();
@@ -431,20 +564,6 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        const contextMenu = document.getElementById('context-menu');
-        window.addEventListener('click', () => contextMenu.classList.add('hidden'));
-        window.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            contextMenu.style.top = `${e.clientY}px`;
-            contextMenu.style.left = `${e.clientX}px`;
-            contextMenu.classList.remove('hidden');
-        });
-
-        function refreshDesktop() { location.reload(); }
-
-        // ==========================================
-        // 4. HARDWARE INSTALLER & ISO DOWNLOADS
-        // ==========================================
         function triggerDownloadSimulation(type) {
             const modal = document.getElementById('os-notification');
             const title = document.getElementById('notif-title');
@@ -456,7 +575,7 @@
             progressBar.style.width = '0%';
             btn.classList.add('hidden');
 
-            let fileName = "DoorsOS-v6.6-x86_64.iso.txt";
+            let fileName = "DoorsOS-v6.7-x86_64.iso.txt";
             let bootInfo = "";
 
             if (type === 'clean') {
@@ -524,6 +643,7 @@
 
         function openApp(appKey) {
             const app = appData[appKey];
+            if (!app) return;
             if (app.mode === 'installer') { createInstallerWindow(appKey, app); return; }
             if (app.mode === 'settings') { createSettingsWindow(appKey, app); return; }
             if (app.mode === 'standalone') {
@@ -672,7 +792,7 @@
                             <div class="font-bold text-white">Active Account: <span class="text-orange-400">${savedUser}</span></div>
                             <div class="text-slate-400 mt-0.5">Session persists across browser restarts & device reboots</div>
                         </div>
-                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 px-3.5 py-2 rounded-lg font-bold text-white transition">Switch / Manage</div>
+                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 px-3.5 py-2 rounded-lg font-bold text-white transition">Switch / Manage</button>
                     </div>
                 </div>
             `;
@@ -735,7 +855,7 @@
             document.addEventListener('mouseup', stopDrag);
         }
         function onDrag(e) {
-            if (!activeWindow, activeWindow === null) return;
+            if (!activeWindow) return;
             activeWindow.style.left = `${e.clientX - offsetX}px`;
             activeWindow.style.top = `${e.clientY - offsetY}px`;
         }
