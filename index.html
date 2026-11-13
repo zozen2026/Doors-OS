@@ -202,7 +202,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v6.7</span>
+            <span>Doors OS v6.8</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -235,18 +235,18 @@
         // 1. DESKTOP ITEMS & PERSISTENT STORAGE
         // ==========================================
         const defaultDesktopApps = [
-            { id: 'zozen', title: 'Zozen', icon: 'fa-bolt text-white', bg: 'bg-orange-600 border-orange-400/30', type: 'app' },
-            { id: 'store', title: 'Zozen Store', icon: 'fa-store text-white', bg: 'bg-indigo-600 border-indigo-400/30', type: 'app' },
-            { id: 'installer', title: 'Get Doors OS', icon: 'fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
-            { id: 'browser', title: 'Browser Hub', icon: 'fa-chrome text-white', bg: 'bg-amber-500 border-amber-300/30', type: 'app' },
-            { id: 'gemini', title: 'Gemini', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
-            { id: 'telegram', title: 'Telegram', icon: 'fa-telegram text-white', bg: 'bg-sky-500 border-sky-300/30', type: 'app' },
-            { id: 'youtube', title: 'YouTube', icon: 'fa-youtube text-white', bg: 'bg-red-600 border-red-400/30', type: 'app' },
-            { id: 'facebook', title: 'Facebook', icon: 'fa-facebook-f text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
-            { id: 'tiktok', title: 'TikTok', icon: 'fa-tiktok text-white', bg: 'bg-black border-zinc-700', type: 'app' },
-            { id: 'instagram', title: 'Instagram', icon: 'fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 border-pink-400/30', type: 'app' },
-            { id: 'whatsapp', title: 'WhatsApp', icon: 'fa-whatsapp text-white', bg: 'bg-emerald-600 border-emerald-400/30', type: 'app' },
-            { id: 'settings', title: 'Settings', icon: 'fa-gear text-slate-200', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
+            { id: 'zozen', title: 'Zozen', icon: 'fa-solid fa-bolt text-white', bg: 'bg-orange-600 border-orange-400/30', type: 'app' },
+            { id: 'store', title: 'Zozen Store', icon: 'fa-solid fa-store text-white', bg: 'bg-indigo-600 border-indigo-400/30', type: 'app' },
+            { id: 'installer', title: 'Get Doors OS', icon: 'fa-solid fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
+            { id: 'browser', title: 'Browser Hub', icon: 'fa-brands fa-chrome text-white', bg: 'bg-amber-500 border-amber-300/30', type: 'app' },
+            { id: 'gemini', title: 'Gemini', icon: 'fa-solid fa-wand-magic-sparkles text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
+            { id: 'telegram', title: 'Telegram', icon: 'fa-brands fa-telegram text-white', bg: 'bg-sky-500 border-sky-300/30', type: 'app' },
+            { id: 'youtube', title: 'YouTube', icon: 'fa-brands fa-youtube text-white', bg: 'bg-red-600 border-red-400/30', type: 'app' },
+            { id: 'facebook', title: 'Facebook', icon: 'fa-brands fa-facebook-f text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
+            { id: 'tiktok', title: 'TikTok', icon: 'fa-brands fa-tiktok text-white', bg: 'bg-black border-zinc-700', type: 'app' },
+            { id: 'instagram', title: 'Instagram', icon: 'fa-brands fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 border-pink-400/30', type: 'app' },
+            { id: 'whatsapp', title: 'WhatsApp', icon: 'fa-brands fa-whatsapp text-white', bg: 'bg-emerald-600 border-emerald-400/30', type: 'app' },
+            { id: 'settings', title: 'Settings', icon: 'fa-solid fa-gear text-slate-200', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
         ];
 
         function renderDesktopGrid() {
@@ -263,26 +263,26 @@
             grid.innerHTML = allItems.map(item => {
                 if (item.type === 'app') {
                     return `
-                        <div ondblclick="openApp('${item.id}')" onclick="openApp('${item.id}')" 
+                        <div onclick="openApp('${item.id}')" 
                              class="desktop-item flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition"
                              data-id="${item.id}" data-type="app" data-title="${item.title}">
                             <div class="w-14 h-14 ${item.bg} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border">
-                                <i class="fa-solid ${item.icon} text-2xl"></i>
+                                <i class="${item.icon} text-2xl"></i>
                             </div>
                             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[70px]">${item.title}</span>
                         </div>
                     `;
                 } else {
-                    let iconClass = "fa-folder text-amber-400";
-                    if (item.type === 'txt') iconClass = "fa-file-lines text-sky-400";
-                    if (item.type === 'sheet') iconClass = "fa-file-excel text-emerald-400";
+                    let iconClass = "fa-solid fa-folder text-amber-400";
+                    if (item.type === 'txt') iconClass = "fa-solid fa-file-lines text-sky-400";
+                    if (item.type === 'sheet') iconClass = "fa-solid fa-file-excel text-emerald-400";
 
                     return `
-                        <div ondblclick="alert('Opening ${item.title}')" onclick="alert('Selected ${item.title}')" 
+                        <div onclick="alert('Opening ${item.title}')" 
                              class="desktop-item flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition relative"
                              data-id="${item.id}" data-type="${item.type}" data-title="${item.title}">
                             <div class="w-14 h-14 bg-slate-800/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-700">
-                                <i class="fa-solid ${iconClass} text-2xl"></i>
+                                <i class="${iconClass} text-2xl"></i>
                             </div>
                             <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[70px]">${item.title}</span>
                         </div>
@@ -331,7 +331,6 @@
             contextMenu.classList.add('hidden');
             itemContextMenu.classList.add('hidden');
 
-            // هل النقر بالزر الأيمن تم على أيقونة سطح المكتب؟
             const itemElement = e.target.closest('.desktop-item');
             if (itemElement) {
                 currentSelectedItem = {
@@ -343,14 +342,12 @@
                 itemContextMenu.style.left = `${e.clientX}px`;
                 itemContextMenu.classList.remove('hidden');
             } else {
-                // النقر على الفراغ في الخلفية
                 contextMenu.style.top = `${e.clientY}px`;
                 contextMenu.style.left = `${e.clientX}px`;
                 contextMenu.classList.remove('hidden');
             }
         });
 
-        // عمليات قائمة الأيقونة (Item Actions)
         function itemActionOpen() {
             if (!currentSelectedItem) return;
             if (currentSelectedItem.type === 'app') {
@@ -370,19 +367,16 @@
 
         function itemActionShortcut() {
             if (!currentSelectedItem) return;
-            if (currentSelectedItem.type !== 'app') {
-                alert("Shortcuts can only be created for apps.");
-                return;
-            }
+            const origApp = defaultDesktopApps.find(a => a.id === currentSelectedItem.id);
             let userItems = [];
             try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
             
             userItems.push({
                 id: currentSelectedItem.id,
                 title: currentSelectedItem.title + " - Shortcut",
-                type: 'app',
-                icon: 'fa-bolt text-white',
-                bg: 'bg-orange-700 border-orange-400/30'
+                type: currentSelectedItem.type,
+                icon: origApp ? origApp.icon : 'fa-solid fa-link text-amber-400',
+                bg: origApp ? origApp.bg : 'bg-slate-800 border-slate-600'
             });
             localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
             renderDesktopGrid();
@@ -415,15 +409,15 @@
 
         function itemActionDelete() {
             if (!currentSelectedItem) return;
-            if (currentSelectedItem.type === 'app') {
-                alert("System apps cannot be deleted.");
+            if (currentSelectedItem.type === 'app' && !currentSelectedItem.title.includes('Shortcut')) {
+                alert("Core system apps cannot be deleted.");
                 return;
             }
             if (confirm(`Are you sure you want to delete "${currentSelectedItem.title}"?`)) {
                 let userItems = [];
                 try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
                 
-                userItems = userItems.filter(item => item.id !== currentSelectedItem.id);
+                userItems = userItems.filter(item => item.id !== currentSelectedItem.id && item.title !== currentSelectedItem.title);
                 localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
                 renderDesktopGrid();
             }
@@ -458,6 +452,13 @@
             }
         }
 
+        function setPresetWallpaper(cssValue) {
+            localStorage.removeItem('doors_os_custom_wallpaper');
+            localStorage.setItem('doors_os_wallpaper_css', cssValue);
+            applySavedWallpaper();
+            if (activeSettingsTab === 'personalization') refreshSettingsContent();
+        }
+
         function handleStudioWallpaperUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -469,6 +470,7 @@
                     localStorage.setItem('doors_os_custom_wallpaper', imgDataUrl);
                     localStorage.removeItem('doors_os_wallpaper_css');
                     applySavedWallpaper();
+                    if (activeSettingsTab === 'personalization') refreshSettingsContent();
                 } catch (err) {
                     compressAndSaveWallpaper(imgDataUrl);
                 }
@@ -489,6 +491,7 @@
                 const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                 localStorage.setItem('doors_os_custom_wallpaper', compressedDataUrl);
                 applySavedWallpaper();
+                if (activeSettingsTab === 'personalization') refreshSettingsContent();
             };
             img.src = dataUrl;
         }
@@ -529,6 +532,10 @@
 
             applySavedWallpaper();
             renderDesktopGrid();
+
+            const hideIcons = localStorage.getItem('doors_os_hide_icons') === 'true';
+            document.getElementById('desktop-grid').style.opacity = hideIcons ? '0' : '1';
+            document.getElementById('desktop-grid').style.pointerEvents = hideIcons ? 'none' : 'auto';
         }
 
         document.addEventListener('DOMContentLoaded', initSystemSession);
@@ -545,6 +552,7 @@
             localStorage.setItem('doors_os_logged_in', 'true');
             initSystemSession();
             closeAuthModal();
+            if (document.getElementById('win-settings')) refreshSettingsContent();
         }
 
         function handleLogout() {
@@ -552,6 +560,7 @@
             localStorage.removeItem('doors_os_logged_in');
             initSystemSession();
             closeAuthModal();
+            if (document.getElementById('win-settings')) refreshSettingsContent();
         }
 
         // ==========================================
@@ -575,7 +584,7 @@
             progressBar.style.width = '0%';
             btn.classList.add('hidden');
 
-            let fileName = "DoorsOS-v6.7-x86_64.iso.txt";
+            let fileName = "DoorsOS-v6.8-x86_64.iso.txt";
             let bootInfo = "";
 
             if (type === 'clean') {
@@ -627,18 +636,18 @@
         window.zIndexCounter = 10;
 
         const appData = {
-            'zozen': { title: 'Zozen App', icon: 'fa-bolt text-orange-400', url: 'https://zozen.vercel.app', mode: 'internal' },
-            'store': { title: 'Zozen Store', icon: 'fa-store text-indigo-400', url: 'https://zozen2026.github.io/Zozen-store/', mode: 'internal' },
-            'installer': { title: 'Doors OS Hardware Installer Hub', icon: 'fa-compact-disc text-orange-400', mode: 'installer' },
-            'browser': { title: 'Browser Hub', icon: 'fa-chrome text-amber-400', url: 'https://www.google.com', mode: 'browser' },
-            'gemini': { title: 'Google Gemini', icon: 'fa-wand-magic-sparkles text-blue-400', url: 'https://gemini.google.com', mode: 'standalone' },
-            'telegram': { title: 'Telegram Web', icon: 'fa-telegram text-sky-400', url: 'https://web.telegram.org', mode: 'standalone' },
-            'youtube': { title: 'YouTube', icon: 'fa-youtube text-red-500', url: 'https://www.youtube.com', mode: 'standalone' },
-            'facebook': { title: 'Facebook', icon: 'fa-facebook-f text-blue-500', url: 'https://www.facebook.com', mode: 'standalone' },
-            'tiktok': { title: 'TikTok', icon: 'fa-tiktok text-white', url: 'https://www.tiktok.com', mode: 'standalone' },
-            'instagram': { title: 'Instagram', icon: 'fa-instagram text-pink-500', url: 'https://www.instagram.com', mode: 'standalone' },
-            'whatsapp': { title: 'WhatsApp Web', icon: 'fa-whatsapp text-emerald-500', url: 'https://web.whatsapp.com', mode: 'standalone' },
-            'settings': { title: 'System Settings', icon: 'fa-gear text-orange-400', mode: 'settings' }
+            'zozen': { title: 'Zozen App', icon: 'fa-solid fa-bolt text-orange-400', url: 'https://zozen.vercel.app', mode: 'internal' },
+            'store': { title: 'Zozen Store', icon: 'fa-solid fa-store text-indigo-400', url: 'https://zozen2026.github.io/Zozen-store/', mode: 'internal' },
+            'installer': { title: 'Doors OS Hardware Installer Hub', icon: 'fa-solid fa-compact-disc text-orange-400', mode: 'installer' },
+            'browser': { title: 'Browser Hub', icon: 'fa-brands fa-chrome text-amber-400', url: 'https://www.google.com', mode: 'browser' },
+            'gemini': { title: 'Google Gemini', icon: 'fa-solid fa-wand-magic-sparkles text-blue-400', url: 'https://gemini.google.com', mode: 'standalone' },
+            'telegram': { title: 'Telegram Web', icon: 'fa-brands fa-telegram text-sky-400', url: 'https://web.telegram.org', mode: 'standalone' },
+            'youtube': { title: 'YouTube', icon: 'fa-brands fa-youtube text-red-500', url: 'https://www.youtube.com', mode: 'standalone' },
+            'facebook': { title: 'Facebook', icon: 'fa-brands fa-facebook-f text-blue-500', url: 'https://www.facebook.com', mode: 'standalone' },
+            'tiktok': { title: 'TikTok', icon: 'fa-brands fa-tiktok text-white', url: 'https://www.tiktok.com', mode: 'standalone' },
+            'instagram': { title: 'Instagram', icon: 'fa-brands fa-instagram text-pink-500', url: 'https://www.instagram.com', mode: 'standalone' },
+            'whatsapp': { title: 'WhatsApp Web', icon: 'fa-brands fa-whatsapp text-emerald-500', url: 'https://web.whatsapp.com', mode: 'standalone' },
+            'settings': { title: 'System Settings', icon: 'fa-solid fa-gear text-orange-400', mode: 'settings' }
         };
 
         function openApp(appKey) {
@@ -681,7 +690,7 @@
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -717,7 +726,7 @@
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-white">${app.title}</span>
                     </div>
                     <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
@@ -762,6 +771,11 @@
             addTaskbarIcon(appKey);
         }
 
+        // ==========================================
+        // 6. FULL INTEGRATED SETTINGS WINDOW
+        // ==========================================
+        let activeSettingsTab = 'personalization';
+
         function createSettingsWindow(appKey, app) {
             const existingWin = document.getElementById(`win-${appKey}`);
             if (existingWin) {
@@ -772,38 +786,191 @@
 
             const winDiv = document.createElement('div');
             winDiv.id = `win-${appKey}`;
-            winDiv.className = 'window absolute top-20 left-32 w-[650px] h-[450px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
+            winDiv.className = 'window absolute top-14 left-24 w-[820px] h-[540px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
             winDiv.onclick = () => bringToFront(winDiv);
-
-            const savedUser = localStorage.getItem('doors_os_user') || 'Guest User';
 
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid ${app.icon}"></i>
+                        <i class="${app.icon}"></i>
                         <span class="font-bold text-sm text-slate-200">${app.title}</span>
                     </div>
-                    <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
-                </div>
-                <div class="flex-1 p-6 text-slate-200 space-y-4">
-                    <h3 class="font-bold text-sm text-orange-400 border-b border-slate-800 pb-2">System Preferences & Persistent Session</h3>
-                    <div class="flex items-center justify-between bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
-                        <div>
-                            <div class="font-bold text-white">Active Account: <span class="text-orange-400">${savedUser}</span></div>
-                            <div class="text-slate-400 mt-0.5">Session persists across browser restarts & device reboots</div>
-                        </div>
-                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 px-3.5 py-2 rounded-lg font-bold text-white transition">Switch / Manage</button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="minimizeWindow('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-solid fa-minus text-xs"></i></button>
+                        <button onclick="toggleMaximize('${winDiv.id}')" class="w-6 h-6 rounded-lg hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition"><i class="fa-regular fa-square text-xs"></i></button>
+                        <button onclick="closeWindow('${winDiv.id}', '${appKey}')" class="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-600 flex items-center justify-center text-red-400 hover:text-white transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                     </div>
+                </div>
+                <div class="flex-1 flex overflow-hidden">
+                    <div class="w-56 bg-slate-950/80 border-r border-slate-800 p-4 flex flex-col gap-1.5 text-xs">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-3 mb-1">Control Panel</div>
+                        <button onclick="switchSettingsTab('personalization')" id="tab-btn-personalization" class="settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium transition bg-orange-600 text-white">
+                            <i class="fa-solid fa-paintbrush w-4"></i> Personalization & Studio
+                        </button>
+                        <button onclick="switchSettingsTab('accounts')" id="tab-btn-accounts" class="settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-user-shield w-4"></i> Accounts & Session
+                        </button>
+                        <button onclick="switchSettingsTab('desktop')" id="tab-btn-desktop" class="settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-desktop w-4"></i> Display & Desktop
+                        </button>
+                        <button onclick="switchSettingsTab('about')" id="tab-btn-about" class="settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                            <i class="fa-solid fa-microchip w-4"></i> System & Hardware
+                        </button>
+                    </div>
+                    <div id="settings-content-area" class="flex-1 p-6 overflow-y-auto text-slate-200"></div>
                 </div>
             `;
 
             document.getElementById('windows-container').appendChild(winDiv);
             bringToFront(winDiv);
             addTaskbarIcon(appKey);
+            switchSettingsTab('personalization');
+        }
+
+        function switchSettingsTab(tabName) {
+            activeSettingsTab = tabName;
+            document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+                btn.className = "settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition";
+            });
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = "settings-tab-btn w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 font-bold transition bg-orange-600 text-white shadow-lg";
+            }
+            refreshSettingsContent();
+        }
+
+        function refreshSettingsContent() {
+            const container = document.getElementById('settings-content-area');
+            if (!container) return;
+
+            const savedUser = localStorage.getItem('doors_os_user') || 'Guest User';
+            const isLoggedIn = localStorage.getItem('doors_os_logged_in') === 'true';
+            const customImg = localStorage.getItem('doors_os_custom_wallpaper');
+            const currentBgStyle = document.getElementById('os-body').style.backgroundImage;
+
+            if (activeSettingsTab === 'personalization') {
+                let presetsHtml = builtInWallpapers.map((wp) => `
+                    <div onclick="setPresetWallpaper('${wp.value}')" class="cursor-pointer group rounded-xl overflow-hidden border border-slate-700 hover:border-orange-500 transition relative h-20 shadow-md" style="background-image: ${wp.value};">
+                        <div class="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-sm px-2 py-1 text-[10px] text-slate-200 truncate">${wp.name}</div>
+                    </div>
+                `).join('');
+
+                container.innerHTML = `
+                    <h2 class="text-lg font-bold text-white mb-1">Personalization & Studio Wallpaper</h2>
+                    <p class="text-xs text-slate-400 mb-5">Choose an image directly from your device's Studio/Gallery. It will stay saved permanently.</p>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row items-center gap-5">
+                        <div class="w-48 h-28 rounded-xl border border-slate-700 bg-cover bg-center shadow-inner flex-shrink-0 relative overflow-hidden" style="background-image: ${currentBgStyle};">
+                            <span class="absolute bottom-1.5 left-2 bg-black/70 text-[10px] px-2 py-0.5 rounded text-white">Active Desktop</span>
+                        </div>
+                        <div class="flex-1 space-y-2.5 text-center sm:text-left">
+                            <h3 class="font-bold text-sm text-white">Select Photo from Studio / Gallery</h3>
+                            <p class="text-xs text-slate-400">Supports JPG, PNG, WebP. Automatically saved to your sovereign persistent profile.</p>
+                            <div class="flex flex-wrap gap-2 justify-center sm:justify-start pt-1">
+                                <button onclick="document.getElementById('studio-wallpaper-input').click()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 transition shadow-lg">
+                                    <i class="fa-solid fa-folder-open"></i> Browse Studio Photos
+                                </button>
+                                ${customImg ? `<button onclick="setPresetWallpaper(builtInWallpapers[0].value)" class="bg-slate-800 hover:bg-red-600/80 text-slate-200 hover:text-white px-3 py-2 rounded-xl text-xs transition">Reset Default</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">Built-in Sovereign Themes</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        ${presetsHtml}
+                    </div>
+                `;
+            } 
+            else if (activeSettingsTab === 'accounts') {
+                container.innerHTML = `
+                    <h2 class="text-lg font-bold text-white mb-1">Accounts & Persistent Session</h2>
+                    <p class="text-xs text-slate-400 mb-5">Manage your Doors OS sovereign profile and session persistence.</p>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-orange-600 rounded-2xl flex items-center justify-center text-2xl font-bold text-white shadow-lg">
+                                ${savedUser.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="font-bold text-base text-white">${savedUser}</div>
+                                <div class="text-xs ${isLoggedIn ? 'text-emerald-400' : 'text-slate-400'} mt-0.5">
+                                    ${isLoggedIn ? '● Signed In (Session Saved Permanently)' : '● Guest Mode (Not Signed In)'}
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition">
+                            ${isLoggedIn ? 'Switch Account' : 'Sign In Now'}
+                        </button>
+                    </div>
+                `;
+            }
+            else if (activeSettingsTab === 'desktop') {
+                const hideIcons = localStorage.getItem('doors_os_hide_icons') === 'true';
+                container.innerHTML = `
+                    <h2 class="text-lg font-bold text-white mb-1">Display & Desktop Behavior</h2>
+                    <p class="text-xs text-slate-400 mb-5">Customize desktop workspace icons and layout.</p>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                            <div>
+                                <div class="font-bold text-white">Show Desktop Icons</div>
+                                <div class="text-slate-400 mt-0.5">Display application shortcuts on the main desktop wallpaper</div>
+                            </div>
+                            <button onclick="toggleDesktopIcons()" class="px-4 py-2 rounded-xl font-bold transition ${!hideIcons ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300'}">
+                                ${!hideIcons ? 'Enabled' : 'Hidden'}
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                            <div>
+                                <div class="font-bold text-white">Screen Resolution</div>
+                                <div class="text-slate-400 mt-0.5">Current active viewport dimensions</div>
+                            </div>
+                            <span class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg font-mono text-orange-400">${window.innerWidth} x ${window.innerHeight}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            else if (activeSettingsTab === 'about') {
+                container.innerHTML = `
+                    <h2 class="text-lg font-bold text-white mb-1">System & Hardware Specifications</h2>
+                    <p class="text-xs text-slate-400 mb-5">Doors OS Sovereign Environment diagnostics.</p>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3 text-xs">
+                        <div class="flex justify-between py-1.5 border-b border-slate-900">
+                            <span class="text-slate-400">Operating System</span>
+                            <span class="font-bold text-orange-400">Doors OS v6.8 Sovereign Edition</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-slate-900">
+                            <span class="text-slate-400">Architecture</span>
+                            <span class="font-bold text-white">x86_64 / Dual-Boot & Native Ready</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-slate-900">
+                            <span class="text-slate-400">Logical CPU Cores</span>
+                            <span class="font-bold text-white">${navigator.hardwareConcurrency || 4} Cores Detected</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-slate-900">
+                            <span class="text-slate-400">Default App Store</span>
+                            <span class="font-bold text-indigo-400">Zozen Store Integrated</span>
+                        </div>
+                        <div class="flex justify-between py-1.5">
+                            <span class="text-slate-400">Session Persistence</span>
+                            <span class="font-bold text-emerald-400">Active (Survives Reboot)</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleDesktopIcons() {
+            const current = localStorage.getItem('doors_os_hide_icons') === 'true';
+            localStorage.setItem('doors_os_hide_icons', (!current).toString());
+            initSystemSession();
+            refreshSettingsContent();
         }
 
         // ==========================================
-        // 6. WINDOW MANAGEMENT
+        // 7. WINDOW MANAGEMENT
         // ==========================================
         function bringToFront(win) {
             window.zIndexCounter++;
@@ -830,7 +997,7 @@
             const btn = document.createElement('button');
             btn.id = `tb-${appKey}`;
             btn.className = 'h-9 px-3 bg-slate-800/80 hover:bg-slate-700 rounded-xl text-xs font-medium flex items-center gap-2 border border-slate-700 text-slate-200 transition';
-            btn.innerHTML = `<i class="fa-solid ${app.icon}"></i><span>${app.title.split(' ')[0]}</span>`;
+            btn.innerHTML = `<i class="${app.icon}"></i><span>${app.title.split(' ')[0]}</span>`;
             btn.onclick = () => {
                 const win = document.getElementById(`win-${appKey}`);
                 if (win.style.display === 'none') win.style.display = 'flex';
