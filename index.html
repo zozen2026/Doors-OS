@@ -315,7 +315,7 @@
         }
 
         // ==========================================
-        // 2. CONTEXT MENUS LOGIC (Background vs Item)
+        // 2. CONTEXT MENUS LOGIC & DELETE PROTECTION
         // ==========================================
         const contextMenu = document.getElementById('context-menu');
         const itemContextMenu = document.getElementById('item-context-menu');
@@ -409,11 +409,17 @@
 
         function itemActionDelete() {
             if (!currentSelectedItem) return;
-            if (currentSelectedItem.type === 'app' && !currentSelectedItem.title.includes('Shortcut')) {
+
+            // حماية تامة للتطبيقات الافتراضية للنظام من الحذف
+            const isDefaultApp = defaultDesktopApps.some(a => a.id === currentSelectedItem.id);
+            if (isDefaultApp && !currentSelectedItem.title.includes('Shortcut')) {
                 alert("Core system apps cannot be deleted.");
+                itemContextMenu.classList.add('hidden');
                 return;
             }
-            if (confirm(`Are you sure you want to delete "${currentSelectedItem.title}"?`)) {
+
+            // رسالة تأكيد لطيفة قبل حذف الملفات والمجلدات المضافة
+            if (confirm(`هل أنت متأكد من حذف "${currentSelectedItem.title}"؟`)) {
                 let userItems = [];
                 try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
                 
@@ -421,6 +427,7 @@
                 localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
                 renderDesktopGrid();
             }
+            
             itemContextMenu.classList.add('hidden');
         }
 
