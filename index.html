@@ -30,119 +30,57 @@
             height: 100%;
             border: none;
         }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(249, 115, 22, 0.8); }
     </style>
 </head>
-<body id="os-body" class="h-screen w-screen text-white flex flex-col justify-between relative bg-cover bg-center transition-all duration-500" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
+<body id="os-body" class="h-screen w-screen text-white flex flex-col justify-between relative bg-cover bg-center bg-no-repeat transition-all duration-500" style="background-image: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);">
 
-    <!-- Desktop Icons Grid -->
-    <div class="p-6 grid grid-cols-4 sm:grid-cols-6 gap-5 w-fit z-0">
-        <!-- 1. Zozen -->
-        <div onclick="openApp('zozen')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-orange-400/30">
-                <i class="fa-solid fa-bolt text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen</span>
-        </div>
-
-        <!-- 2. Zozen Store -->
-        <div onclick="openApp('store')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-indigo-400/30">
-                <i class="fa-solid fa-store text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Zozen Store</span>
-        </div>
-
-        <!-- 3. System Installer Hub -->
-        <div onclick="openApp('installer')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-orange-300/40 animate-pulse">
-                <i class="fa-solid fa-compact-disc text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-orange-400 font-bold drop-shadow">Get Doors OS</span>
-        </div>
-
-        <!-- 4. Browser Hub -->
-        <div onclick="openApp('browser')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-amber-300/30">
-                <i class="fa-brands fa-chrome text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Browser Hub</span>
-        </div>
-
-        <!-- 5. Google Gemini -->
-        <div onclick="openApp('gemini')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-blue-400/30" style="background: linear-gradient(135deg, #1a73e8 0%, #8ab4f8 50%, #c5221f 100%);">
-                <i class="fa-solid fa-wand-magic-sparkles text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Gemini</span>
-        </div>
-
-        <!-- 6. Telegram -->
-        <div onclick="openApp('telegram')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-sky-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-sky-300/30">
-                <i class="fa-brands fa-telegram text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Telegram</span>
-        </div>
-
-        <!-- 7. YouTube -->
-        <div onclick="openApp('youtube')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-red-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-red-400/30">
-                <i class="fa-brands fa-youtube text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">YouTube</span>
-        </div>
-
-        <!-- 8. Facebook -->
-        <div onclick="openApp('facebook')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-blue-400/30">
-                <i class="fa-brands fa-facebook-f text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Facebook</span>
-        </div>
-
-        <!-- 9. TikTok -->
-        <div onclick="openApp('tiktok')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-zinc-700">
-                <i class="fa-brands fa-tiktok text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">TikTok</span>
-        </div>
-
-        <!-- 10. Instagram -->
-        <div onclick="openApp('instagram')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-pink-400/30">
-                <i class="fa-brands fa-instagram text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Instagram</span>
-        </div>
-
-        <!-- 11. WhatsApp -->
-        <div onclick="openApp('whatsapp')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-emerald-400/30">
-                <i class="fa-brands fa-whatsapp text-2xl text-white"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">WhatsApp</span>
-        </div>
-
-        <!-- 12. Settings -->
-        <div onclick="openApp('settings')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
-            <div class="w-14 h-14 bg-slate-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-500/30">
-                <i class="fa-solid fa-gear text-2xl text-slate-200"></i>
-            </div>
-            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow">Settings</span>
-        </div>
+    <!-- Dynamic Desktop Icons Grid -->
+    <div id="desktop-grid" class="p-6 grid grid-cols-4 sm:grid-cols-6 gap-5 w-fit z-0 transition-opacity duration-300">
+        <!-- يتم تعبئة الأيقونات ديناميكياً بواسطة JavaScript -->
     </div>
+
+    <!-- Hidden File Input for Studio Wallpaper -->
+    <input type="file" id="studio-wallpaper-input" accept="image/*" class="hidden" onchange="handleStudioWallpaperUpload(event)">
 
     <!-- Windows Container -->
     <div id="windows-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
-    <!-- Right-Click Context Menu -->
-    <div id="context-menu" class="absolute hidden w-52 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
+    <!-- Right-Click Context Menu with "New +" Submenu -->
+    <div id="context-menu" class="absolute hidden w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
         <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-rotate"></i> Refresh System
         </button>
-        <button onclick="changeWallpaper()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-image"></i> Change Wallpaper
+        
+        <!-- New + Dropdown Parent -->
+        <div class="relative group">
+            <button class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center justify-between transition">
+                <span class="flex items-center gap-3"><i class="fa-solid fa-plus text-orange-400"></i> New +</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+            <!-- Submenu -->
+            <div class="absolute left-full top-0 ml-1.5 hidden group-hover:block w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 text-slate-200 text-xs z-50">
+                <button onclick="createNewDesktopItem('folder')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+                    <i class="fa-solid fa-folder text-amber-400"></i> New Folder
+                </button>
+                <button onclick="createNewDesktopItem('txt')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+                    <i class="fa-solid fa-file-lines text-sky-400"></i> Text Document (.txt)
+                </button>
+                <button onclick="createNewDesktopItem('sheet')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+                    <i class="fa-solid fa-file-excel text-emerald-400"></i> Spreadsheet (.xls)
+                </button>
+            </div>
+        </div>
+
+        <button onclick="document.getElementById('studio-wallpaper-input').click()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-images text-orange-400"></i> Set Wallpaper from Studio
+        </button>
+        <button onclick="openApp('settings')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+            <i class="fa-solid fa-sliders"></i> Personalize & Settings
         </button>
         <div class="h-px bg-slate-800 my-1"></div>
         <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition font-bold">
@@ -162,7 +100,6 @@
             <h3 id="notif-title" class="font-bold text-base text-white mb-1">Preparing ISO Package</h3>
             <p id="notif-desc" class="text-xs text-slate-400 mb-4">Building bootloader configuration and system images...</p>
             
-            <!-- Progress Bar -->
             <div class="w-full bg-slate-950 rounded-full h-2.5 mb-4 border border-slate-800 overflow-hidden">
                 <div id="notif-progress" class="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
             </div>
@@ -246,13 +183,13 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v6.4</span>
+            <span>Doors OS v6.6</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
 
     <!-- Taskbar -->
-    <div class="h-14 bg-slate-900/80 backdrop-blur-md border-t border-slate-800 px-4 flex items-center justify-between z-40">
+    <div id="os-taskbar" class="h-14 bg-slate-900/80 backdrop-blur-md border-t border-slate-800 px-4 flex items-center justify-between z-40 transition-all">
         <div class="flex items-center gap-3">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
                 <i class="fa-solid fa-door-open text-lg"></i>
@@ -276,18 +213,154 @@
 
     <script>
         // ==========================================
-        // 1. PERSISTENT SYSTEM SESSION & STATE
+        // 1. DESKTOP ITEMS & PERSISTENT STORAGE
         // ==========================================
-        const wallpapers = [
-            "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)",
-            "radial-gradient(circle at center, #3b1e29 0%, #160909 100%)",
-            "radial-gradient(circle at center, #1e3b29 0%, #09160d 100%)",
-            "linear-gradient(to bottom right, #0f172a, #311042)"
+        const defaultDesktopApps = [
+            { id: 'zozen', title: 'Zozen', icon: 'fa-bolt text-white', bg: 'bg-orange-600 border-orange-400/30', type: 'app' },
+            { id: 'store', title: 'Zozen Store', icon: 'fa-store text-white', bg: 'bg-indigo-600 border-indigo-400/30', type: 'app' },
+            { id: 'installer', title: 'Get Doors OS', icon: 'fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
+            { id: 'browser', title: 'Browser Hub', icon: 'fa-chrome text-white', bg: 'bg-amber-500 border-amber-300/30', type: 'app' },
+            { id: 'gemini', title: 'Gemini', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
+            { id: 'telegram', title: 'Telegram', icon: 'fa-telegram text-white', bg: 'bg-sky-500 border-sky-300/30', type: 'app' },
+            { id: 'youtube', title: 'YouTube', icon: 'fa-youtube text-white', bg: 'bg-red-600 border-red-400/30', type: 'app' },
+            { id: 'facebook', title: 'Facebook', icon: 'fa-facebook-f text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
+            { id: 'tiktok', title: 'TikTok', icon: 'fa-tiktok text-white', bg: 'bg-black border-zinc-700', type: 'app' },
+            { id: 'instagram', title: 'Instagram', icon: 'fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 border-pink-400/30', type: 'app' },
+            { id: 'whatsapp', title: 'WhatsApp', icon: 'fa-whatsapp text-white', bg: 'bg-emerald-600 border-emerald-400/30', type: 'app' },
+            { id: 'settings', title: 'Settings', icon: 'fa-gear text-slate-200', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
         ];
-        let currentWp = 0;
+
+        function renderDesktopGrid() {
+            const grid = document.getElementById('desktop-grid');
+            if (!grid) return;
+
+            // استرجاع العناصر المخصصة التي أضافها المستخدم عبر New +
+            let userItems = [];
+            try {
+                userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || [];
+            } catch(e) { userItems = []; }
+
+            const allItems = [...defaultDesktopApps, ...userItems];
+            
+            grid.innerHTML = allItems.map(item => {
+                if (item.type === 'app') {
+                    return `
+                        <div onclick="openApp('${item.id}')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition">
+                            <div class="w-14 h-14 ${item.bg} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border">
+                                <i class="fa-solid ${item.icon} text-2xl"></i>
+                            </div>
+                            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[70px]">${item.title}</span>
+                        </div>
+                    `;
+                } else {
+                    // Custom user created item (Folder, Txt, Sheet)
+                    let iconClass = "fa-folder text-amber-400";
+                    if (item.type === 'txt') iconClass = "fa-file-lines text-sky-400";
+                    if (item.type === 'sheet') iconClass = "fa-file-excel text-emerald-400";
+
+                    return `
+                        <div onclick="alert('Opening user item: ${item.title}')" class="flex flex-col items-center cursor-pointer group p-2 rounded-xl hover:bg-white/10 transition relative">
+                            <div class="w-14 h-14 bg-slate-800/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-700">
+                                <i class="fa-solid ${iconClass} text-2xl"></i>
+                            </div>
+                            <span class="text-xs mt-2 text-slate-200 font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[70px]">${item.title}</span>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function createNewDesktopItem(type) {
+            let defaultName = "New Folder";
+            if (type === 'txt') defaultName = "New Document.txt";
+            if (type === 'sheet') defaultName = "New Spreadsheet.xls";
+
+            const name = prompt("Enter name for the new item:", defaultName);
+            if (!name) return;
+
+            let userItems = [];
+            try {
+                userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || [];
+            } catch(e) { userItems = []; }
+
+            userItems.push({
+                id: 'custom_' + Date.now(),
+                title: name,
+                type: type
+            });
+
+            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+            renderDesktopGrid();
+        }
+
+        // ==========================================
+        // 2. WALLPAPERS & SESSIONS
+        // ==========================================
+        const builtInWallpapers = [
+            { name: "Sovereign Midnight", value: "radial-gradient(circle at center, #1e293b 0%, #090d16 100%)" },
+            { name: "Crimson Nebula", value: "radial-gradient(circle at center, #3b1e29 0%, #160909 100%)" },
+            { name: "Emerald Matrix", value: "radial-gradient(circle at center, #1e3b29 0%, #09160d 100%)" },
+            { name: "Cosmic Purple", value: "linear-gradient(to bottom right, #0f172a, #311042)" },
+            { name: "Solar Flare", value: "linear-gradient(135deg, #1f1209 0%, #7c2d12 50%, #090d16 100%)" },
+            { name: "Deep Ocean", value: "linear-gradient(135deg, #082f49 0%, #0f172a 100%)" }
+        ];
+
+        function applySavedWallpaper() {
+            const customImg = localStorage.getItem('doors_os_custom_wallpaper');
+            const savedGradient = localStorage.getItem('doors_os_wallpaper_css');
+            const osBody = document.getElementById('os-body');
+
+            if (customImg) {
+                osBody.style.backgroundImage = `url('${customImg}')`;
+                osBody.style.backgroundSize = "cover";
+                osBody.style.backgroundPosition = "center";
+            } else if (savedGradient) {
+                osBody.style.backgroundImage = savedGradient;
+            }
+        }
+
+        function setPresetWallpaper(cssValue) {
+            localStorage.removeItem('doors_os_custom_wallpaper');
+            localStorage.setItem('doors_os_wallpaper_css', cssValue);
+            applySavedWallpaper();
+        }
+
+        function handleStudioWallpaperUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgDataUrl = e.target.result;
+                try {
+                    localStorage.setItem('doors_os_custom_wallpaper', imgDataUrl);
+                    localStorage.removeItem('doors_os_wallpaper_css');
+                    applySavedWallpaper();
+                } catch (err) {
+                    compressAndSaveWallpaper(imgDataUrl);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function compressAndSaveWallpaper(dataUrl) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const maxWidth = 1920;
+                const scale = Math.min(1, maxWidth / img.width);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                localStorage.setItem('doors_os_custom_wallpaper', compressedDataUrl);
+                applySavedWallpaper();
+            };
+            img.src = dataUrl;
+        }
 
         function initSystemSession() {
-            // استرجاع حساب المستخدم
             const savedUser = localStorage.getItem('doors_os_user');
             const isLoggedIn = localStorage.getItem('doors_os_logged_in');
 
@@ -321,39 +394,22 @@
                 if (authInput) authInput.value = "";
             }
 
-            // استرجاع الخلفية المحفوظة إن وجدت
-            const savedWpIndex = localStorage.getItem('doors_os_wallpaper');
-            if (savedWpIndex !== null && wallpapers[savedWpIndex]) {
-                currentWp = parseInt(savedWpIndex, 10);
-                document.getElementById('os-body').style.backgroundImage = wallpapers[currentWp];
-            }
+            applySavedWallpaper();
+            renderDesktopGrid();
         }
 
-        // تشغيل الاسترجاع الفوري عند تحميل المستند
         document.addEventListener('DOMContentLoaded', initSystemSession);
 
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
         function handleAuthSubmit() {
             const userInput = document.getElementById('auth-user');
             const user = userInput ? userInput.value.trim() : "";
-            
-            if (!user) {
-                alert("Please enter a valid username or email.");
-                return;
-            }
+            if (!user) { alert("Please enter a valid username or email."); return; }
 
-            // حفظ دائم في المتصفح
             localStorage.setItem('doors_os_user', user);
             localStorage.setItem('doors_os_logged_in', 'true');
-
-            // تحديث الواجهة فوراً
             initSystemSession();
             closeAuthModal();
         }
@@ -366,7 +422,7 @@
         }
 
         // ==========================================
-        // 2. CLOCK, WALLPAPER & CONTEXT MENU
+        // 3. CLOCK & CONTEXT MENU
         // ==========================================
         function updateClock() {
             const now = new Date();
@@ -384,18 +440,10 @@
             contextMenu.classList.remove('hidden');
         });
 
-        function refreshDesktop() {
-            location.reload();
-        }
-
-        function changeWallpaper() {
-            currentWp = (currentWp + 1) % wallpapers.length;
-            document.getElementById('os-body').style.backgroundImage = wallpapers[currentWp];
-            localStorage.setItem('doors_os_wallpaper', currentWp.toString());
-        }
+        function refreshDesktop() { location.reload(); }
 
         // ==========================================
-        // 3. HARDWARE INSTALLER & ISO DOWNLOADS
+        // 4. HARDWARE INSTALLER & ISO DOWNLOADS
         // ==========================================
         function triggerDownloadSimulation(type) {
             const modal = document.getElementById('os-notification');
@@ -408,7 +456,7 @@
             progressBar.style.width = '0%';
             btn.classList.add('hidden');
 
-            let fileName = "DoorsOS-v6.4-x86_64.iso";
+            let fileName = "DoorsOS-v6.6-x86_64.iso.txt";
             let bootInfo = "";
 
             if (type === 'clean') {
@@ -430,10 +478,9 @@
                 if (progress >= 100) {
                     clearInterval(interval);
                     title.innerText = "Package Ready & Downloaded!";
-                    desc.innerText = "Bootloader configuration file has been generated for USB flashing (Rufus / Ventoy).";
+                    desc.innerText = "Bootloader configuration file has been generated for USB flashing.";
                     btn.classList.remove('hidden');
 
-                    // تنزيل ملف إعداد الإقلاع فعلياً على جهاز المستخدم
                     const blob = new Blob([bootInfo], { type: 'text/plain' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -447,12 +494,10 @@
             }, 200);
         }
 
-        function closeOsNotification() {
-            document.getElementById('os-notification').classList.add('hidden');
-        }
+        function closeOsNotification() { document.getElementById('os-notification').classList.add('hidden'); }
 
         // ==========================================
-        // 4. START MENU & WINDOW MANAGER
+        // 5. START MENU & WINDOW MANAGER
         // ==========================================
         function toggleStartMenu() {
             const menu = document.getElementById('start-menu');
@@ -463,97 +508,28 @@
         window.zIndexCounter = 10;
 
         const appData = {
-            'zozen': { 
-                title: 'Zozen App', 
-                icon: 'fa-bolt text-orange-400', 
-                url: 'https://zozen.vercel.app',
-                mode: 'internal'
-            },
-            'store': { 
-                title: 'Zozen Store', 
-                icon: 'fa-store text-indigo-400', 
-                url: 'https://zozen2026.github.io/Zozen-store/',
-                mode: 'internal'
-            },
-            'installer': {
-                title: 'Doors OS Hardware Installer Hub',
-                icon: 'fa-compact-disc text-orange-400',
-                mode: 'installer'
-            },
-            'browser': { 
-                title: 'Browser Hub', 
-                icon: 'fa-chrome text-amber-400', 
-                url: 'https://www.google.com',
-                mode: 'browser'
-            },
-            'gemini': { 
-                title: 'Google Gemini', 
-                icon: 'fa-wand-magic-sparkles text-blue-400', 
-                url: 'https://gemini.google.com',
-                mode: 'standalone'
-            },
-            'telegram': { 
-                title: 'Telegram Web', 
-                icon: 'fa-telegram text-sky-400', 
-                url: 'https://web.telegram.org',
-                mode: 'standalone'
-            },
-            'youtube': { 
-                title: 'YouTube', 
-                icon: 'fa-youtube text-red-500', 
-                url: 'https://www.youtube.com',
-                mode: 'standalone'
-            },
-            'facebook': { 
-                title: 'Facebook', 
-                icon: 'fa-facebook-f text-blue-500', 
-                url: 'https://www.facebook.com',
-                mode: 'standalone'
-            },
-            'tiktok': { 
-                title: 'TikTok', 
-                icon: 'fa-tiktok text-white', 
-                url: 'https://www.tiktok.com',
-                mode: 'standalone'
-            },
-            'instagram': { 
-                title: 'Instagram', 
-                icon: 'fa-instagram text-pink-500', 
-                url: 'https://www.instagram.com',
-                mode: 'standalone'
-            },
-            'whatsapp': { 
-                title: 'WhatsApp Web', 
-                icon: 'fa-whatsapp text-emerald-500', 
-                url: 'https://web.whatsapp.com',
-                mode: 'standalone'
-            },
-            'settings': {
-                title: 'System Settings',
-                icon: 'fa-gear text-slate-300',
-                mode: 'settings'
-            }
+            'zozen': { title: 'Zozen App', icon: 'fa-bolt text-orange-400', url: 'https://zozen.vercel.app', mode: 'internal' },
+            'store': { title: 'Zozen Store', icon: 'fa-store text-indigo-400', url: 'https://zozen2026.github.io/Zozen-store/', mode: 'internal' },
+            'installer': { title: 'Doors OS Hardware Installer Hub', icon: 'fa-compact-disc text-orange-400', mode: 'installer' },
+            'browser': { title: 'Browser Hub', icon: 'fa-chrome text-amber-400', url: 'https://www.google.com', mode: 'browser' },
+            'gemini': { title: 'Google Gemini', icon: 'fa-wand-magic-sparkles text-blue-400', url: 'https://gemini.google.com', mode: 'standalone' },
+            'telegram': { title: 'Telegram Web', icon: 'fa-telegram text-sky-400', url: 'https://web.telegram.org', mode: 'standalone' },
+            'youtube': { title: 'YouTube', icon: 'fa-youtube text-red-500', url: 'https://www.youtube.com', mode: 'standalone' },
+            'facebook': { title: 'Facebook', icon: 'fa-facebook-f text-blue-500', url: 'https://www.facebook.com', mode: 'standalone' },
+            'tiktok': { title: 'TikTok', icon: 'fa-tiktok text-white', url: 'https://www.tiktok.com', mode: 'standalone' },
+            'instagram': { title: 'Instagram', icon: 'fa-instagram text-pink-500', url: 'https://www.instagram.com', mode: 'standalone' },
+            'whatsapp': { title: 'WhatsApp Web', icon: 'fa-whatsapp text-emerald-500', url: 'https://web.whatsapp.com', mode: 'standalone' },
+            'settings': { title: 'System Settings', icon: 'fa-gear text-orange-400', mode: 'settings' }
         };
 
         function openApp(appKey) {
             const app = appData[appKey];
-
-            if (app.mode === 'installer') {
-                createInstallerWindow(appKey, app);
-                return;
-            }
-
+            if (app.mode === 'installer') { createInstallerWindow(appKey, app); return; }
+            if (app.mode === 'settings') { createSettingsWindow(appKey, app); return; }
             if (app.mode === 'standalone') {
-                const width = 1050;
-                const height = 700;
-                const left = (screen.width - width) / 2;
-                const top = (screen.height - height) / 2;
+                const width = 1050, height = 700;
+                const left = (screen.width - width) / 2, top = (screen.height - height) / 2;
                 window.open(app.url, `_blank_${appKey}`, `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`);
-                return;
-            }
-
-            if (app.mode === 'settings') {
-                createSettingsWindow(appKey, app);
                 return;
             }
 
@@ -674,12 +650,12 @@
                 return;
             }
 
-            const savedUser = localStorage.getItem('doors_os_user') || 'Guest User';
-
             const winDiv = document.createElement('div');
             winDiv.id = `win-${appKey}`;
             winDiv.className = 'window absolute top-20 left-32 w-[650px] h-[450px] bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden';
             winDiv.onclick = () => bringToFront(winDiv);
+
+            const savedUser = localStorage.getItem('doors_os_user') || 'Guest User';
 
             winDiv.innerHTML = `
                 <div class="h-11 bg-slate-800/90 border-b border-slate-700/80 px-4 flex items-center justify-between cursor-move" onmousedown="startDrag(event, '${winDiv.id}')">
@@ -696,14 +672,7 @@
                             <div class="font-bold text-white">Active Account: <span class="text-orange-400">${savedUser}</span></div>
                             <div class="text-slate-400 mt-0.5">Session persists across browser restarts & device reboots</div>
                         </div>
-                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 px-3.5 py-2 rounded-lg font-bold text-white transition">Switch / Manage</button>
-                    </div>
-                    <div class="flex items-center justify-between bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
-                        <div>
-                            <div class="font-bold text-white">Wallpaper Theme</div>
-                            <div class="text-slate-400 mt-0.5">Cycle through saved desktop backgrounds</div>
-                        </div>
-                        <button onclick="changeWallpaper()" class="bg-slate-800 hover:bg-slate-700 px-3.5 py-2 rounded-lg font-bold text-white transition">Change Wallpaper</button>
+                        <button onclick="openAuthModal()" class="bg-orange-600 hover:bg-orange-500 px-3.5 py-2 rounded-lg font-bold text-white transition">Switch / Manage</div>
                     </div>
                 </div>
             `;
@@ -713,14 +682,15 @@
             addTaskbarIcon(appKey);
         }
 
+        // ==========================================
+        // 6. WINDOW MANAGEMENT
+        // ==========================================
         function bringToFront(win) {
             window.zIndexCounter++;
             win.style.zIndex = window.zIndexCounter;
         }
 
-        function minimizeWindow(winId) {
-            document.getElementById(winId).style.display = 'none';
-        }
+        function minimizeWindow(winId) { document.getElementById(winId).style.display = 'none'; }
 
         function toggleMaximize(winId) {
             const win = document.getElementById(winId);
@@ -743,9 +713,7 @@
             btn.innerHTML = `<i class="fa-solid ${app.icon}"></i><span>${app.title.split(' ')[0]}</span>`;
             btn.onclick = () => {
                 const win = document.getElementById(`win-${appKey}`);
-                if (win.style.display === 'none') {
-                    win.style.display = 'flex';
-                }
+                if (win.style.display === 'none') win.style.display = 'flex';
                 bringToFront(win);
             };
             taskbarApps.appendChild(btn);
@@ -767,7 +735,7 @@
             document.addEventListener('mouseup', stopDrag);
         }
         function onDrag(e) {
-            if (!activeWindow) return;
+            if (!activeWindow, activeWindow === null) return;
             activeWindow.style.left = `${e.clientX - offsetX}px`;
             activeWindow.style.top = `${e.clientY - offsetY}px`;
         }
