@@ -496,15 +496,17 @@
                 return;
             }
 
+            // إذا تم الضغط على زر المتصفح، سنقوم بفتحه كصفحة بحث تفاعلية آمنة أو عبر نافذة مستقلة لتفادي حظر جوجل
+            if (appId === 'browser') {
+                window.open('https://www.google.com', '_blank');
+                return;
+            }
+
             let title = appId.toUpperCase();
             let icon = "fa-solid fa-window-maximize";
             let contentUrl = "";
 
-            if (appId === 'browser') {
-                title = "Browser Hub";
-                icon = "fa-brands fa-chrome text-amber-400";
-                contentUrl = "https://www.bing.com"; // تم ضبطه لتفادي خطأ رفض الاتصال
-            } else if (appId === 'gemini') {
+            if (appId === 'gemini') {
                 title = "Google Gemini";
                 icon = "fa-solid fa-wand-magic-sparkles text-blue-400";
                 contentUrl = "https://gemini.google.com";
@@ -537,17 +539,7 @@
 
             let windowBodyContent = `<iframe src="${contentUrl}" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>`;
             
-            if (appId === 'browser') {
-                windowBodyContent = `
-                    <div class="flex flex-col h-full bg-slate-950">
-                        <div class="h-10 bg-slate-900 px-3 flex items-center gap-2 border-b border-slate-800">
-                            <button onclick="document.getElementById('browser-frame-${appId}').src = document.getElementById('browser-frame-${appId}').src" class="text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-rotate-right"></i></button>
-                            <input type="text" id="browser-input-${appId}" value="${contentUrl}" class="flex-grow bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-xs text-white focus:outline-none focus:border-orange-500" onkeydown="if(event.key==='Enter') { let val=this.value; if(!val.startsWith('http')) val='https://'+val; document.getElementById('browser-frame-${appId}').src=val; }">
-                        </div>
-                        <iframe id="browser-frame-${appId}" src="${contentUrl}" class="flex-grow"></iframe>
-                    </div>
-                `;
-            } else if (appId === 'installer') {
+            if (appId === 'installer') {
                 windowBodyContent = `
                     <div class="p-6 text-slate-200 h-full flex flex-col justify-center items-center text-center">
                         <i class="fa-solid fa-compact-disc text-5xl text-orange-500 mb-4 animate-spin"></i>
