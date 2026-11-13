@@ -51,7 +51,7 @@
     <!-- Windows Container -->
     <div id="windows-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
 
-    <!-- 1. Background Context Menu (القائمة عند النقر بالزر الأيمن في الفراغ) -->
+    <!-- 1. Background Context Menu -->
     <div id="context-menu" class="absolute hidden w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
         <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-rotate"></i> Refresh System
@@ -90,7 +90,7 @@
         </button>
     </div>
 
-    <!-- 2. Item Context Menu (القائمة عند النقر بالزر الأيمن على أيقونة) -->
+    <!-- 2. Item Context Menu -->
     <div id="item-context-menu" class="absolute hidden w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl p-1.5 z-50 text-slate-200 text-xs">
         <button onclick="itemActionOpen()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-folder-open text-orange-400"></i> Open
@@ -312,7 +312,7 @@
         }
 
         // ==========================================
-        // CONTEXT MENUS (إصلاح النقر بالزر الأيمن)
+        // CONTEXT MENUS (إصلاح النقر بالزر الأيمن تماماً)
         // ==========================================
         const contextMenu = document.getElementById('context-menu');
         const itemContextMenu = document.getElementById('item-context-menu');
@@ -494,11 +494,57 @@
         }
 
         // ==========================================
-        // WINDOW MANAGEMENT (إدارة النوافذ والتطبيقات)
+        // WINDOW MANAGEMENT (فتح التطبيقات وتوسيعها تلقائياً)
         // ==========================================
         const openWindows = {};
 
         function openApp(appId) {
+            let contentUrl = "https://www.google.com";
+
+            if (appId === 'browser') {
+                contentUrl = "https://www.google.com";
+            } else if (appId === 'gemini') {
+                contentUrl = "https://gemini.google.com";
+            } else if (appId === 'youtube') {
+                contentUrl = "https://www.youtube.com";
+            } else if (appId === 'telegram') {
+                contentUrl = "https://web.telegram.org";
+            } else if (appId === 'facebook') {
+                contentUrl = "https://www.facebook.com";
+            } else if (appId === 'tiktok') {
+                contentUrl = "https://www.tiktok.com";
+            } else if (appId === 'instagram') {
+                contentUrl = "https://www.instagram.com";
+            } else if (appId === 'whatsapp') {
+                contentUrl = "https://web.whatsapp.com";
+            } else if (appId === 'zozen' || appId === 'store') {
+                contentUrl = "https://www.bing.com";
+            } else if (appId === 'installer') {
+                startIsoDownloadSimulation();
+                return;
+            } else if (appId === 'settings') {
+                // فتح نافذة إعدادات النظام الداخلية
+                openInternalWindow(appId, "System Settings", "fa-solid fa-gear text-slate-300");
+                return;
+            }
+
+            // فتح التطبيق في نافذة مستقلة بمتصفح كروم
+            const win = window.open(contentUrl, '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes');
+            if (win) {
+                win.focus();
+                // محاولة تفعيل وضع ملء الشاشة تلقائياً عبر الأكواد
+                try {
+                    setTimeout(() => {
+                        if (win.document && win.document.documentElement.requestFullscreen) {
+                            win.document.documentElement.requestFullscreen();
+                        }
+                    }, 1000);
+                } catch(e) {}
+            }
+        }
+
+        // دالة مخصصة للنوافذ الداخلية مثل Settings و Installer
+        function openInternalWindow(appId, title, icon) {
             const container = document.getElementById('windows-container');
             const taskbarApps = document.getElementById('taskbar-apps');
 
@@ -507,93 +553,28 @@
                 return;
             }
 
-            let title = appId.toUpperCase();
-            let icon = "fa-solid fa-window-maximize";
-            let contentUrl = "https://www.google.com";
-
-            if (appId === 'browser') {
-                title = "Browser Hub";
-                icon = "fa-brands fa-chrome text-amber-400";
-                contentUrl = "https://www.google.com";
-            } else if (appId === 'gemini') {
-                title = "Google Gemini";
-                icon = "fa-solid fa-wand-magic-sparkles text-blue-400";
-                contentUrl = "https://gemini.google.com";
-            } else if (appId === 'youtube') {
-                title = "YouTube";
-                icon = "fa-brands fa-youtube text-red-400";
-                contentUrl = "https://www.youtube.com";
-            } else if (appId === 'telegram') {
-                title = "Telegram";
-                icon = "fa-brands fa-telegram text-sky-400";
-                contentUrl = "https://web.telegram.org";
-            } else if (appId === 'facebook') {
-                title = "Facebook";
-                icon = "fa-brands fa-facebook-f text-blue-400";
-                contentUrl = "https://www.facebook.com";
-            } else if (appId === 'tiktok') {
-                title = "TikTok";
-                icon = "fa-brands fa-tiktok text-white";
-                contentUrl = "https://www.tiktok.com";
-            } else if (appId === 'instagram') {
-                title = "Instagram";
-                icon = "fa-brands fa-instagram text-pink-400";
-                contentUrl = "https://www.instagram.com";
-            } else if (appId === 'whatsapp') {
-                title = "WhatsApp";
-                icon = "fa-brands fa-whatsapp text-emerald-400";
-                contentUrl = "https://web.whatsapp.com";
-            } else if (appId === 'zozen') {
-                title = "Zozen";
-                icon = "fa-solid fa-bolt text-orange-400";
-                contentUrl = "https://www.bing.com";
-            } else if (appId === 'store') {
-                title = "Zozen Store";
-                icon = "fa-solid fa-store text-indigo-400";
-                contentUrl = "https://www.bing.com";
-            } else if (appId === 'installer') {
-                title = "Doors ISO Builder";
-                icon = "fa-solid fa-compact-disc text-orange-400";
-            } else if (appId === 'settings') {
-                title = "System Settings";
-                icon = "fa-solid fa-gear text-slate-300";
-            }
-
             const winEl = document.createElement('div');
             winEl.id = `window-${appId}`;
             winEl.className = "window absolute bg-slate-900 border border-slate-700 rounded-xl shadow-2xl flex flex-col pointer-events-auto overflow-hidden";
             winEl.style.top = "80px";
             winEl.style.left = "120px";
-            winEl.style.width = "820px";
-            winEl.style.height = "540px";
+            winEl.style.width = "750px";
+            winEl.style.height = "480px";
             winEl.style.zIndex = getNextZIndex();
 
-            let windowBodyContent = `<iframe src="${contentUrl}"></iframe>`;
-            
-            if (appId === 'installer') {
-                windowBodyContent = `
-                    <div class="p-6 text-slate-200 h-full flex flex-col justify-center items-center text-center">
-                        <i class="fa-solid fa-compact-disc text-5xl text-orange-500 mb-4 animate-spin"></i>
-                        <h2 class="text-xl font-bold mb-2">Doors v1.0 Sovereign ISO</h2>
-                        <p class="text-xs text-slate-400 max-w-md mb-6">Ready to generate dual-boot image package and integrate your custom web environment into hardware bootloader.</p>
-                        <button onclick="startIsoDownloadSimulation()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold px-6 py-2.5 rounded-xl transition text-xs shadow-lg">Download / Generate ISO</button>
-                    </div>
-                `;
-            } else if (appId === 'settings') {
-                windowBodyContent = `
-                    <div class="p-6 text-slate-200 h-full flex flex-col">
-                        <h2 class="text-lg font-bold mb-4"><i class="fa-solid fa-gear text-orange-400"></i> System Settings</h2>
-                        <p class="text-xs text-slate-400 mb-4">Manage your sovereign environment preferences and sessions.</p>
-                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                            <div class="flex justify-between items-center text-xs">
-                                <span>Current Session User</span>
-                                <span class="text-orange-400 font-bold" id="settings-user-lbl">Active</span>
-                            </div>
-                            <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-4 py-2 rounded-lg text-xs transition font-bold">Sign Out & Clear Session</button>
+            let windowBodyContent = `
+                <div class="p-6 text-slate-200 h-full flex flex-col">
+                    <h2 class="text-lg font-bold mb-4"><i class="${icon}"></i> ${title}</h2>
+                    <p class="text-xs text-slate-400 mb-4">Manage your sovereign environment preferences and sessions.</p>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span>Current Session User</span>
+                            <span class="text-orange-400 font-bold">Active</span>
                         </div>
+                        <button onclick="handleLogout()" class="bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-4 py-2 rounded-lg text-xs transition font-bold">Sign Out & Clear Session</button>
                     </div>
-                `;
-            }
+                </div>
+            `;
 
             winEl.innerHTML = `
                 <div class="window-header h-10 bg-slate-950 px-4 flex items-center justify-between cursor-move border-b border-slate-800" onmousedown="bringToFront('${appId}')">
@@ -706,7 +687,7 @@
                 if (progress) progress.style.width = w + '%';
                 if (w >= 100) {
                     clearInterval(interval);
-                    if (btn) btn.btn.classList.remove('hidden'); // تم التصحيح هنا
+                    if (btn) btn.classList.remove('hidden');
                 }
             }, 250);
         }
