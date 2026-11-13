@@ -104,8 +104,9 @@
         <button onclick="itemActionRename()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-pen text-indigo-400"></i> Change Name
         </button>
-        <div class="h-px bg-slate-800 my-1"></div>
-        <button onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-400 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
+        <!-- زر الحذف سيظهر فقط للملفات والمجلدات المضافة وليست للتطبيقات الافتراضية -->
+        <div id="delete-divider" class="h-px bg-slate-800 my-1"></div>
+        <button id="delete-btn-action" onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-400 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-trash"></i> Delete
         </button>
     </div>
@@ -315,7 +316,7 @@
         }
 
         // ==========================================
-        // 2. CONTEXT MENUS LOGIC & DELETE PROTECTION
+        // 2. CONTEXT MENUS & HIDING DELETE FOR DEFAULTS
         // ==========================================
         const contextMenu = document.getElementById('context-menu');
         const itemContextMenu = document.getElementById('item-context-menu');
@@ -338,6 +339,20 @@
                     type: itemElement.dataset.type,
                     title: itemElement.dataset.title
                 };
+
+                // فحص ما إذا كان التطبيق افتراضياً لإخفاء زر الحذف تماماً
+                const isDefaultApp = defaultDesktopApps.some(a => a.id === currentSelectedItem.id);
+                const deleteBtn = document.getElementById('delete-btn-action');
+                const deleteDivider = document.getElementById('delete-divider');
+
+                if (isDefaultApp && !currentSelectedItem.title.includes('Shortcut')) {
+                    if (deleteBtn) deleteBtn.classList.add('hidden');
+                    if (deleteDivider) deleteDivider.classList.add('hidden');
+                } else {
+                    if (deleteBtn) deleteBtn.classList.remove('hidden');
+                    if (deleteDivider) deleteDivider.classList.remove('hidden');
+                }
+
                 itemContextMenu.style.top = `${e.clientY}px`;
                 itemContextMenu.style.left = `${e.clientX}px`;
                 itemContextMenu.classList.remove('hidden');
@@ -410,15 +425,7 @@
         function itemActionDelete() {
             if (!currentSelectedItem) return;
 
-            // حماية تامة للتطبيقات الافتراضية للنظام من الحذف
-            const isDefaultApp = defaultDesktopApps.some(a => a.id === currentSelectedItem.id);
-            if (isDefaultApp && !currentSelectedItem.title.includes('Shortcut')) {
-                alert("Core system apps cannot be deleted.");
-                itemContextMenu.classList.add('hidden');
-                return;
-            }
-
-            // رسالة تأكيد لطيفة قبل حذف الملفات والمجلدات المضافة
+            // رسالة تأكيد الحذف للملفات والمجلدات المضافة فقط
             if (confirm(`هل أنت متأكد من حذف "${currentSelectedItem.title}"؟`)) {
                 let userItems = [];
                 try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
