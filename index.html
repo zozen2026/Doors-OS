@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors OS - Sovereign Hardware Environment</title>
+    <title>Doors v1.0 - Sovereign Hardware Environment</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -83,7 +83,7 @@
         </button>
         <div class="h-px bg-slate-800 my-1"></div>
         <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 text-orange-400 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition font-bold">
-            <i class="fa-solid fa-compact-disc"></i> Download Doors OS ISO
+            <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 ISO
         </button>
         <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-user-circle"></i> Account / Sign In
@@ -133,7 +133,7 @@
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-6">
                 <div id="modal-avatar" class="w-12 h-12 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">D</div>
-                <h3 class="font-bold text-base text-white">Doors OS Sovereign Account</h3>
+                <h3 class="font-bold text-base text-white">Doors v1.0 Sovereign Account</h3>
                 <p id="auth-subtitle" class="text-xs text-slate-400">Your session remains active across restarts</p>
             </div>
             <div id="auth-form-content" class="space-y-4 text-xs">
@@ -165,7 +165,7 @@
         </div>
         <div class="space-y-1 text-sm max-h-60 overflow-y-auto">
             <button onclick="openApp('installer'); toggleStartMenu();" class="w-full text-left px-3 py-2 bg-orange-600/20 text-orange-400 font-bold rounded-lg flex items-center gap-3 transition mb-1">
-                <i class="fa-solid fa-compact-disc"></i> Download Doors OS (ISO)
+                <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 (ISO)
             </button>
             <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-800 rounded-lg flex items-center gap-3 transition">
                 <i class="fa-solid fa-bolt text-orange-400"></i> Zozen
@@ -202,7 +202,7 @@
             </button>
         </div>
         <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
-            <span>Doors OS v6.8</span>
+            <span>Doors v1.0</span>
             <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-400 font-bold hover:underline">Account</button>
         </div>
     </div>
@@ -237,7 +237,7 @@
         const defaultDesktopApps = [
             { id: 'zozen', title: 'Zozen', icon: 'fa-solid fa-bolt text-white', bg: 'bg-orange-600 border-orange-400/30', type: 'app' },
             { id: 'store', title: 'Zozen Store', icon: 'fa-solid fa-store text-white', bg: 'bg-indigo-600 border-indigo-400/30', type: 'app' },
-            { id: 'installer', title: 'Get Doors OS', icon: 'fa-solid fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
+            { id: 'installer', title: 'Get Doors', icon: 'fa-solid fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
             { id: 'browser', title: 'Browser Hub', icon: 'fa-brands fa-chrome text-white', bg: 'bg-amber-500 border-amber-300/30', type: 'app' },
             { id: 'gemini', title: 'Gemini', icon: 'fa-solid fa-wand-magic-sparkles text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
             { id: 'telegram', title: 'Telegram', icon: 'fa-brands fa-telegram text-white', bg: 'bg-sky-500 border-sky-300/30', type: 'app' },
@@ -584,19 +584,19 @@
             progressBar.style.width = '0%';
             btn.classList.add('hidden');
 
-            let fileName = "DoorsOS-v6.8-x86_64.iso.txt";
+            let fileName = "Doors-v1.0-x86_64.iso.txt";
             let bootInfo = "";
 
             if (type === 'clean') {
                 title.innerText = "Building Clean Install ISO (x86_64)";
                 desc.innerText = "Compiling sovereign kernel and UI shell to replace Windows partition...";
-                fileName = "DoorsOS-CleanInstall-x86_64.iso.txt";
-                bootInfo = "DOORS OS CLEAN INSTALL BOOTLOADER CONFIG\nTarget: Full Disk Format (Replace Windows)\nArchitecture: x86_64 UEFI/BIOS\nPersistence: Enabled";
+                fileName = "Doors-CleanInstall-x86_64.iso.txt";
+                bootInfo = "DOORS v1.0 CLEAN INSTALL BOOTLOADER CONFIG\nTarget: Full Disk Format (Replace Windows)\nArchitecture: x86_64 UEFI/BIOS\nPersistence: Enabled";
             } else {
                 title.innerText = "Preparing Dual-Boot Package (GRUB2)";
                 desc.innerText = "Configuring GRUB2 bootloader alongside Windows Boot Manager...";
-                fileName = "DoorsOS-DualBoot-GRUB2.iso.txt";
-                bootInfo = "DOORS OS DUAL-BOOT GRUB2 CONFIG\nTarget: Side-by-Side Partition with Windows\nBoot Menu: [1] Doors OS Sovereign  [2] Windows Boot Manager\nPersistence: Enabled";
+                fileName = "Doors-DualBoot-GRUB2.iso.txt";
+                bootInfo = "DOORS v1.0 DUAL-BOOT GRUB2 CONFIG\nTarget: Side-by-Side Partition with Windows\nBoot Menu: [1] Doors v1.0 Sovereign  [2] Windows Boot Manager\nPersistence: Enabled";
             }
 
             let progress = 0;
@@ -638,7 +638,7 @@
         const appData = {
             'zozen': { title: 'Zozen App', icon: 'fa-solid fa-bolt text-orange-400', url: 'https://zozen.vercel.app', mode: 'internal' },
             'store': { title: 'Zozen Store', icon: 'fa-solid fa-store text-indigo-400', url: 'https://zozen2026.github.io/Zozen-store/', mode: 'internal' },
-            'installer': { title: 'Doors OS Hardware Installer Hub', icon: 'fa-solid fa-compact-disc text-orange-400', mode: 'installer' },
+            'installer': { title: 'Doors Hardware Installer Hub', icon: 'fa-solid fa-compact-disc text-orange-400', mode: 'installer' },
             'browser': { title: 'Browser Hub', icon: 'fa-brands fa-chrome text-amber-400', url: 'https://www.google.com', mode: 'browser' },
             'gemini': { title: 'Google Gemini', icon: 'fa-solid fa-wand-magic-sparkles text-blue-400', url: 'https://gemini.google.com', mode: 'standalone' },
             'telegram': { title: 'Telegram Web', icon: 'fa-brands fa-telegram text-sky-400', url: 'https://web.telegram.org', mode: 'standalone' },
@@ -736,8 +736,8 @@
                         <div class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-500 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-lg mb-3">
                             <i class="fa-solid fa-compact-disc"></i>
                         </div>
-                        <h2 class="text-xl font-bold text-white mb-1">Deploy Doors OS to Physical Hardware</h2>
-                        <p class="text-xs text-slate-400">Install Doors OS natively alongside Windows (Dual-Boot) or as a standalone primary operating system.</p>
+                        <h2 class="text-xl font-bold text-white mb-1">Deploy Doors v1.0 to Physical Hardware</h2>
+                        <p class="text-xs text-slate-400">Install Doors v1.0 natively alongside Windows (Dual-Boot) or as a standalone primary operating system.</p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -745,7 +745,7 @@
                             <div>
                                 <span class="text-xs text-orange-400 font-bold uppercase tracking-wider">Option 1 • Recommended</span>
                                 <h3 class="font-bold text-base text-white mt-1 mb-2">Dual-Boot (Alongside Windows)</h3>
-                                <p class="text-xs text-slate-400 mb-4">Configures GRUB2 bootloader so you can choose between Windows and Doors OS every time you power on your PC.</p>
+                                <p class="text-xs text-slate-400 mb-4">Configures GRUB2 bootloader so you can choose between Windows and Doors v1.0 every time you power on your PC.</p>
                             </div>
                             <button onclick="triggerDownloadSimulation('dual')" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg">
                                 Download Dual-Boot Package
@@ -756,7 +756,7 @@
                             <div>
                                 <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Option 2 • Sovereign</span>
                                 <h3 class="font-bold text-base text-white mt-1 mb-2">Clean Install (Replace Windows)</h3>
-                                <p class="text-xs text-slate-400 mb-4">Formats target drive to install Doors OS natively as your exclusive, ultra-fast operating system.</p>
+                                <p class="text-xs text-slate-400 mb-4">Formats target drive to install Doors v1.0 natively as your exclusive, ultra-fast operating system.</p>
                             </div>
                             <button onclick="triggerDownloadSimulation('clean')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs transition border border-slate-700">
                                 Download Clean Install Package
@@ -884,7 +884,7 @@
             else if (activeSettingsTab === 'accounts') {
                 container.innerHTML = `
                     <h2 class="text-lg font-bold text-white mb-1">Accounts & Persistent Session</h2>
-                    <p class="text-xs text-slate-400 mb-5">Manage your Doors OS sovereign profile and session persistence.</p>
+                    <p class="text-xs text-slate-400 mb-5">Manage your Doors v1.0 sovereign profile and session persistence.</p>
 
                     <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex items-center justify-between mb-4">
                         <div class="flex items-center gap-4">
@@ -934,12 +934,12 @@
             else if (activeSettingsTab === 'about') {
                 container.innerHTML = `
                     <h2 class="text-lg font-bold text-white mb-1">System & Hardware Specifications</h2>
-                    <p class="text-xs text-slate-400 mb-5">Doors OS Sovereign Environment diagnostics.</p>
+                    <p class="text-xs text-slate-400 mb-5">Doors v1.0 Sovereign Environment diagnostics.</p>
 
                     <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3 text-xs">
                         <div class="flex justify-between py-1.5 border-b border-slate-900">
                             <span class="text-slate-400">Operating System</span>
-                            <span class="font-bold text-orange-400">Doors OS v6.8 Sovereign Edition</span>
+                            <span class="font-bold text-orange-400">Doors v1.0 Sovereign Edition</span>
                         </div>
                         <div class="flex justify-between py-1.5 border-b border-slate-900">
                             <span class="text-slate-400">Architecture</span>
