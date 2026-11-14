@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors v1.0 - Sovereign White Environment</title>
+    <title>Doors v1.0 - Sovereign Internal Environment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -34,45 +34,45 @@
 </head>
 <body id="os-body" class="relative bg-cover bg-center bg-no-repeat transition-all duration-500 bg-slate-100 text-slate-800" style="background-image: radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%);">
 
-    <!-- Desktop Area -->
+    <!-- Desktop Area (سطح مكتب بيئة Doors) -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة تثبيت تطبيق جديد داخل النظام -->
+    <!-- نافذة تثبيت التطبيق داخل بيئة Doors حصرياً (بدون تحميل ويندوز) -->
     <div id="install-app-modal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
             <button onclick="closeInstallModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-box-open"></i>
+                    <i class="fa-solid fa-box-archive"></i>
                 </div>
                 <div>
-                    <h3 class="font-bold text-sm text-slate-900">تثبيت تطبيق في Doors OS</h3>
-                    <p class="text-[11px] text-slate-500">يُثبّت داخل النظام ويفتح بنافذة مستقلة</p>
+                    <h3 class="font-bold text-sm text-slate-900">تثبيت داخل بيئة Doors</h3>
+                    <p class="text-[11px] text-slate-500">يُحفظ التطبيق داخل النظام الافتراضي دون تحميل ملفات في ويندوز</p>
                 </div>
             </div>
             <div class="space-y-3 text-xs">
                 <div>
                     <label class="block text-slate-600 font-semibold mb-1">اسم التطبيق</label>
-                    <input type="text" id="new-app-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="مثال: لعبتي أو تطبيق الفيديو">
+                    <input type="text" id="new-app-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="مثال: تطبيق زوزين أو لعبتي">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-semibold mb-1">رابط التطبيق (URL)</label>
+                    <label class="block text-slate-600 font-semibold mb-1">رابط التشغيل (URL / Web App)</label>
                     <input type="url" id="new-app-url" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="https://...">
                 </div>
-                <button onclick="confirmManualInstall()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-md mt-2">
-                    <i class="fa-solid fa-check mr-1"></i> تثبيت الآن داخل النظام
+                <button onclick="confirmInternalInstall()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-md mt-2">
+                    <i class="fa-solid fa-download mr-1"></i> تثبيت في بيئة Doors الآن
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- إشعار منبثق سريع عند التثبيت أو التشغيل -->
+    <!-- إشعار النظام الداخلي -->
     <div id="toast-alert" class="fixed top-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-3 z-50 transition-all duration-300 translate-x-full opacity-0">
-        <i class="fa-solid fa-window-restore text-orange-400 text-base"></i>
-        <span id="toast-message">جاري تشغيل التطبيق...</span>
+        <i class="fa-solid fa-circle-check text-orange-400 text-base"></i>
+        <span id="toast-message">تمت العملية داخل Doors بنجاح</span>
     </div>
 
-    <!-- Nice Search Modal -->
+    <!-- نافذة البحث المتقدم (Nice Search) -->
     <div id="nice-search-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-start justify-center pt-28 z-50">
         <div class="bg-white border border-slate-200 w-[500px] rounded-2xl p-5 shadow-2xl text-slate-800">
             <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
@@ -83,39 +83,37 @@
             </div>
             <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
                 <button id="search-mode-system" onclick="setSearchMode('system')" class="py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-desktop"></i> بحث في النظام
+                    <i class="fa-solid fa-desktop"></i> بحث في بيئة Doors
                 </button>
                 <button id="search-mode-web" onclick="setSearchMode('web')" class="py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-globe"></i> بحث في الويب
                 </button>
             </div>
             <div class="relative mb-3">
-                <input type="text" id="nice-search-input" oninput="executeNiceSearch()" placeholder="اكتب للبحث..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
+                <input type="text" id="nice-search-input" oninput="executeNiceSearch()" placeholder="اكتب للبحث داخل بيئة Doors..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
             </div>
             <div id="nice-search-results" class="max-h-60 overflow-y-auto space-y-1 text-xs"></div>
         </div>
     </div>
 
-    <!-- Start Menu -->
+    <!-- قائمة ابدأ (Start Menu) -->
     <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-800">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
                 <div>
-                    <h3 class="font-bold text-sm">Zozen Admin</h3>
-                    <span class="text-xs text-emerald-600 font-medium">● Standalone Mode</span>
+                    <h3 class="font-bold text-sm">Doors Sovereign</h3>
+                    <span class="text-xs text-emerald-600 font-medium">● Internal Storage Only</span>
                 </div>
             </div>
-            <button onclick="openInstallModal(); toggleStartMenu();" class="bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition" title="تثبيت تطبيق جديد">
-                + تثبيت
+            <button onclick="openInstallModal(); toggleStartMenu();" class="bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
+                + تثبيت تطبيق
             </button>
         </div>
-        <div id="start-menu-apps" class="space-y-1 text-sm max-h-64 overflow-y-auto">
-            <!-- يتم ملء التطبيقات تلقائياً من الجافاسكريبت -->
-        </div>
+        <div id="start-menu-apps" class="space-y-1 text-sm max-h-64 overflow-y-auto"></div>
     </div>
 
-    <!-- Taskbar -->
+    <!-- شريط المهام (Taskbar) -->
     <div id="os-taskbar" class="h-14 bg-white/90 backdrop-blur-md border-t border-slate-200 px-4 flex items-center justify-between z-40 fixed bottom-0 left-0 right-0 text-slate-800">
         <div class="flex items-center gap-2.5">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
@@ -128,12 +126,12 @@
             </button>
             <button onclick="openInstallModal()" class="h-10 px-3.5 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-xl text-xs font-bold flex items-center gap-2 transition text-orange-600">
                 <i class="fa-solid fa-plus"></i>
-                <span class="hidden sm:inline">تثبيت تطبيق</span>
+                <span class="hidden sm:inline">تثبيت في Doors</span>
             </button>
         </div>
         <div class="flex items-center gap-3 text-xs text-slate-600 font-medium">
             <span class="hidden md:flex bg-orange-50 text-orange-600 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
-                <i class="fa-solid fa-microchip"></i> Hardware-Ready OS
+                <i class="fa-solid fa-shield-halved"></i> No Windows Downloads
             </span>
             <span id="clock" class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">00:00</span>
         </div>
@@ -146,16 +144,12 @@
             { id: 'browser', title: 'Browser Hub', url: 'https://www.google.com', icon: 'fa-brands fa-chrome text-white', bg: 'bg-amber-500' },
             { id: 'gemini', title: 'Gemini', url: 'https://gemini.google.com', icon: 'fa-solid fa-wand-magic-sparkles text-white', bg: 'bg-blue-600' },
             { id: 'telegram', title: 'Telegram', url: 'https://web.telegram.org', icon: 'fa-brands fa-telegram text-white', bg: 'bg-sky-500' },
-            { id: 'youtube', title: 'YouTube', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube text-white', bg: 'bg-red-600' },
-            { id: 'facebook', title: 'Facebook', url: 'https://www.facebook.com', icon: 'fa-brands fa-facebook-f text-white', bg: 'bg-blue-600' },
-            { id: 'tiktok', title: 'TikTok', url: 'https://www.tiktok.com', icon: 'fa-brands fa-tiktok text-white', bg: 'bg-black' },
-            { id: 'instagram', title: 'Instagram', url: 'https://www.instagram.com', icon: 'fa-brands fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600' },
-            { id: 'whatsapp', title: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'fa-brands fa-whatsapp text-white', bg: 'bg-emerald-600' }
+            { id: 'youtube', title: 'YouTube', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube text-white', bg: 'bg-red-600' }
         ];
 
         let currentSearchMode = 'system';
 
-        // الدالة الرئيسية لفتح أي تطبيق في نافذة كروم مستقلة بدون شريط متصفح
+        // دالة تشغيل التطبيق كنافذة مستقلة داخل بيئة Doors (بدون تحميل ملفات)
         function launchStandaloneApp(url, title) {
             const width = Math.min(1150, window.screen.availWidth - 80);
             const height = Math.min(750, window.screen.availHeight - 80);
@@ -176,40 +170,39 @@
                 'resizable=yes'
             ].join(',');
 
-            // استخدام اسم فريد للنافذة لكي يفتح كل تطبيق في نافذته المستقلة
-            const windowName = 'DoorsApp_' + title.replace(/\s+/g, '_');
+            const windowName = 'DoorsOS_App_' + title.replace(/\s+/g, '_');
             const appWin = window.open(url, windowName, windowFeatures);
 
             if (appWin) {
                 appWin.focus();
-                showToast(`تم تشغيل "${title}" كنافذة مستقلة`);
+                showToast(`تشغيل "${title}" داخل بيئة Doors`);
             } else {
-                alert('يرجى السماح بالنوافذ المنبثقة (Pop-ups) في المتصفح ليتمكن نظام Doors من تشغيل التطبيقات في نوافذ مستقلة.');
+                alert('يرجى السماح بالنوافذ المنبثقة ليعمل نظام Doors بحرية.');
             }
         }
 
-        // الاستماع لطلبات التثبيت من متجر زوزين (سواء عبر postMessage أو عبر التبويبات المفتوحة)
+        // استقبال طلبات التثبيت البرمجي الداخلي حصرياً
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'INSTALL_DOORS_APP') {
                 const { appName, appUrl, appIcon, appColor } = event.data;
-                installAppIntoOS(appName, appUrl, appIcon, appColor);
+                saveAppToInternalStorage(appName, appUrl, appIcon, appColor);
             }
         });
 
-        // تثبيت التطبيق وحفظه داخل نظام Doors
-        function installAppIntoOS(title, url, icon = 'fa-solid fa-cube text-white', bg = 'bg-emerald-600') {
+        // حفظ التطبيق داخل ذاكرة النظام الداخلية (LocalStorage) فقط دون أي تحميل بملفات ويندوز
+        function saveAppToInternalStorage(title, url, icon = 'fa-solid fa-cube text-white', bg = 'bg-emerald-600') {
             if (!title || !url) return;
             
-            let installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || [];
+            let installedApps = JSON.parse(localStorage.getItem('doors_os_internal_apps')) || [];
             
             const exists = installedApps.some(app => app.url === url);
             if (exists) {
-                showToast(`التطبيق "${title}" مثبت بالفعل في النظام!`);
+                showToast(`التطبيق "${title}" موجود مسبقاً في بيئة Doors!`);
                 return;
             }
 
             const newApp = {
-                id: 'custom_' + Date.now(),
+                id: 'doors_internal_' + Date.now(),
                 title: title,
                 url: url,
                 icon: icon,
@@ -218,16 +211,16 @@
             };
 
             installedApps.push(newApp);
-            localStorage.setItem('doors_os_installed_apps', JSON.stringify(installedApps));
+            localStorage.setItem('doors_os_internal_apps', JSON.stringify(installedApps));
             
             renderDesktopGrid();
             renderStartMenu();
-            showToast(`تم تثبيت "${title}" داخل نظام Doors بنجاح!`);
+            showToast(`تم تثبيت "${title}" داخل بيئة Doors بنجاح!`);
         }
 
         function getAllApps() {
             let installedApps = [];
-            try { installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || []; } catch(e) {}
+            try { installedApps = JSON.parse(localStorage.getItem('doors_os_internal_apps')) || []; } catch(e) {}
             return [...defaultDesktopApps, ...installedApps];
         }
 
@@ -245,29 +238,29 @@
             document.getElementById('install-app-modal').classList.add('hidden');
         }
 
-        function confirmManualInstall() {
+        function confirmInternalInstall() {
             const name = document.getElementById('new-app-name').value.trim();
             let url = document.getElementById('new-app-url').value.trim();
             if (!name || !url) {
-                alert('يرجى إدخال اسم التطبيق والرابط');
+                alert('يرجى إدخال اسم التطبيق ورابطه');
                 return;
             }
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
             }
-            installAppIntoOS(name, url);
+            saveAppToInternalStorage(name, url);
             closeInstallModal();
         }
 
-        function uninstallCustomApp(appId, event) {
+        function uninstallInternalApp(appId, event) {
             event.stopPropagation();
-            if (!confirm('هل تريد إزالة هذا التطبيق من نظام Doors؟')) return;
-            let installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || [];
+            if (!confirm('هل تريد إزالة هذا التطبيق من بيئة Doors؟')) return;
+            let installedApps = JSON.parse(localStorage.getItem('doors_os_internal_apps')) || [];
             installedApps = installedApps.filter(app => app.id !== appId);
-            localStorage.setItem('doors_os_installed_apps', JSON.stringify(installedApps));
+            localStorage.setItem('doors_os_internal_apps', JSON.stringify(installedApps));
             renderDesktopGrid();
             renderStartMenu();
-            showToast('تمت إزالة التطبيق من النظام');
+            showToast('تمت إزالة التطبيق من بيئة Doors');
         }
 
         function showToast(msg) {
@@ -279,6 +272,7 @@
             }, 3000);
         }
 
+        // رسم سطح مكتب بيئة Doors
         function renderDesktopGrid() {
             const area = document.getElementById('desktop-area');
             area.innerHTML = '';
@@ -303,7 +297,7 @@
                 div.onclick = () => openAppByObject(app);
 
                 const deleteBadge = app.isCustom ? `
-                    <button onclick="uninstallCustomApp('${app.id}', event)" class="hidden group-hover:flex absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full items-center justify-center text-[10px] shadow" title="إزالة التطبيق">
+                    <button onclick="uninstallInternalApp('${app.id}', event)" class="hidden group-hover:flex absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full items-center justify-center text-[10px] shadow" title="إزالة من Doors">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 ` : '';
@@ -331,7 +325,7 @@
                         <span class="w-6 h-6 ${app.bg} rounded-md flex items-center justify-center text-xs"><i class="${app.icon}"></i></span>
                         <span class="font-medium text-xs">${app.title}</span>
                     </span>
-                    ${app.isCustom ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">مثبت</span>' : ''}
+                    ${app.isCustom ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">داخلي</span>' : ''}
                 `;
                 btn.onclick = () => {
                     openAppByObject(app);
@@ -372,7 +366,7 @@
             if (currentSearchMode === 'system') {
                 const filtered = getAllApps().filter(app => app.title.toLowerCase().includes(query.toLowerCase()));
                 if (filtered.length === 0) {
-                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">لم يتم العثور على تطبيقات</div>`;
+                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">لم يتم العثور على تطبيقات في بيئة Doors</div>`;
                     return;
                 }
                 filtered.forEach(app => {
