@@ -36,7 +36,7 @@
     <!-- سطح مكتب النظام -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة مخصصة حصرياً لمتجرنا الداخلي (تعمل عبر iframe داخلي) -->
+    <!-- نافذة مخصصة حصرياً لمتجرنا الداخلي (عبر iframe داخلي) -->
     <div id="doors-store-window" class="absolute inset-6 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-50 overflow-hidden">
         <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
             <div class="flex items-center gap-2 font-bold text-xs text-slate-700">
@@ -97,14 +97,15 @@
     </div>
 
     <script>
-        // التطبيقات المثبتة في النظام (تُحفظ في LocalStorage)
+        // التطبيقات المثبتة مسبقاً في النظام (بما فيها Steam ومتجر زوزين)
         let installedApps = JSON.parse(localStorage.getItem('doors_ecosystem_apps')) || [
             { id: 'store', title: 'Zozen Store', type: 'store', icon: 'fa-solid fa-store', bg: 'bg-indigo-600', company: 'Zozen Corp' },
+            { id: 'steam', title: 'Steam', type: 'url', url: 'https://store.steampowered.com', icon: 'fa-brands fa-steam', bg: 'bg-slate-900', company: 'Valve Corporation', desc: 'منصة الألعاب العالمية' },
             { id: 'zozen', title: 'Zozen App', type: 'url', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt', bg: 'bg-orange-600', company: 'Zozen Ecosystem' },
             { id: 'youtube', title: 'YouTube', type: 'url', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube', bg: 'bg-red-600', company: 'Google' }
         ];
 
-        // 1. فتح التطبيقات: إما المتجر (عبر iframe داخلي) أو التطبيقات الخارجية (عبر نافذة كروم مستقلة تماماً بدون شريط متصفح)
+        // تشغيل التطبيقات: المتجر داخلياً، والتطبيقات الخارجية في نافذة مستقلة
         function launchApp(appId) {
             const app = installedApps.find(a => a.id === appId);
             if (!app) return;
@@ -112,7 +113,6 @@
             if (app.type === 'store') {
                 openZozenStore();
             } else {
-                // فتح التطبيق الخارجي في نافذة كروم مستقلة (Standalone Window) دون أي تحميل في ويندوز
                 const width = Math.min(1150, window.screen.availWidth - 80);
                 const height = Math.min(750, window.screen.availHeight - 80);
                 const left = Math.round((window.screen.availWidth - width) / 2);
@@ -139,7 +139,7 @@
             }
         }
 
-        // 2. إدارة متجر زوزين الداخلي وبوابة المطورين
+        // إدارة متجر زوزين الداخلي وبوابة المطورين
         function openZozenStore() {
             const windowEl = document.getElementById('doors-store-window');
             const bodyEl = document.getElementById('store-window-body');
@@ -161,11 +161,11 @@
                             </div>
                             <div>
                                 <label class="block font-semibold mb-1 text-slate-700">اسم التطبيق *</label>
-                                <input type="text" id="dev-app-name" placeholder="مثال: تطبيق الفيديوهات" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
+                                <input type="text" id="dev-app-name" placeholder="مثال: تطبيق الألعاب" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div>
                                 <label class="block font-semibold mb-1 text-slate-700">اسم الشركة أو الجهة المطورة</label>
-                                <input type="text" id="dev-company-name" placeholder="مثال: Zozen Corp" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
+                                <input type="text" id="dev-company-name" placeholder="مثال: Valve" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div>
                                 <label class="block font-semibold mb-1 text-slate-700">اسم المطور الشخصي (اختياري - Optional)</label>
@@ -185,7 +185,7 @@
                             </div>
                         </div>
                         <button onclick="installAppFromStore()" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition shadow text-xs">
-                            <i class="fa-solid fa-download mr-1"></i> تثبيت التطبيق في نظام Doors (ليس تشغيل فقط)
+                            <i class="fa-solid fa-download mr-1"></i> تثبيت التطبيق في نظام Doors
                         </button>
                     </div>
                 </div>
@@ -220,7 +220,6 @@
             });
         }
 
-        // عملية "التثبيت الفعلي" من بوابة المطورين في المتجر وتحديث سطح المكتب
         function installAppFromStore() {
             const icon = document.getElementById('dev-app-icon').value.trim() || 'fa-solid fa-cube';
             const title = document.getElementById('dev-app-name').value.trim();
@@ -261,7 +260,6 @@
             document.getElementById('doors-store-window').classList.remove('flex');
         }
 
-        // البحث الذكي
         function toggleZozenSearch() {
             const modal = document.getElementById('zozen-search-modal');
             modal.classList.toggle('hidden');
@@ -292,10 +290,9 @@
                     </div>
                 `;
             });
-            resultsContainer.innerHTML = html || '<div class="text-center py-4 text-slate-400">لا توجد تطبقات مطابقة</div>';
+            resultsContainer.innerHTML = html || '<div class="text-center py-4 text-slate-400">لا توجد تطبيقات مطابقة</div>';
         }
 
-        // رسم سطح المكتب
         function renderDesktop() {
             const area = document.getElementById('desktop-area');
             area.innerHTML = '';
