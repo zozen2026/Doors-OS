@@ -39,16 +39,16 @@
     <!-- Desktop Area -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة مدمجة داخل النظام (Iframe Window) خاصة بمشاريعنا Zozen & Zozen Store -->
+    <!-- نافذة النظام المدمجة (تعمل بمحرك المتصفح وبدون أي أثر لشريط كروم) -->
     <div id="in-system-window" class="absolute inset-10 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-40 overflow-hidden">
-        <!-- شريط علوي للنافذة -->
+        <!-- شريط علوي يحاكي نافذة التطبيق المستقل -->
         <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
-            <div class="flex items-center gap-2 font-bold text-xs text-slate-700" id="iframe-window-title">
+            <div class="flex items-center gap-2 font-bold text-xs text-slate-700">
                 <i class="fa-solid fa-window-maximize text-orange-600"></i>
-                <span id="window-title-text">Project Viewer</span>
+                <span id="window-title-text">Application Window</span>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openCurrentIframeInNewTab()" class="text-slate-500 hover:text-orange-600 px-2 py-1 text-xs rounded transition" title="فتح في نافذة جديدة خارج النظام">
+                <button onclick="openCurrentIframeInNewTab()" class="text-slate-500 hover:text-orange-600 px-2 py-1 text-xs rounded transition" title="فتح في نافذة مستقلة">
                     <i class="fa-solid fa-external-link-alt"></i>
                 </button>
                 <button onclick="closeInSystemWindow()" class="w-7 h-7 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
@@ -56,7 +56,7 @@
                 </button>
             </div>
         </div>
-        <!-- محتوى الـ Iframe -->
+        <!-- محتوى التطبيق (يعمل بداخله محرك الويب بصمت تام وبدون واجهة متصفح) -->
         <div class="flex-1 w-full h-full bg-white relative">
             <iframe id="system-iframe" src="" class="w-full h-full border-0"></iframe>
         </div>
@@ -65,7 +65,7 @@
     <!-- Hidden File Input for Studio Wallpaper -->
     <input type="file" id="studio-wallpaper-input" accept="image/*" class="hidden" onchange="handleStudioWallpaperUpload(event)">
 
-    <!-- 1. Background Context Menu (Light Theme) -->
+    <!-- Background Context Menu -->
     <div id="context-menu" class="absolute hidden w-56 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
         <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-rotate"></i> Refresh System
@@ -104,7 +104,7 @@
         </button>
     </div>
 
-    <!-- 2. Item Context Menu (Light Theme) -->
+    <!-- Item Context Menu -->
     <div id="item-context-menu" class="absolute hidden w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
         <button onclick="itemActionOpen()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
             <i class="fa-solid fa-folder-open text-orange-500"></i> Open
@@ -150,7 +150,7 @@
         </div>
     </div>
 
-    <!-- In-System Custom Notification Modal -->
+    <!-- Notification Modal -->
     <div id="os-notification" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
         <div class="bg-white border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-800 text-center relative">
             <div id="notif-icon" class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-200">
@@ -293,27 +293,25 @@
 
         function openApp(appId) {
             if (appId === 'store') {
-                // فتح متجر زوزين داخل نافذة iframe مدمجة بالنظام
                 openInSystemWindow('https://zozen2026.github.io/Zozen-store/', 'Zozen Store - متجر زوزين');
             } else if (appId === 'zozen') {
-                // فتح تطبيق زوزين داخل نافذة iframe مدمجة بالنظام
                 openInSystemWindow('https://zozen.vercel.app', 'Zozen - تطبيق زوزين');
-            } else if (appId === 'browser') {
-                alert('Opening Browser Hub...');
             } else if (appId === 'gemini') {
-                window.open('https://gemini.google.com', '_blank');
+                openInSystemWindow('https://gemini.google.com', 'Google Gemini - الذكاء الاصطناعي');
             } else if (appId === 'telegram') {
-                window.open('https://telegram.org', '_blank');
+                openInSystemWindow('https://web.telegram.org', 'Telegram - تيليجرام');
             } else if (appId === 'youtube') {
-                window.open('https://www.youtube.com', '_blank');
+                openInSystemWindow('https://www.youtube.com', 'YouTube - يوتيوب');
             } else if (appId === 'facebook') {
-                window.open('https://www.facebook.com', '_blank');
+                openInSystemWindow('https://www.facebook.com', 'Facebook - فيسبوك');
             } else if (appId === 'tiktok') {
-                window.open('https://www.tiktok.com', '_blank');
+                openInSystemWindow('https://www.tiktok.com', 'TikTok - تيك توك');
             } else if (appId === 'instagram') {
-                window.open('https://www.instagram.com', '_blank');
+                openInSystemWindow('https://www.instagram.com', 'Instagram - إنستغرام');
             } else if (appId === 'whatsapp') {
-                window.open('https://whatsapp.com', '_blank');
+                openInSystemWindow('https://web.whatsapp.com', 'WhatsApp - واتساب');
+            } else if (appId === 'browser') {
+                openInSystemWindow('https://www.google.com', 'Browser Hub - متصفح النظام');
             } else if (appId === 'settings') {
                 alert('Opening System Settings & Personalization');
             } else if (appId === 'installer') {
@@ -360,7 +358,7 @@
             const iframeEl = document.getElementById('system-iframe');
             windowEl.classList.add('hidden');
             windowEl.classList.remove('flex');
-            iframeEl.src = ''; // إيقاف التحميل لتوفير الذاكرة
+            iframeEl.src = '';
         }
 
         function openCurrentIframeInNewTab() {
@@ -449,7 +447,7 @@
                     <span class="text-xs font-bold text-orange-600">انتقال ➔</span>
                 `;
                 div.onclick = () => {
-                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                    openInSystemWindow(`https://www.google.com/search?q=${encodeURIComponent(query)}`, `Google Search: ${query}`);
                     toggleNiceSearch();
                 };
                 resultsContainer.appendChild(div);
