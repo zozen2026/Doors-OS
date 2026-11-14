@@ -39,6 +39,29 @@
     <!-- Desktop Area -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
+    <!-- نافذة مدمجة داخل النظام (Iframe Window) خاصة بمشاريعنا Zozen & Zozen Store -->
+    <div id="in-system-window" class="absolute inset-10 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-40 overflow-hidden">
+        <!-- شريط علوي للنافذة -->
+        <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-xs text-slate-700" id="iframe-window-title">
+                <i class="fa-solid fa-window-maximize text-orange-600"></i>
+                <span id="window-title-text">Project Viewer</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openCurrentIframeInNewTab()" class="text-slate-500 hover:text-orange-600 px-2 py-1 text-xs rounded transition" title="فتح في نافذة جديدة خارج النظام">
+                    <i class="fa-solid fa-external-link-alt"></i>
+                </button>
+                <button onclick="closeInSystemWindow()" class="w-7 h-7 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <!-- محتوى الـ Iframe -->
+        <div class="flex-1 w-full h-full bg-white relative">
+            <iframe id="system-iframe" src="" class="w-full h-full border-0"></iframe>
+        </div>
+    </div>
+
     <!-- Hidden File Input for Studio Wallpaper -->
     <input type="file" id="studio-wallpaper-input" accept="image/*" class="hidden" onchange="handleStudioWallpaperUpload(event)">
 
@@ -98,7 +121,7 @@
         </button>
     </div>
 
-    <!-- Nice Search Modal (محرك البحث الجديد بخيارين) -->
+    <!-- Nice Search Modal -->
     <div id="nice-search-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-start justify-center pt-28 z-50">
         <div class="bg-white border border-slate-200 w-[500px] rounded-2xl p-5 shadow-2xl text-slate-800">
             <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
@@ -108,7 +131,6 @@
                 <button onclick="toggleNiceSearch()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <!-- أزرار اختيار وضع البحث -->
             <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
                 <button id="search-mode-system" onclick="setSearchMode('system')" class="py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-desktop"></i> بحث في النظام
@@ -118,12 +140,10 @@
                 </button>
             </div>
 
-            <!-- حقل الإدخال -->
             <div class="relative mb-3">
                 <input type="text" id="nice-search-input" oninput="executeNiceSearch()" placeholder="اكتب للبحث..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
             </div>
 
-            <!-- نتائج البحث -->
             <div id="nice-search-results" class="max-h-60 overflow-y-auto space-y-1 text-xs">
                 <div class="text-center py-6 text-slate-400">ابدأ الكتابة للبحث...</div>
             </div>
@@ -147,7 +167,7 @@
         </div>
     </div>
 
-    <!-- Auth / Account Modal (Light Theme) -->
+    <!-- Auth Modal -->
     <div id="auth-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
@@ -174,7 +194,7 @@
         </div>
     </div>
 
-    <!-- Start Menu (Light Theme) -->
+    <!-- Start Menu -->
     <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-800">
         <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-3">
             <div id="user-avatar-letter" class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
@@ -227,14 +247,13 @@
         </div>
     </div>
 
-    <!-- Taskbar (Light Theme) -->
+    <!-- Taskbar -->
     <div id="os-taskbar" class="h-14 bg-white/90 backdrop-blur-md border-t border-slate-200 px-4 flex items-center justify-between z-40 fixed bottom-0 left-0 right-0 text-slate-800">
         <div class="flex items-center gap-3">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
                 <i class="fa-solid fa-door-open text-lg"></i>
                 <span>Doors</span>
             </button>
-            <!-- زر فتح محرك Nice Search -->
             <button onclick="toggleNiceSearch()" class="h-10 px-3.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-semibold flex items-center gap-2 transition text-slate-700">
                 <i class="fa-solid fa-magnifying-glass text-orange-600"></i>
                 <span>Nice Search</span>
@@ -269,13 +288,16 @@
             { id: 'settings', title: 'Settings', icon: 'fa-solid fa-gear text-white', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
         ];
 
-        let currentSearchMode = 'system'; // 'system' or 'web'
+        let currentSearchMode = 'system';
+        let currentIframeUrl = '';
 
         function openApp(appId) {
             if (appId === 'store') {
-                window.open('https://zozen2026.github.io/Zozen-store/', '_blank');
+                // فتح متجر زوزين داخل نافذة iframe مدمجة بالنظام
+                openInSystemWindow('https://zozen2026.github.io/Zozen-store/', 'Zozen Store - متجر زوزين');
             } else if (appId === 'zozen') {
-                window.open('https://zozen.vercel.app', '_blank');
+                // فتح تطبيق زوزين داخل نافذة iframe مدمجة بالنظام
+                openInSystemWindow('https://zozen.vercel.app', 'Zozen - تطبيق زوزين');
             } else if (appId === 'browser') {
                 alert('Opening Browser Hub...');
             } else if (appId === 'gemini') {
@@ -318,6 +340,32 @@
                 }, 200);
             } else {
                 alert(`Opening application: ${appId}`);
+            }
+        }
+
+        function openInSystemWindow(url, title) {
+            currentIframeUrl = url;
+            const windowEl = document.getElementById('in-system-window');
+            const iframeEl = document.getElementById('system-iframe');
+            const titleEl = document.getElementById('window-title-text');
+            
+            titleEl.innerText = title;
+            iframeEl.src = url;
+            windowEl.classList.remove('hidden');
+            windowEl.classList.add('flex');
+        }
+
+        function closeInSystemWindow() {
+            const windowEl = document.getElementById('in-system-window');
+            const iframeEl = document.getElementById('system-iframe');
+            windowEl.classList.add('hidden');
+            windowEl.classList.remove('flex');
+            iframeEl.src = ''; // إيقاف التحميل لتوفير الذاكرة
+        }
+
+        function openCurrentIframeInNewTab() {
+            if (currentIframeUrl) {
+                window.open(currentIframeUrl, '_blank');
             }
         }
 
