@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors v1.0 - Sovereign Ecosystem</title>
+    <title>Doors v1.0 - Sovereign Ecosystem with Supabase</title>
+    <!-- تحميل مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -36,23 +38,21 @@
     <!-- سطح مكتب النظام -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة مخصصة حصرياً لمتجرنا الداخلي (عبر iframe داخلي) -->
+    <!-- نافذة متجر زوزين الداخلي (تعمل عبر iframe داخلي للنظام) -->
     <div id="doors-store-window" class="absolute inset-6 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-50 overflow-hidden">
         <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
             <div class="flex items-center gap-2 font-bold text-xs text-slate-700">
                 <i class="fa-solid fa-store text-indigo-600"></i>
-                <span id="store-window-title">Zozen Store - متجر النظام الداخلي</span>
+                <span id="store-window-title">Zozen Store - متجر النظام السحابي</span>
             </div>
             <div class="flex items-center gap-2">
-                <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-bold">متجر رسمي مدمج</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">متصل بـ Supabase</span>
                 <button onclick="closeStoreWindow()" class="w-7 h-7 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
         </div>
-        <div class="flex-1 w-full h-full bg-white relative" id="store-window-body">
-            <!-- سيتم تحميل واجهة المتجر أو بوابة المطورين هنا -->
-        </div>
+        <div class="flex-1 w-full h-full bg-white relative overflow-y-auto" id="store-window-body"></div>
     </div>
 
     <!-- مربع بحث زوزين الذكي -->
@@ -97,17 +97,29 @@
     </div>
 
     <script>
-        // التطبيقات المثبتة مسبقاً في النظام (بما فيها Steam ومتجر زوزين)
-        let installedApps = JSON.parse(localStorage.getItem('doors_ecosystem_apps')) || [
-            { id: 'store', title: 'Zozen Store', type: 'store', icon: 'fa-solid fa-store', bg: 'bg-indigo-600', company: 'Zozen Corp' },
+        // إعدادات اتصال Supabase التي أرسلتها
+        const SUPABASE_URL = "https://lzvtnfdgynwczrkwlwhf.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6dnRuZmRneW53Y3pya3dsd2hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNDIxMTEsImV4cCI6MjEwNDcxODExMX0.w2hNlJ4SszyMBkUVjr1qiWNTTPxHMHkM9YOFtVP-pVI";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // التطبيقات الافتراضية الأساسية للنظام
+        const defaultApps = [
+            { id: 'store', title: 'Zozen Store', type: 'store', icon: 'fa-solid fa-store', bg: 'bg-indigo-600', company: 'Zozen Corp', desc: 'متجر النظام وبوابة المطورين السحابية' },
             { id: 'steam', title: 'Steam', type: 'url', url: 'https://store.steampowered.com', icon: 'fa-brands fa-steam', bg: 'bg-slate-900', company: 'Valve Corporation', desc: 'منصة الألعاب العالمية' },
-            { id: 'zozen', title: 'Zozen App', type: 'url', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt', bg: 'bg-orange-600', company: 'Zozen Ecosystem' },
-            { id: 'youtube', title: 'YouTube', type: 'url', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube', bg: 'bg-red-600', company: 'Google' }
+            { id: 'zozen', title: 'Zozen App', type: 'url', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt', bg: 'bg-orange-600', company: 'Zozen Ecosystem', desc: 'منصة زوزين الرسمية' },
+            { id: 'youtube', title: 'YouTube', type: 'url', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube', bg: 'bg-red-600', company: 'Google', desc: 'منصة الفيديوهات' }
         ];
 
-        // تشغيل التطبيقات: المتجر داخلياً، والتطبيقات الخارجية في نافذة مستقلة
+        // جلب جميع التطبيقات (الافتراضية + المثبتة محلیاً)
+        function getAllApps() {
+            let customApps = JSON.parse(localStorage.getItem('doors_custom_apps')) || [];
+            return [...defaultApps, ...customApps];
+        }
+
+        // تشغيل التطبيقات
         function launchApp(appId) {
-            const app = installedApps.find(a => a.id === appId);
+            const apps = getAllApps();
+            const app = apps.find(a => a.id === appId);
             if (!app) return;
 
             if (app.type === 'store') {
@@ -139,79 +151,115 @@
             }
         }
 
-        // إدارة متجر زوزين الداخلي وبوابة المطورين
-        function openZozenStore() {
+        // فتح واجهة متجر زوزين الداخلي وجلب التطبيقات من Supabase
+        async function openZozenStore() {
             const windowEl = document.getElementById('doors-store-window');
             const bodyEl = document.getElementById('store-window-body');
+
+            bodyEl.innerHTML = `<div class="text-center py-20 text-slate-500"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><p>جاري جلب التطبيقات من خوادم Supabase...</p></div>`;
+            windowEl.classList.remove('hidden');
+            windowEl.classList.add('flex');
+
+            let supabaseAppsHtml = '';
+            try {
+                const { data: apps, error } = await supabaseClient.from('apps').select('*').order('id', { ascending: false });
+                if (error) throw error;
+
+                if (apps && apps.length > 0) {
+                    apps.forEach(app => {
+                        const appName = app.name || 'تطبيق سحابي';
+                        const appUrl = app.exe_url || app.file_url || '#';
+                        const appDev = app.developer || 'مطور سحابي';
+                        const appDesc = app.description || 'تباعاً لقاعدة بيانات Supabase';
+                        
+                        supabaseAppsHtml += `
+                            <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-cloud"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-sm text-slate-800">${appName}</h4>
+                                        <p class="text-[11px] text-slate-500">بواسطة: ${appDev}</p>
+                                        <p class="text-[10px] text-emerald-600 mt-0.5">${appDesc}</p>
+                                    </div>
+                                </div>
+                                <button onclick="installCloudAppToSystem('${appName}', '${appUrl}', '${appDev}', '${appDesc}')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow">تثبيت في النظام</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    supabaseAppsHtml = `<p class="text-slate-400 text-xs text-center py-4">لا توجد تطبيقات مرفوعة على قاعدة بيانات Supabase حالياً.</p>`;
+                }
+            } catch (err) {
+                supabaseAppsHtml = `<p class="text-red-500 text-xs text-center py-4">فشل الاتصال بقاعدة بيانات Supabase: ${err.message}</p>`;
+            }
 
             let storeHtml = `
                 <div class="p-6 max-w-4xl mx-auto space-y-8">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-store text-indigo-600"></i> التطبيقات المثبتة والمتاحة في النظام</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="store-apps-grid"></div>
+                        <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud text-emerald-600"></i> تطبيقات السحابة (Supabase Cloud Hub)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${supabaseAppsHtml}</div>
                     </div>
 
-                    <!-- بوابة المطورين المدمجة في المتجر -->
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-store text-indigo-600"></i> التطبيقات المحلية المثبتة في النظام</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="local-store-apps-grid"></div>
+                    </div>
+
+                    <!-- بوابة المطورين المتصلة بـ Supabase -->
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-base font-bold text-orange-600 mb-4 flex items-center gap-2"><i class="fa-solid fa-code"></i> بوابة المطورين (تثبيت تطبيق جديد في نظام Doors)</h3>
+                        <h3 class="text-base font-bold text-orange-600 mb-4 flex items-center gap-2"><i class="fa-solid fa-code"></i> بوابة المطورين (نشر تطبيق سحابياً عبر Supabase)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                             <div>
-                                <label class="block font-semibold mb-1 text-slate-700">شعار التطبيق (Icon class / FontAwesome)</label>
-                                <input type="text" id="dev-app-icon" value="fa-solid fa-cube" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div>
                                 <label class="block font-semibold mb-1 text-slate-700">اسم التطبيق *</label>
-                                <input type="text" id="dev-app-name" placeholder="مثال: تطبيق الألعاب" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
+                                <input type="text" id="dev-app-name" placeholder="مثال: تطبيق زوزين الذكي" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div>
                                 <label class="block font-semibold mb-1 text-slate-700">اسم الشركة أو الجهة المطورة</label>
-                                <input type="text" id="dev-company-name" placeholder="مثال: Valve" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
+                                <input type="text" id="dev-company-name" placeholder="مثال: Zozen Corp" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div>
-                                <label class="block font-semibold mb-1 text-slate-700">اسم المطور الشخصي (اختياري - Optional)</label>
+                                <label class="block font-semibold mb-1 text-slate-700">اسم المطور الشخصي (Optional)</label>
                                 <input type="text" id="dev-person-name" placeholder="اسمك الكريم" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div>
                                 <label class="block font-semibold mb-1 text-slate-700">رقم الإصدار (Version)</label>
                                 <input type="text" id="dev-app-version" value="1.0.0" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
-                            <div>
-                                <label class="block font-semibold mb-1 text-slate-700">رابط التطبيق (URL) *</label>
+                            <div class="md:col-span-2">
+                                <label class="block font-semibold mb-1 text-slate-700">رابط التطبيق المباشر (URL) *</label>
                                 <input type="url" id="dev-app-url" placeholder="https://..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block font-semibold mb-1 text-slate-700">الوصف (Description)</label>
-                                <textarea id="dev-app-desc" rows="2" placeholder="ما الذي يفعله هذا التطبيق..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500"></textarea>
+                                <textarea id="dev-app-desc" rows="2" placeholder="ما الذي يفعله التطبيق..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500"></textarea>
                             </div>
                         </div>
-                        <button onclick="installAppFromStore()" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition shadow text-xs">
-                            <i class="fa-solid fa-download mr-1"></i> تثبيت التطبيق في نظام Doors
+                        <button onclick="publishAppToSupabaseCloud()" id="publish-btn" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition shadow text-xs">
+                            <i class="fa-solid fa-cloud-arrow-up mr-1"></i> رفع ونشر التطبيق إلى خوادم Supabase
                         </button>
                     </div>
                 </div>
             `;
 
             bodyEl.innerHTML = storeHtml;
-            windowEl.classList.remove('hidden');
-            windowEl.classList.add('flex');
-            renderStoreGrid();
+            renderLocalStoreGrid();
         }
 
-        function renderStoreGrid() {
-            const grid = document.getElementById('store-apps-grid');
+        function renderLocalStoreGrid() {
+            const grid = document.getElementById('local-store-apps-grid');
             if (!grid) return;
             grid.innerHTML = '';
 
-            installedApps.forEach(app => {
+            getAllApps().forEach(app => {
                 const div = document.createElement('div');
                 div.className = "bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex items-center justify-between";
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 ${app.bg || 'bg-orange-600'} text-white rounded-xl flex items-center justify-center text-lg"><i class="${app.icon || 'fa-solid fa-cube'}"></i></div>
                         <div>
-                            <h4 class="font-bold text-sm text-slate-800">${app.title} <span class="text-[10px] text-slate-400">v${app.version || '1.0'}</span></h4>
-                            <p class="text-[11px] text-slate-500">${app.company || 'Zozen Ecosystem'} ${app.developer ? '• ' + app.developer : ''}</p>
-                            <p class="text-[10px] text-orange-600 mt-0.5">${app.desc || 'تطبيق مثبت في النظام'}</p>
+                            <h4 class="font-bold text-sm text-slate-800">${app.title}</h4>
+                            <p class="text-[11px] text-slate-500">${app.company || 'Zozen Ecosystem'}</p>
+                            <p class="text-[10px] text-orange-600 mt-0.5">${app.desc || 'تطبيق مثبت'}</p>
                         </div>
                     </div>
                     <button onclick="launchApp('${app.id}'); closeStoreWindow();" class="bg-slate-100 hover:bg-indigo-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">فتح</button>
@@ -220,39 +268,75 @@
             });
         }
 
-        function installAppFromStore() {
-            const icon = document.getElementById('dev-app-icon').value.trim() || 'fa-solid fa-cube';
-            const title = document.getElementById('dev-app-name').value.trim();
+        // تثبيت التطبيق السحابي في نظام Doors المحلي وعرضه على سطح المكتب
+        function installCloudAppToSystem(name, url, developer, desc) {
+            const newApp = {
+                id: 'cloud_app_' + Date.now(),
+                title: name,
+                type: 'url',
+                url: url,
+                company: developer,
+                desc: desc,
+                icon: 'fa-solid fa-cloud',
+                bg: 'bg-emerald-600'
+            };
+
+            let customApps = JSON.parse(localStorage.getItem('doors_custom_apps')) || [];
+            if (!customApps.some(a => a.url === url)) {
+                customApps.push(newApp);
+                localStorage.setItem('doors_custom_apps', JSON.stringify(customApps));
+                alert(`تم تثبيت التطبيق "${name}" من سحابة Supabase بنجاح وظهر على سطح المكتب!`);
+                renderDesktop();
+                renderLocalStoreGrid();
+            } else {
+                alert('هذا التطبيق مثبت مسبقاً في نظامك!');
+            }
+        }
+
+        // نشر تطبيق جديد من بوابة المطورين مباشرة إلى جدول apps في Supabase
+        async function publishAppToSupabaseCloud() {
+            const name = document.getElementById('dev-app-name').value.trim();
             const company = document.getElementById('dev-company-name').value.trim() || 'Zozen Developer';
             const developer = document.getElementById('dev-person-name').value.trim();
             const version = document.getElementById('dev-app-version').value.trim() || '1.0';
             const url = document.getElementById('dev-app-url').value.trim();
             const desc = document.getElementById('dev-app-desc').value.trim();
+            const btn = document.getElementById('publish-btn');
 
-            if (!title || !url) {
-                alert('يرجى إدخال اسم التطبيق والرابط الخاص به.');
+            if (!name || !url) {
+                alert('يرجى إدخال اسم التطبيق والرابط المباشر على الأقل.');
                 return;
             }
 
-            const newApp = {
-                id: 'app_' + Date.now(),
-                title: title,
-                type: 'url',
-                url: url,
-                company: company,
-                developer: developer,
-                version: version,
-                desc: desc,
-                icon: icon,
-                bg: 'bg-emerald-600'
-            };
+            btn.disabled = true;
+            btn.textContent = 'جاري الرفع إلى خوادم Supabase...';
 
-            installedApps.push(newApp);
-            localStorage.setItem('doors_ecosystem_apps', JSON.stringify(installedApps));
+            try {
+                const { error } = await supabaseClient
+                    .from('apps')
+                    .insert([{ 
+                        name: name, 
+                        developer: company + (developer ? ' (' + developer + ')' : ''), 
+                        description: desc || 'إصدار v' + version, 
+                        exe_url: url 
+                    }]);
 
-            alert(`تم تثبيت تطبيق "${title}" بنجاح في بيئة Doors وظهرت أيقونته على سطح المكتب!`);
-            renderDesktop();
-            renderStoreGrid();
+                if (error) throw error;
+
+                alert('تم نشر التطبيق بنجاح في قاعدة بيانات Supabase وأصبح متاحاً سحابياً!');
+                document.getElementById('dev-app-name').value = '';
+                document.getElementById('dev-company-name').value = '';
+                document.getElementById('dev-person-name').value = '';
+                document.getElementById('dev-app-url').value = '';
+                document.getElementById('dev-app-desc').value = '';
+                
+                openZozenStore(); // إعادة تحميل المتجر لتحديث القائمة السحابية
+            } catch (err) {
+                alert('فشل النشر السحابي: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'رفع ونشر التطبيق إلى خوادم Supabase';
+            }
         }
 
         function closeStoreWindow() {
@@ -274,7 +358,7 @@
             resultsContainer.innerHTML = '';
             if (!query) return;
 
-            const matches = installedApps.filter(app => app.title.toLowerCase().includes(query));
+            const matches = getAllApps().filter(app => app.title.toLowerCase().includes(query));
             let html = '';
             matches.forEach(app => {
                 html += `
@@ -296,7 +380,7 @@
         function renderDesktop() {
             const area = document.getElementById('desktop-area');
             area.innerHTML = '';
-            installedApps.forEach((app, index) => {
+            getAllApps().forEach((app, index) => {
                 let col = Math.floor(index / 5);
                 let row = index % 5;
                 const div = document.createElement('div');
