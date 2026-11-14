@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors v1.0 - Sovereign Internal Environment</title>
+    <title>Doors v1.0 - Pure Internal Environment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,7 +37,28 @@
     <!-- Desktop Area (سطح مكتب بيئة Doors) -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة تثبيت التطبيق داخل بيئة Doors حصرياً (بدون تحميل ويندوز) -->
+    <!-- نافذة التطبيق الداخلية الحصرية داخل Doors (تمنع فتح متصفح ويندوز أو التحميل) -->
+    <div id="doors-app-window" class="absolute inset-6 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-50 overflow-hidden">
+        <!-- شريط علوي خاص بنظام Doors -->
+        <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-xs text-slate-700">
+                <i class="fa-solid fa-cube text-orange-600"></i>
+                <span id="doors-window-title">Doors App Window</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold">بيئة Doors الداخلية</span>
+                <button onclick="closeDoorsAppWindow()" class="w-7 h-7 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <!-- محتوى التطبيق الداخلي (يعمل حصرياً داخل بيئة النظام بدون تحميل) -->
+        <div class="flex-1 w-full h-full bg-white relative">
+            <iframe id="doors-internal-iframe" src="" class="w-full h-full border-0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+    </div>
+
+    <!-- نافذة تثبيت التطبيق داخل بيئة Doors حصرياً -->
     <div id="install-app-modal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
             <button onclick="closeInstallModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
@@ -47,16 +68,16 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-sm text-slate-900">تثبيت داخل بيئة Doors</h3>
-                    <p class="text-[11px] text-slate-500">يُحفظ التطبيق داخل النظام الافتراضي دون تحميل ملفات في ويندوز</p>
+                    <p class="text-[11px] text-slate-500">يُحفظ التطبيق داخل النظام الافتراضي دون أي ملفات في ويندوز</p>
                 </div>
             </div>
             <div class="space-y-3 text-xs">
                 <div>
                     <label class="block text-slate-600 font-semibold mb-1">اسم التطبيق</label>
-                    <input type="text" id="new-app-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="مثال: تطبيق زوزين أو لعبتي">
+                    <input type="text" id="new-app-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="مثال: تطبيق زوزين">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-semibold mb-1">رابط التشغيل (URL / Web App)</label>
+                    <label class="block text-slate-600 font-semibold mb-1">رابط التشغيل (Web App URL)</label>
                     <input type="url" id="new-app-url" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="https://...">
                 </div>
                 <button onclick="confirmInternalInstall()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-md mt-2">
@@ -103,11 +124,11 @@
                 <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
                 <div>
                     <h3 class="font-bold text-sm">Doors Sovereign</h3>
-                    <span class="text-xs text-emerald-600 font-medium">● Internal Storage Only</span>
+                    <span class="text-xs text-emerald-600 font-medium">● Internal Sandbox Only</span>
                 </div>
             </div>
             <button onclick="openInstallModal(); toggleStartMenu();" class="bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">
-                + تثبيت تطبيق
+                + تثبيت
             </button>
         </div>
         <div id="start-menu-apps" class="space-y-1 text-sm max-h-64 overflow-y-auto"></div>
@@ -131,7 +152,7 @@
         </div>
         <div class="flex items-center gap-3 text-xs text-slate-600 font-medium">
             <span class="hidden md:flex bg-orange-50 text-orange-600 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved"></i> No Windows Downloads
+                <i class="fa-solid fa-shield-halved"></i> Pure Sandbox OS
             </span>
             <span id="clock" class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">00:00</span>
         </div>
@@ -149,39 +170,28 @@
 
         let currentSearchMode = 'system';
 
-        // دالة تشغيل التطبيق كنافذة مستقلة داخل بيئة Doors (بدون تحميل ملفات)
-        function launchStandaloneApp(url, title) {
-            const width = Math.min(1150, window.screen.availWidth - 80);
-            const height = Math.min(750, window.screen.availHeight - 80);
-            const left = Math.round((window.screen.availWidth - width) / 2);
-            const top = Math.round((window.screen.availHeight - height) / 2);
-
-            const windowFeatures = [
-                'popup=yes',
-                `width=${width}`,
-                `height=${height}`,
-                `left=${left}`,
-                `top=${top}`,
-                'toolbar=no',
-                'menubar=no',
-                'location=no',
-                'status=no',
-                'scrollbars=yes',
-                'resizable=yes'
-            ].join(',');
-
-            const windowName = 'DoorsOS_App_' + title.replace(/\s+/g, '_');
-            const appWin = window.open(url, windowName, windowFeatures);
-
-            if (appWin) {
-                appWin.focus();
-                showToast(`تشغيل "${title}" داخل بيئة Doors`);
-            } else {
-                alert('يرجى السماح بالنوافذ المنبثقة ليعمل نظام Doors بحرية.');
-            }
+        // دالة تشغيل التطبيق حصرياً داخل نافذة نظام Doors الداخلية (تمنع التحميل تماماً)
+        function launchInsideDoorsOS(url, title) {
+            const windowEl = document.getElementById('doors-app-window');
+            const iframeEl = document.getElementById('doors-internal-iframe');
+            const titleEl = document.getElementById('doors-window-title');
+            
+            titleEl.innerText = title;
+            iframeEl.src = url;
+            windowEl.classList.remove('hidden');
+            windowEl.classList.add('flex');
+            showToast(`تشغيل "${title}" داخل بيئة Doors`);
         }
 
-        // استقبال طلبات التثبيت البرمجي الداخلي حصرياً
+        function closeDoorsAppWindow() {
+            const windowEl = document.getElementById('doors-app-window');
+            const iframeEl = document.getElementById('doors-internal-iframe');
+            windowEl.classList.add('hidden');
+            windowEl.classList.remove('flex');
+            iframeEl.src = '';
+        }
+
+        // استقبال طلبات التثبيت من متجر زوزين البرمجي
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'INSTALL_DOORS_APP') {
                 const { appName, appUrl, appIcon, appColor } = event.data;
@@ -189,7 +199,7 @@
             }
         });
 
-        // حفظ التطبيق داخل ذاكرة النظام الداخلية (LocalStorage) فقط دون أي تحميل بملفات ويندوز
+        // حفظ التطبيق في ذاكرة Doors المحلية فقط
         function saveAppToInternalStorage(title, url, icon = 'fa-solid fa-cube text-white', bg = 'bg-emerald-600') {
             if (!title || !url) return;
             
@@ -225,7 +235,7 @@
         }
 
         function openAppByObject(app) {
-            launchStandaloneApp(app.url, app.title);
+            launchInsideDoorsOS(app.url, app.title);
         }
 
         function openInstallModal() {
@@ -272,7 +282,6 @@
             }, 3000);
         }
 
-        // رسم سطح مكتب بيئة Doors
         function renderDesktopGrid() {
             const area = document.getElementById('desktop-area');
             area.innerHTML = '';
@@ -331,6 +340,7 @@
                     openAppByObject(app);
                     toggleStartMenu();
                 };
+                container.جلسة = true;
                 container.appendChild(btn);
             });
         }
@@ -380,7 +390,7 @@
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between p-3 bg-orange-50 hover:bg-orange-100 rounded-xl cursor-pointer text-orange-700";
                 div.innerHTML = `<span>بحث في الويب عن: "${query}"</span><span>➔</span>`;
-                div.onclick = () => { launchStandaloneApp(`https://www.google.com/search?q=${encodeURIComponent(query)}`, `Google: ${query}`); toggleNiceSearch(); };
+                div.onclick = () => { launchInsideDoorsOS(`https://www.google.com/search?q=${encodeURIComponent(query)}`, `Google: ${query}`); toggleNiceSearch(); };
                 resultsContainer.appendChild(div);
             }
         }
