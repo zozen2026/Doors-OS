@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doors v1.0 - Sovereign White Environment</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -23,11 +21,11 @@
             position: absolute;
             cursor: pointer;
             touch-action: none;
+            width: 86px;
         }
         .desktop-item:active {
             cursor: grabbing;
         }
-        /* Custom Scrollbar for Light Theme */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.8); }
         ::-webkit-scrollbar-thumb { background: rgba(203, 213, 225, 1); border-radius: 10px; }
@@ -39,86 +37,39 @@
     <!-- Desktop Area -->
     <div id="desktop-area" class="absolute inset-0 bottom-14 z-0 overflow-hidden"></div>
 
-    <!-- نافذة النظام المدمجة (تعمل بمحرك المتصفح وبدون أي أثر لشريط كروم) -->
-    <div id="in-system-window" class="absolute inset-10 bottom-20 bg-white/95 backdrop-blur-2xl border border-slate-200 rounded-2xl shadow-2xl hidden flex-col z-40 overflow-hidden">
-        <!-- شريط علوي يحاكي نافذة التطبيق المستقل -->
-        <div class="h-12 bg-slate-100 border-b border-slate-200 px-4 flex items-center justify-between">
-            <div class="flex items-center gap-2 font-bold text-xs text-slate-700">
-                <i class="fa-solid fa-window-maximize text-orange-600"></i>
-                <span id="window-title-text">Application Window</span>
+    <!-- نافذة تثبيت تطبيق جديد داخل النظام -->
+    <div id="install-app-modal" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
+            <button onclick="closeInstallModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-slate-900">تثبيت تطبيق في Doors OS</h3>
+                    <p class="text-[11px] text-slate-500">يُثبّت داخل النظام ويفتح بنافذة مستقلة</p>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button onclick="openCurrentIframeInNewTab()" class="text-slate-500 hover:text-orange-600 px-2 py-1 text-xs rounded transition" title="فتح في نافذة مستقلة">
-                    <i class="fa-solid fa-external-link-alt"></i>
-                </button>
-                <button onclick="closeInSystemWindow()" class="w-7 h-7 bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-lg flex items-center justify-center transition text-xs">
-                    <i class="fa-solid fa-xmark"></i>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-600 font-semibold mb-1">اسم التطبيق</label>
+                    <input type="text" id="new-app-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="مثال: لعبتي أو تطبيق الفيديو">
+                </div>
+                <div>
+                    <label class="block text-slate-600 font-semibold mb-1">رابط التطبيق (URL)</label>
+                    <input type="url" id="new-app-url" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500" placeholder="https://...">
+                </div>
+                <button onclick="confirmManualInstall()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-md mt-2">
+                    <i class="fa-solid fa-check mr-1"></i> تثبيت الآن داخل النظام
                 </button>
             </div>
-        </div>
-        <!-- محتوى التطبيق (يعمل بداخله محرك الويب بصمت تام وبدون واجهة متصفح) -->
-        <div class="flex-1 w-full h-full bg-white relative">
-            <iframe id="system-iframe" src="" class="w-full h-full border-0"></iframe>
         </div>
     </div>
 
-    <!-- Hidden File Input for Studio Wallpaper -->
-    <input type="file" id="studio-wallpaper-input" accept="image/*" class="hidden" onchange="handleStudioWallpaperUpload(event)">
-
-    <!-- Background Context Menu -->
-    <div id="context-menu" class="absolute hidden w-56 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
-        <button onclick="refreshDesktop()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-rotate"></i> Refresh System
-        </button>
-        
-        <div class="relative group">
-            <button class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center justify-between transition">
-                <span class="flex items-center gap-3"><i class="fa-solid fa-plus text-orange-500"></i> New +</span>
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            </button>
-            <div class="absolute left-full top-0 ml-1.5 hidden group-hover:block w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 text-slate-700 text-xs z-50">
-                <button onclick="createNewDesktopItem('folder')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-folder text-amber-500"></i> New Folder
-                </button>
-                <button onclick="createNewDesktopItem('txt')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-file-lines text-sky-500"></i> Text Document (.txt)
-                </button>
-                <button onclick="createNewDesktopItem('sheet')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-                    <i class="fa-solid fa-file-excel text-emerald-500"></i> Spreadsheet (.xls)
-                </button>
-            </div>
-        </div>
-
-        <button onclick="document.getElementById('studio-wallpaper-input').click()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-images text-orange-500"></i> Set Wallpaper from Studio
-        </button>
-        <button onclick="openApp('settings')" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-sliders"></i> Personalize & Settings
-        </button>
-        <div class="h-px bg-slate-200 my-1"></div>
-        <button onclick="openApp('installer')" class="w-full text-left px-3 py-2 text-orange-600 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition font-bold">
-            <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 ISO
-        </button>
-        <button onclick="openAuthModal()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-user-circle"></i> Account / Sign In
-        </button>
-    </div>
-
-    <!-- Item Context Menu -->
-    <div id="item-context-menu" class="absolute hidden w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-2xl p-1.5 z-50 text-slate-700 text-xs">
-        <button onclick="itemActionOpen()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-folder-open text-orange-500"></i> Open
-        </button>
-        <button onclick="itemActionCopy()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-copy text-sky-500"></i> Copy
-        </button>
-        <button onclick="itemActionRename()" class="w-full text-left px-3 py-2 hover:bg-orange-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-pen text-indigo-500"></i> Change Name
-        </button>
-        <div id="delete-divider" class="h-px bg-slate-200 my-1"></div>
-        <button id="delete-btn-action" onclick="itemActionDelete()" class="w-full text-left px-3 py-2 text-red-500 hover:bg-red-600 hover:text-white rounded-lg flex items-center gap-3 transition">
-            <i class="fa-solid fa-trash"></i> Delete
-        </button>
+    <!-- إشعار منبثق سريع عند التثبيت أو التشغيل -->
+    <div id="toast-alert" class="fixed top-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-3 z-50 transition-all duration-300 translate-x-full opacity-0">
+        <i class="fa-solid fa-window-restore text-orange-400 text-base"></i>
+        <span id="toast-message">جاري تشغيل التطبيق...</span>
     </div>
 
     <!-- Nice Search Modal -->
@@ -130,7 +81,6 @@
                 </div>
                 <button onclick="toggleNiceSearch()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
             <div class="grid grid-cols-2 gap-2 mb-3 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
                 <button id="search-mode-system" onclick="setSearchMode('system')" class="py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-desktop"></i> بحث في النظام
@@ -139,117 +89,35 @@
                     <i class="fa-solid fa-globe"></i> بحث في الويب
                 </button>
             </div>
-
             <div class="relative mb-3">
                 <input type="text" id="nice-search-input" oninput="executeNiceSearch()" placeholder="اكتب للبحث..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
             </div>
-
-            <div id="nice-search-results" class="max-h-60 overflow-y-auto space-y-1 text-xs">
-                <div class="text-center py-6 text-slate-400">ابدأ الكتابة للبحث...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Modal -->
-    <div id="os-notification" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50 pointer-events-auto">
-        <div class="bg-white border border-orange-500/40 w-[420px] rounded-2xl p-6 shadow-2xl text-slate-800 text-center relative">
-            <div id="notif-icon" class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3 border border-orange-200">
-                <i class="fa-solid fa-download animate-bounce"></i>
-            </div>
-            <h3 id="notif-title" class="font-bold text-base text-slate-900 mb-1">Preparing ISO Package</h3>
-            <p id="notif-desc" class="text-xs text-slate-500 mb-4">Building bootloader configuration and system images...</p>
-            
-            <div class="w-full bg-slate-100 rounded-full h-2.5 mb-4 border border-slate-200 overflow-hidden">
-                <div id="notif-progress" class="bg-gradient-to-r from-orange-600 to-amber-500 h-2.5 rounded-full w-0 transition-all duration-300"></div>
-            </div>
-
-            <button onclick="closeOsNotification()" id="notif-btn" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 rounded-xl text-xs transition hidden">Close / Done</button>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white border border-slate-200 w-96 rounded-2xl p-6 shadow-2xl text-slate-800 relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center mb-6">
-                <div id="modal-avatar" class="w-12 h-12 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-xl font-bold mb-2">D</div>
-                <h3 class="font-bold text-base text-slate-900">Doors v1.0 Sovereign Account</h3>
-                <p id="auth-subtitle" class="text-xs text-slate-500">Your session remains active across restarts</p>
-            </div>
-            <div id="auth-form-content" class="space-y-4 text-xs">
-                <div>
-                    <label class="block text-slate-500 mb-1">Email / Username</label>
-                    <input type="text" id="auth-user" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-orange-500" placeholder="user@doors.os">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Password</label>
-                    <input type="password" id="auth-pass" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-orange-500" placeholder="••••••••">
-                </div>
-                <button onclick="handleAuthSubmit()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl transition shadow-lg">Sign In & Save Session</button>
-                <div class="text-center pt-2 flex justify-between items-center border-t border-slate-100">
-                    <span class="text-emerald-600 text-[11px]"><i class="fa-solid fa-shield-halved"></i> Persistent Storage Active</span>
-                    <button onclick="handleLogout()" class="text-red-500 font-bold hover:underline">Sign Out</button>
-                </div>
-            </div>
+            <div id="nice-search-results" class="max-h-60 overflow-y-auto space-y-1 text-xs"></div>
         </div>
     </div>
 
     <!-- Start Menu -->
     <div id="start-menu" class="absolute bottom-16 left-4 w-72 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl p-4 hidden flex-col z-50 text-slate-800">
-        <div class="flex items-center gap-3 pb-3 border-b border-slate-100 mb-3">
-            <div id="user-avatar-letter" class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
-            <div class="overflow-hidden">
-                <h3 id="current-user-display" class="font-bold text-sm truncate">Guest User</h3>
-                <span id="session-status-badge" class="text-xs text-slate-500">● Local Guest Session</span>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold text-lg text-white">D</div>
+                <div>
+                    <h3 class="font-bold text-sm">Zozen Admin</h3>
+                    <span class="text-xs text-emerald-600 font-medium">● Standalone Mode</span>
+                </div>
             </div>
-        </div>
-        <div class="space-y-1 text-sm max-h-60 overflow-y-auto">
-            <button onclick="openApp('installer'); toggleStartMenu();" class="w-full text-left px-3 py-2 bg-orange-50 text-orange-600 font-bold rounded-lg flex items-center gap-3 transition mb-1 border border-orange-100">
-                <i class="fa-solid fa-compact-disc"></i> Download Doors v1.0 (ISO)
-            </button>
-            <button onclick="openApp('zozen'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-bolt text-orange-500"></i> Zozen
-            </button>
-            <button onclick="openApp('store'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-store text-indigo-500"></i> Zozen Store
-            </button>
-            <button onclick="openApp('browser'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-chrome text-amber-500"></i> Browser Hub
-            </button>
-            <button onclick="openApp('gemini'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i> Google Gemini
-            </button>
-            <button onclick="openApp('telegram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-telegram text-sky-500"></i> Telegram
-            </button>
-            <button onclick="openApp('youtube'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-youtube text-red-500"></i> YouTube
-            </button>
-            <button onclick="openApp('facebook'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-facebook-f text-blue-600"></i> Facebook
-            </button>
-            <button onclick="openApp('tiktok'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-tiktok text-black"></i> TikTok
-            </button>
-            <button onclick="openApp('instagram'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-instagram text-pink-500"></i> Instagram
-            </button>
-            <button onclick="openApp('whatsapp'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition">
-                <i class="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp
-            </button>
-            <button onclick="openApp('settings'); toggleStartMenu();" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 rounded-lg flex items-center gap-3 transition border-t border-slate-100 mt-1 pt-2">
-                <i class="fa-solid fa-gear text-slate-500"></i> System Settings
+            <button onclick="openInstallModal(); toggleStartMenu();" class="bg-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition" title="تثبيت تطبيق جديد">
+                + تثبيت
             </button>
         </div>
-        <div class="pt-3 mt-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
-            <span>Doors v1.0</span>
-            <button onclick="openAuthModal(); toggleStartMenu();" class="text-orange-600 font-bold hover:underline">Account</button>
+        <div id="start-menu-apps" class="space-y-1 text-sm max-h-64 overflow-y-auto">
+            <!-- يتم ملء التطبيقات تلقائياً من الجافاسكريبت -->
         </div>
     </div>
 
     <!-- Taskbar -->
     <div id="os-taskbar" class="h-14 bg-white/90 backdrop-blur-md border-t border-slate-200 px-4 flex items-center justify-between z-40 fixed bottom-0 left-0 right-0 text-slate-800">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5">
             <button onclick="toggleStartMenu()" class="h-10 px-4 bg-orange-600 hover:bg-orange-500 rounded-xl font-bold flex items-center gap-2 shadow-lg transition border border-orange-400/30 text-white">
                 <i class="fa-solid fa-door-open text-lg"></i>
                 <span>Doors</span>
@@ -258,14 +126,13 @@
                 <i class="fa-solid fa-magnifying-glass text-orange-600"></i>
                 <span>Nice Search</span>
             </button>
-        </div>
-
-        <div class="flex items-center gap-3 text-xs text-slate-600 font-medium">
-            <button onclick="openAuthModal()" id="taskbar-user-pill" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl flex items-center gap-2 transition">
-                <i class="fa-solid fa-user-check text-orange-600"></i>
-                <span id="taskbar-username">Guest User</span>
+            <button onclick="openInstallModal()" class="h-10 px-3.5 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-xl text-xs font-bold flex items-center gap-2 transition text-orange-600">
+                <i class="fa-solid fa-plus"></i>
+                <span class="hidden sm:inline">تثبيت تطبيق</span>
             </button>
-            <span class="hidden sm:flex bg-orange-50 text-orange-600 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
+        </div>
+        <div class="flex items-center gap-3 text-xs text-slate-600 font-medium">
+            <span class="hidden md:flex bg-orange-50 text-orange-600 border border-orange-200 px-2.5 py-1.5 rounded-xl items-center gap-1.5">
                 <i class="fa-solid fa-microchip"></i> Hardware-Ready OS
             </span>
             <span id="clock" class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">00:00</span>
@@ -274,97 +141,209 @@
 
     <script>
         const defaultDesktopApps = [
-            { id: 'zozen', title: 'Zozen', icon: 'fa-solid fa-bolt text-white', bg: 'bg-orange-600 border-orange-400/30', type: 'app' },
-            { id: 'store', title: 'Zozen Store', icon: 'fa-solid fa-store text-white', bg: 'bg-indigo-600 border-indigo-400/30', type: 'app' },
-            { id: 'installer', title: 'Get Doors', icon: 'fa-solid fa-compact-disc text-white', bg: 'bg-gradient-to-tr from-orange-600 to-amber-500 border-orange-300/40 animate-pulse', type: 'app' },
-            { id: 'browser', title: 'Browser Hub', icon: 'fa-brands fa-chrome text-white', bg: 'bg-amber-500 border-amber-300/30', type: 'app' },
-            { id: 'gemini', title: 'Gemini', icon: 'fa-solid fa-wand-magic-sparkles text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
-            { id: 'telegram', title: 'Telegram', icon: 'fa-brands fa-telegram text-white', bg: 'bg-sky-500 border-sky-300/30', type: 'app' },
-            { id: 'youtube', title: 'YouTube', icon: 'fa-brands fa-youtube text-white', bg: 'bg-red-600 border-red-400/30', type: 'app' },
-            { id: 'facebook', title: 'Facebook', icon: 'fa-brands fa-facebook-f text-white', bg: 'bg-blue-600 border-blue-400/30', type: 'app' },
-            { id: 'tiktok', title: 'TikTok', icon: 'fa-brands fa-tiktok text-white', bg: 'bg-black border-zinc-700', type: 'app' },
-            { id: 'instagram', title: 'Instagram', icon: 'fa-brands fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600 border-pink-400/30', type: 'app' },
-            { id: 'whatsapp', title: 'WhatsApp', icon: 'fa-brands fa-whatsapp text-white', bg: 'bg-emerald-600 border-emerald-400/30', type: 'app' },
-            { id: 'settings', title: 'Settings', icon: 'fa-solid fa-gear text-white', bg: 'bg-slate-700 border-slate-500/30', type: 'app' }
+            { id: 'zozen', title: 'Zozen', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt text-white', bg: 'bg-orange-600' },
+            { id: 'store', title: 'Zozen Store', url: 'https://zozen2026.github.io/Zozen-store/', icon: 'fa-solid fa-store text-white', bg: 'bg-indigo-600' },
+            { id: 'browser', title: 'Browser Hub', url: 'https://www.google.com', icon: 'fa-brands fa-chrome text-white', bg: 'bg-amber-500' },
+            { id: 'gemini', title: 'Gemini', url: 'https://gemini.google.com', icon: 'fa-solid fa-wand-magic-sparkles text-white', bg: 'bg-blue-600' },
+            { id: 'telegram', title: 'Telegram', url: 'https://web.telegram.org', icon: 'fa-brands fa-telegram text-white', bg: 'bg-sky-500' },
+            { id: 'youtube', title: 'YouTube', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube text-white', bg: 'bg-red-600' },
+            { id: 'facebook', title: 'Facebook', url: 'https://www.facebook.com', icon: 'fa-brands fa-facebook-f text-white', bg: 'bg-blue-600' },
+            { id: 'tiktok', title: 'TikTok', url: 'https://www.tiktok.com', icon: 'fa-brands fa-tiktok text-white', bg: 'bg-black' },
+            { id: 'instagram', title: 'Instagram', url: 'https://www.instagram.com', icon: 'fa-brands fa-instagram text-white', bg: 'bg-gradient-to-tr from-amber-500 via-rose-600 to-purple-600' },
+            { id: 'whatsapp', title: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'fa-brands fa-whatsapp text-white', bg: 'bg-emerald-600' }
         ];
 
         let currentSearchMode = 'system';
-        let currentIframeUrl = '';
 
-        function openApp(appId) {
-            if (appId === 'store') {
-                openInSystemWindow('https://zozen2026.github.io/Zozen-store/', 'Zozen Store - متجر زوزين');
-            } else if (appId === 'zozen') {
-                openInSystemWindow('https://zozen.vercel.app', 'Zozen - تطبيق زوزين');
-            } else if (appId === 'gemini') {
-                openInSystemWindow('https://gemini.google.com', 'Google Gemini - الذكاء الاصطناعي');
-            } else if (appId === 'telegram') {
-                openInSystemWindow('https://web.telegram.org', 'Telegram - تيليجرام');
-            } else if (appId === 'youtube') {
-                openInSystemWindow('https://www.youtube.com', 'YouTube - يوتيوب');
-            } else if (appId === 'facebook') {
-                openInSystemWindow('https://www.facebook.com', 'Facebook - فيسبوك');
-            } else if (appId === 'tiktok') {
-                openInSystemWindow('https://www.tiktok.com', 'TikTok - تيك توك');
-            } else if (appId === 'instagram') {
-                openInSystemWindow('https://www.instagram.com', 'Instagram - إنستغرام');
-            } else if (appId === 'whatsapp') {
-                openInSystemWindow('https://web.whatsapp.com', 'WhatsApp - واتساب');
-            } else if (appId === 'browser') {
-                openInSystemWindow('https://www.google.com', 'Browser Hub - متصفح النظام');
-            } else if (appId === 'settings') {
-                alert('Opening System Settings & Personalization');
-            } else if (appId === 'installer') {
-                const notif = document.getElementById('os-notification');
-                notif.classList.remove('hidden');
-                let progress = 0;
-                const bar = document.getElementById('notif-progress');
-                const title = document.getElementById('notif-title');
-                const desc = document.getElementById('notif-desc');
-                const btn = document.getElementById('notif-btn');
-                
-                title.innerText = "Building Doors v1.0 ISO";
-                desc.innerText = "Packaging kernel and custom installer...";
-                
-                const interval = setInterval(() => {
-                    progress += 10;
-                    bar.style.width = progress + '%';
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        title.innerText = "ISO Package Ready!";
-                        desc.innerText = "Your sovereign system image has been compiled successfully.";
-                        btn.classList.remove('hidden');
-                    }
-                }, 200);
+        // الدالة الرئيسية لفتح أي تطبيق في نافذة كروم مستقلة بدون شريط متصفح
+        function launchStandaloneApp(url, title) {
+            const width = Math.min(1150, window.screen.availWidth - 80);
+            const height = Math.min(750, window.screen.availHeight - 80);
+            const left = Math.round((window.screen.availWidth - width) / 2);
+            const top = Math.round((window.screen.availHeight - height) / 2);
+
+            const windowFeatures = [
+                'popup=yes',
+                `width=${width}`,
+                `height=${height}`,
+                `left=${left}`,
+                `top=${top}`,
+                'toolbar=no',
+                'menubar=no',
+                'location=no',
+                'status=no',
+                'scrollbars=yes',
+                'resizable=yes'
+            ].join(',');
+
+            // استخدام اسم فريد للنافذة لكي يفتح كل تطبيق في نافذته المستقلة
+            const windowName = 'DoorsApp_' + title.replace(/\s+/g, '_');
+            const appWin = window.open(url, windowName, windowFeatures);
+
+            if (appWin) {
+                appWin.focus();
+                showToast(`تم تشغيل "${title}" كنافذة مستقلة`);
             } else {
-                alert(`Opening application: ${appId}`);
+                alert('يرجى السماح بالنوافذ المنبثقة (Pop-ups) في المتصفح ليتمكن نظام Doors من تشغيل التطبيقات في نوافذ مستقلة.');
             }
         }
 
-        function openInSystemWindow(url, title) {
-            currentIframeUrl = url;
-            const windowEl = document.getElementById('in-system-window');
-            const iframeEl = document.getElementById('system-iframe');
-            const titleEl = document.getElementById('window-title-text');
+        // الاستماع لطلبات التثبيت من متجر زوزين (سواء عبر postMessage أو عبر التبويبات المفتوحة)
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'INSTALL_DOORS_APP') {
+                const { appName, appUrl, appIcon, appColor } = event.data;
+                installAppIntoOS(appName, appUrl, appIcon, appColor);
+            }
+        });
+
+        // تثبيت التطبيق وحفظه داخل نظام Doors
+        function installAppIntoOS(title, url, icon = 'fa-solid fa-cube text-white', bg = 'bg-emerald-600') {
+            if (!title || !url) return;
             
-            titleEl.innerText = title;
-            iframeEl.src = url;
-            windowEl.classList.remove('hidden');
-            windowEl.classList.add('flex');
-        }
-
-        function closeInSystemWindow() {
-            const windowEl = document.getElementById('in-system-window');
-            const iframeEl = document.getElementById('system-iframe');
-            windowEl.classList.add('hidden');
-            windowEl.classList.remove('flex');
-            iframeEl.src = '';
-        }
-
-        function openCurrentIframeInNewTab() {
-            if (currentIframeUrl) {
-                window.open(currentIframeUrl, '_blank');
+            let installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || [];
+            
+            const exists = installedApps.some(app => app.url === url);
+            if (exists) {
+                showToast(`التطبيق "${title}" مثبت بالفعل في النظام!`);
+                return;
             }
+
+            const newApp = {
+                id: 'custom_' + Date.now(),
+                title: title,
+                url: url,
+                icon: icon,
+                bg: bg,
+                isCustom: true
+            };
+
+            installedApps.push(newApp);
+            localStorage.setItem('doors_os_installed_apps', JSON.stringify(installedApps));
+            
+            renderDesktopGrid();
+            renderStartMenu();
+            showToast(`تم تثبيت "${title}" داخل نظام Doors بنجاح!`);
+        }
+
+        function getAllApps() {
+            let installedApps = [];
+            try { installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || []; } catch(e) {}
+            return [...defaultDesktopApps, ...installedApps];
+        }
+
+        function openAppByObject(app) {
+            launchStandaloneApp(app.url, app.title);
+        }
+
+        function openInstallModal() {
+            document.getElementById('new-app-name').value = '';
+            document.getElementById('new-app-url').value = '';
+            document.getElementById('install-app-modal').classList.remove('hidden');
+        }
+
+        function closeInstallModal() {
+            document.getElementById('install-app-modal').classList.add('hidden');
+        }
+
+        function confirmManualInstall() {
+            const name = document.getElementById('new-app-name').value.trim();
+            let url = document.getElementById('new-app-url').value.trim();
+            if (!name || !url) {
+                alert('يرجى إدخال اسم التطبيق والرابط');
+                return;
+            }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            installAppIntoOS(name, url);
+            closeInstallModal();
+        }
+
+        function uninstallCustomApp(appId, event) {
+            event.stopPropagation();
+            if (!confirm('هل تريد إزالة هذا التطبيق من نظام Doors؟')) return;
+            let installedApps = JSON.parse(localStorage.getItem('doors_os_installed_apps')) || [];
+            installedApps = installedApps.filter(app => app.id !== appId);
+            localStorage.setItem('doors_os_installed_apps', JSON.stringify(installedApps));
+            renderDesktopGrid();
+            renderStartMenu();
+            showToast('تمت إزالة التطبيق من النظام');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-alert');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+            }, 3000);
+        }
+
+        function renderDesktopGrid() {
+            const area = document.getElementById('desktop-area');
+            area.innerHTML = '';
+            const allApps = getAllApps();
+
+            let startX = 25, startY = 25;
+            let col = 0, row = 0;
+            const colWidth = 95, rowHeight = 105;
+            const maxRows = Math.floor((window.innerHeight - 100) / rowHeight);
+
+            allApps.forEach((app) => {
+                let posX = startX + (col * colWidth);
+                let posY = startY + (row * rowHeight);
+
+                row++;
+                if (row >= maxRows) { row = 0; col++; }
+
+                const div = document.createElement('div');
+                div.className = "desktop-item flex flex-col items-center group p-2 rounded-xl hover:bg-black/5 transition relative";
+                div.style.left = posX + 'px';
+                div.style.top = posY + 'px';
+                div.onclick = () => openAppByObject(app);
+
+                const deleteBadge = app.isCustom ? `
+                    <button onclick="uninstallCustomApp('${app.id}', event)" class="hidden group-hover:flex absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full items-center justify-center text-[10px] shadow" title="إزالة التطبيق">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                ` : '';
+
+                div.innerHTML = `
+                    ${deleteBadge}
+                    <div class="w-14 h-14 ${app.bg} rounded-2xl flex items-center justify-center text-2xl shadow-md mb-1.5 group-hover:scale-105 transition">
+                        <i class="${app.icon}"></i>
+                    </div>
+                    <span class="text-[11px] font-semibold text-slate-700 text-center leading-tight line-clamp-2 drop-shadow-sm">${app.title}</span>
+                `;
+                area.appendChild(div);
+            });
+        }
+
+        function renderStartMenu() {
+            const container = document.getElementById('start-menu-apps');
+            container.innerHTML = '';
+            const allApps = getAllApps();
+            allApps.forEach(app => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left px-3 py-2 hover:bg-slate-100 rounded-lg flex items-center justify-between transition";
+                btn.innerHTML = `
+                    <span class="flex items-center gap-3">
+                        <span class="w-6 h-6 ${app.bg} rounded-md flex items-center justify-center text-xs"><i class="${app.icon}"></i></span>
+                        <span class="font-medium text-xs">${app.title}</span>
+                    </span>
+                    ${app.isCustom ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">مثبت</span>' : ''}
+                `;
+                btn.onclick = () => {
+                    openAppByObject(app);
+                    toggleStartMenu();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleStartMenu() {
+            document.getElementById('start-menu').classList.toggle('hidden');
+            document.getElementById('start-menu').classList.toggle('flex');
         }
 
         function toggleNiceSearch() {
@@ -380,17 +359,8 @@
             currentSearchMode = mode;
             const btnSys = document.getElementById('search-mode-system');
             const btnWeb = document.getElementById('search-mode-web');
-            const input = document.getElementById('nice-search-input');
-
-            if (mode === 'system') {
-                btnSys.className = "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2";
-                btnWeb.className = "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
-                input.placeholder = "ابحث عن التطبيقات والمجلدات في الجهاز...";
-            } else {
-                btnWeb.className = "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2";
-                btnSys.className = "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
-                input.placeholder = "ابحث مباشرة في شبكة الويب (Google)...";
-            }
+            btnSys.className = mode === 'system' ? "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2" : "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
+            btnWeb.className = mode === 'web' ? "py-2 rounded-lg bg-orange-600 text-white shadow transition flex items-center justify-center gap-2" : "py-2 rounded-lg text-slate-600 hover:bg-white transition flex items-center justify-center gap-2";
             executeNiceSearch();
         }
 
@@ -400,357 +370,34 @@
             resultsContainer.innerHTML = '';
 
             if (currentSearchMode === 'system') {
-                let userItems = [];
-                try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
-                const allItems = [...defaultDesktopApps, ...userItems];
-
-                const filtered = allItems.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
-
+                const filtered = getAllApps().filter(app => app.title.toLowerCase().includes(query.toLowerCase()));
                 if (filtered.length === 0) {
-                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">لم يتم العثور على نتائج في النظام</div>`;
+                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">لم يتم العثور على تطبيقات</div>`;
                     return;
                 }
-
-                filtered.forEach(item => {
+                filtered.forEach(app => {
                     const div = document.createElement('div');
-                    div.className = "flex items-center justify-between p-2.5 hover:bg-slate-100 rounded-xl cursor-pointer transition text-slate-700";
-                    div.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
-                                <i class="${item.icon || 'fa-solid fa-folder'}"></i>
-                            </div>
-                            <span class="font-medium">${item.title}</span>
-                        </div>
-                        <span class="text-[11px] bg-slate-100 text-slate-500 px-2 py-1 rounded">فتح</span>
-                    `;
-                    div.onclick = () => {
-                        toggleNiceSearch();
-                        if (item.type === 'app' || !item.type) openApp(item.id);
-                        else alert(`Opening ${item.title}`);
-                    };
+                    div.className = "flex items-center justify-between p-2.5 hover:bg-slate-100 rounded-xl cursor-pointer transition";
+                    div.innerHTML = `<span class="font-medium">${app.title}</span><span class="text-[11px] bg-slate-200 px-2 py-0.5 rounded">تشغيل</span>`;
+                    div.onclick = () => { toggleNiceSearch(); openAppByObject(app); };
                     resultsContainer.appendChild(div);
                 });
-
-            } else {
-                if (!query) {
-                    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">اكتب ما تريد البحث عنه في الويب واضغط Enter</div>`;
-                    return;
-                }
-
+            } else if (query) {
                 const div = document.createElement('div');
-                div.className = "flex items-center justify-between p-3 bg-orange-50 hover:bg-orange-100 rounded-xl cursor-pointer transition text-orange-700 border border-orange-100";
-                div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-globe text-lg text-orange-600"></i>
-                        <span class="font-semibold">بحث في Google عن: "${query}"</span>
-                    </div>
-                    <span class="text-xs font-bold text-orange-600">انتقال ➔</span>
-                `;
-                div.onclick = () => {
-                    openInSystemWindow(`https://www.google.com/search?q=${encodeURIComponent(query)}`, `Google Search: ${query}`);
-                    toggleNiceSearch();
-                };
+                div.className = "flex items-center justify-between p-3 bg-orange-50 hover:bg-orange-100 rounded-xl cursor-pointer text-orange-700";
+                div.innerHTML = `<span>بحث في الويب عن: "${query}"</span><span>➔</span>`;
+                div.onclick = () => { launchStandaloneApp(`https://www.google.com/search?q=${encodeURIComponent(query)}`, `Google: ${query}`); toggleNiceSearch(); };
                 resultsContainer.appendChild(div);
             }
         }
 
-        function renderDesktopGrid() {
-            const area = document.getElementById('desktop-area');
-            if (!area) return;
-            area.innerHTML = '';
-
-            let userItems = [];
-            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
-            const allItems = [...defaultDesktopApps, ...userItems];
-
-            let savedPositions = {};
-            try { savedPositions = JSON.parse(localStorage.getItem('doors_os_icons_pos')) || {}; } catch(e) {}
-
-            let startX = 30, startY = 30;
-            let col = 0, row = 0;
-            const colWidth = 90, rowHeight = 100;
-            const maxRows = Math.floor((window.innerHeight - 120) / rowHeight);
-
-            allItems.forEach((item) => {
-                let posX = startX + (col * colWidth);
-                let posY = startY + (row * rowHeight);
-
-                if (savedPositions[item.id]) {
-                    posX = savedPositions[item.id].x;
-                    posY = savedPositions[item.id].y;
-                }
-
-                row++;
-                if (row >= maxRows) {
-                    row = 0;
-                    col++;
-                }
-
-                const div = document.createElement('div');
-                div.className = "desktop-item flex flex-col items-center group p-2 rounded-xl hover:bg-black/5 transition";
-                div.style.left = posX + 'px';
-                div.style.top = posY + 'px';
-                div.setAttribute('data-id', item.id);
-                div.setAttribute('data-type', item.type || 'app');
-                div.setAttribute('data-title', item.title);
-
-                let iconHtml = '';
-                if (item.type === 'app' || !item.type) {
-                    iconHtml = `<div class="w-14 h-14 ${item.bg || 'bg-slate-800'} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border"><i class="${item.icon} text-2xl"></i></div>`;
-                } else {
-                    let iconClass = "fa-solid fa-folder text-amber-500";
-                    if (item.type === 'txt') iconClass = "fa-solid fa-file-lines text-sky-500";
-                    if (item.type === 'sheet') iconClass = "fa-solid fa-file-excel text-emerald-500";
-                    iconHtml = `<div class="w-14 h-14 bg-white/90 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-105 transition border border-slate-200"><i class="${iconClass} text-2xl"></i></div>`;
-                }
-
-                div.innerHTML = `${iconHtml}<span class="text-xs mt-2 text-slate-800 font-medium drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] truncate max-w-[70px] text-center">${item.title}</span>`;
-
-                setupIconInteraction(div, item);
-                area.appendChild(div);
-            });
-        }
-
-        function setupIconInteraction(elmnt, item) {
-            let startX = 0, startY = 0;
-            let currentX = 0, currentY = 0;
-            let isDragging = false;
-            let hasMoved = false;
-
-            elmnt.onmousedown = function(e) {
-                if (e.button !== 0) return;
-                e.preventDefault();
-                startX = e.clientX;
-                startY = e.clientY;
-                isDragging = true;
-                hasMoved = false;
-
-                document.onmouseup = onMouseUp;
-                document.onmousemove = onMouseMove;
-            };
-
-            function onMouseMove(e) {
-                if (!isDragging) return;
-                let moveX = Math.abs(e.clientX - startX);
-                let moveY = Math.abs(e.clientY - startY);
-
-                if (moveX > 5 || moveY > 5) {
-                    hasMoved = true;
-                    currentX = startX - e.clientX;
-                    currentY = startY - e.clientY;
-                    startX = e.clientX;
-                    startY = e.clientY;
-
-                    let newTop = elmnt.offsetTop - currentY;
-                    let newLeft = elmnt.offsetLeft - currentX;
-
-                    if (newTop < 0) newTop = 0;
-                    if (newLeft < 0) newLeft = 0;
-
-                    elmnt.style.top = newTop + "px";
-                    elmnt.style.left = newLeft + "px";
-                }
-            }
-
-            function onMouseUp(e) {
-                document.onmouseup = null;
-                document.onmousemove = null;
-                isDragging = false;
-
-                if (hasMoved) {
-                    try {
-                        let savedPositions = JSON.parse(localStorage.getItem('doors_os_icons_pos')) || {};
-                        savedPositions[item.id] = {
-                            x: elmnt.offsetLeft,
-                            y: elmnt.offsetTop
-                        };
-                        localStorage.setItem('doors_os_icons_pos', JSON.stringify(savedPositions));
-                    } catch(err) {}
-                }
-            }
-
-            elmnt.ondblclick = function(e) {
-                e.stopPropagation();
-                if (item.type === 'app' || !item.type) {
-                    openApp(item.id);
-                } else {
-                    alert(`Opening ${item.title}`);
-                }
-            };
-        }
-
-        function createNewDesktopItem(type) {
-            let defaultName = "New Folder";
-            if (type === 'txt') defaultName = "New Document.txt";
-            if (type === 'sheet') defaultName = "New Spreadsheet.xls";
-
-            const name = prompt("Enter name for the new item:", defaultName);
-            if (!name) return;
-
-            let userItems = [];
-            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) { userItems = []; }
-
-            userItems.push({
-                id: 'custom_' + Date.now(),
-                title: name,
-                type: type
-            });
-
-            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
-            renderDesktopGrid();
-        }
-
-        const contextMenu = document.getElementById('context-menu');
-        const itemContextMenu = document.getElementById('item-context-menu');
-        let currentSelectedItem = null;
-
-        window.addEventListener('click', () => {
-            if(contextMenu) contextMenu.classList.add('hidden');
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
-        });
-
-        window.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            if(contextMenu) contextMenu.classList.add('hidden');
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
-
-            const itemElement = e.target.closest('.desktop-item');
-            if (itemElement) {
-                currentSelectedItem = {
-                    id: itemElement.dataset.id,
-                    type: itemElement.dataset.type,
-                    title: itemElement.dataset.title
-                };
-                if(itemContextMenu) {
-                    itemContextMenu.style.top = `${e.clientY}px`;
-                    itemContextMenu.style.left = `${e.clientX}px`;
-                    itemContextMenu.classList.remove('hidden');
-                }
-            } else {
-                if(contextMenu) {
-                    contextMenu.style.top = `${e.clientY}px`;
-                    contextMenu.style.left = `${e.clientX}px`;
-                    contextMenu.classList.remove('hidden');
-                }
-            }
-        });
-
-        function refreshDesktop() {
-            renderDesktopGrid();
-        }
-
-        function itemActionOpen() {
-            if (!currentSelectedItem) return;
-            if (currentSelectedItem.type === 'app' || !currentSelectedItem.type) {
-                openApp(currentSelectedItem.id);
-            } else {
-                alert(`Opening ${currentSelectedItem.title}`);
-            }
-        }
-
-        function itemActionCopy() {
-            if (!currentSelectedItem) return;
-            alert(`Copied ${currentSelectedItem.title}`);
-        }
-
-        function itemActionRename() {
-            if (!currentSelectedItem) return;
-            const newName = prompt("Enter new name:", currentSelectedItem.title);
-            if (!newName) return;
-            
-            let userItems = [];
-            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
-            
-            const found = userItems.find(i => i.id === currentSelectedItem.id);
-            if (found) {
-                found.title = newName;
-                localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
-                renderDesktopGrid();
-            } else {
-                alert('Cannot rename default system apps.');
-            }
-        }
-
-        function itemActionDelete() {
-            if (!currentSelectedItem) return;
-            let userItems = [];
-            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
-            
-            userItems = userItems.filter(i => i.id !== currentSelectedItem.id);
-            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
-            renderDesktopGrid();
-        }
-
-        function toggleStartMenu() {
-            const menu = document.getElementById('start-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
-
-        function handleAuthSubmit() {
-            const user = document.getElementById('auth-user').value || 'User';
-            localStorage.setItem('doors_os_user', user);
-            updateUserUI(user);
-            closeAuthModal();
-            alert(`Welcome back, ${user}! Session saved.`);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('doors_os_user');
-            updateUserUI('Guest User');
-            closeAuthModal();
-            alert('Signed out to Guest session.');
-        }
-
-        function updateUserUI(name) {
-            document.getElementById('current-user-display').innerText = name;
-            document.getElementById('taskbar-username').innerText = name;
-            const letter = name.charAt(0).toUpperCase();
-            document.getElementById('user-avatar-letter').innerText = letter;
-            document.getElementById('modal-avatar').innerText = letter;
-            document.getElementById('session-status-badge').innerText = name === 'Guest User' ? '● Local Guest Session' : '● Sovereign User Active';
-        }
-
-        function closeOsNotification() {
-            document.getElementById('os-notification').classList.add('hidden');
-            document.getElementById('notif-progress').style.width = '0%';
-            document.getElementById('notif-btn').classList.add('hidden');
-        }
-
-        function handleStudioWallpaperUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('os-body').style.backgroundImage = `url('${e.target.result}')`;
-                localStorage.setItem('doors_os_wallpaper', e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Clock update
         setInterval(() => {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').innerText = `${hours}:${minutes}`;
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        // Init on load
-        window.onload = function() {
-            renderDesktopGrid();
-            const savedUser = localStorage.getItem('doors_os_user');
-            if (savedUser) updateUserUI(savedUser);
-            const savedBg = localStorage.getItem('doors_os_wallpaper');
-            if (savedBg) document.getElementById('os-body').style.backgroundImage = `url('${savedBg}')`;
-        };
+        renderDesktopGrid();
+        renderStartMenu();
     </script>
 </body>
 </html>
