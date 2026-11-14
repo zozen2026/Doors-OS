@@ -271,6 +271,56 @@
 
         let currentSearchMode = 'system'; // 'system' or 'web'
 
+        function openApp(appId) {
+            if (appId === 'store') {
+                window.open('https://zozen2026.github.io/Zozen-store/', '_blank');
+            } else if (appId === 'zozen') {
+                window.open('https://zozen.vercel.app', '_blank');
+            } else if (appId === 'browser') {
+                alert('Opening Browser Hub...');
+            } else if (appId === 'gemini') {
+                window.open('https://gemini.google.com', '_blank');
+            } else if (appId === 'telegram') {
+                window.open('https://telegram.org', '_blank');
+            } else if (appId === 'youtube') {
+                window.open('https://www.youtube.com', '_blank');
+            } else if (appId === 'facebook') {
+                window.open('https://www.facebook.com', '_blank');
+            } else if (appId === 'tiktok') {
+                window.open('https://www.tiktok.com', '_blank');
+            } else if (appId === 'instagram') {
+                window.open('https://www.instagram.com', '_blank');
+            } else if (appId === 'whatsapp') {
+                window.open('https://whatsapp.com', '_blank');
+            } else if (appId === 'settings') {
+                alert('Opening System Settings & Personalization');
+            } else if (appId === 'installer') {
+                const notif = document.getElementById('os-notification');
+                notif.classList.remove('hidden');
+                let progress = 0;
+                const bar = document.getElementById('notif-progress');
+                const title = document.getElementById('notif-title');
+                const desc = document.getElementById('notif-desc');
+                const btn = document.getElementById('notif-btn');
+                
+                title.innerText = "Building Doors v1.0 ISO";
+                desc.innerText = "Packaging kernel and custom installer...";
+                
+                const interval = setInterval(() => {
+                    progress += 10;
+                    bar.style.width = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        title.innerText = "ISO Package Ready!";
+                        desc.innerText = "Your sovereign system image has been compiled successfully.";
+                        btn.classList.remove('hidden');
+                    }
+                }, 200);
+            } else {
+                alert(`Opening application: ${appId}`);
+            }
+        }
+
         function toggleNiceSearch() {
             const modal = document.getElementById('nice-search-modal');
             modal.classList.toggle('hidden');
@@ -336,7 +386,6 @@
                 });
 
             } else {
-                // وضع البحث في الويب
                 if (!query) {
                     resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-400">اكتب ما تريد البحث عنه في الويب واضغط Enter</div>`;
                     return;
@@ -540,64 +589,93 @@
             }
         });
 
+        function refreshDesktop() {
+            renderDesktopGrid();
+        }
+
         function itemActionOpen() {
             if (!currentSelectedItem) return;
-            if (currentSelectedItem.type === 'app') openApp(currentSelectedItem.id);
-            else alert(`Opening ${currentSelectedItem.title}`);
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
+            if (currentSelectedItem.type === 'app' || !currentSelectedItem.type) {
+                openApp(currentSelectedItem.id);
+            } else {
+                alert(`Opening ${currentSelectedItem.title}`);
+            }
         }
 
         function itemActionCopy() {
             if (!currentSelectedItem) return;
-            navigator.clipboard.writeText(currentSelectedItem.title);
-            alert(`Copied "${currentSelectedItem.title}" to clipboard!`);
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
+            alert(`Copied ${currentSelectedItem.title}`);
         }
 
         function itemActionRename() {
             if (!currentSelectedItem) return;
             const newName = prompt("Enter new name:", currentSelectedItem.title);
             if (!newName) return;
-
-            let userItems = [];
-            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
             
-            userItems = userItems.map(item => {
-                if (item.id === currentSelectedItem.id) item.title = newName;
-                return item;
-            });
-            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
-            renderDesktopGrid();
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
+            let userItems = [];
+            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
+            
+            const found = userItems.find(i => i.id === currentSelectedItem.id);
+            if (found) {
+                found.title = newName;
+                localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+                renderDesktopGrid();
+            } else {
+                alert('Cannot rename default system apps.');
+            }
         }
 
         function itemActionDelete() {
             if (!currentSelectedItem) return;
-            if (confirm(`هل أنت متأكد من حذف "${currentSelectedItem.title}"؟`)) {
-                let userItems = [];
-                try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e){}
-                
-                userItems = userItems.filter(item => item.id !== currentSelectedItem.id);
-                localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
-                renderDesktopGrid();
-            }
-            if(itemContextMenu) itemContextMenu.classList.add('hidden');
+            let userItems = [];
+            try { userItems = JSON.parse(localStorage.getItem('doors_os_user_items')) || []; } catch(e) {}
+            
+            userItems = userItems.filter(i => i.id !== currentSelectedItem.id);
+            localStorage.setItem('doors_os_user_items', JSON.stringify(userItems));
+            renderDesktopGrid();
         }
 
-        function refreshDesktop() { location.reload(); }
+        function toggleStartMenu() {
+            const menu = document.getElementById('start-menu');
+            menu.classList.toggle('hidden');
+        }
 
-        function applySavedWallpaper() {
-            const customImg = localStorage.getItem('doors_os_custom_wallpaper');
-            const savedGradient = localStorage.getItem('doors_os_wallpaper_css');
-            const osBody = document.getElementById('os-body');
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
 
-            if (customImg) {
-                osBody.style.backgroundImage = `url('${customImg}')`;
-                osBody.style.backgroundSize = "cover";
-                osBody.style.backgroundPosition = "center";
-            } else if (savedGradient) {
-                osBody.style.backgroundImage = savedGradient;
-            }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function handleAuthSubmit() {
+            const user = document.getElementById('auth-user').value || 'User';
+            localStorage.setItem('doors_os_user', user);
+            updateUserUI(user);
+            closeAuthModal();
+            alert(`Welcome back, ${user}! Session saved.`);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('doors_os_user');
+            updateUserUI('Guest User');
+            closeAuthModal();
+            alert('Signed out to Guest session.');
+        }
+
+        function updateUserUI(name) {
+            document.getElementById('current-user-display').innerText = name;
+            document.getElementById('taskbar-username').innerText = name;
+            const letter = name.charAt(0).toUpperCase();
+            document.getElementById('user-avatar-letter').innerText = letter;
+            document.getElementById('modal-avatar').innerText = letter;
+            document.getElementById('session-status-badge').innerText = name === 'Guest User' ? '● Local Guest Session' : '● Sovereign User Active';
+        }
+
+        function closeOsNotification() {
+            document.getElementById('os-notification').classList.add('hidden');
+            document.getElementById('notif-progress').style.width = '0%';
+            document.getElementById('notif-btn').classList.add('hidden');
         }
 
         function handleStudioWallpaperUpload(event) {
@@ -605,113 +683,28 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                localStorage.setItem('doors_os_custom_wallpaper', e.target.result);
-                applySavedWallpaper();
+                document.getElementById('os-body').style.backgroundImage = `url('${e.target.result}')`;
+                localStorage.setItem('doors_os_wallpaper', e.target.result);
             };
             reader.readAsDataURL(file);
         }
 
-        function initSystemSession() {
-            const savedUser = localStorage.getItem('doors_os_user');
-            const isLoggedIn = localStorage.getItem('doors_os_logged_in');
-            const startMenuUser = document.getElementById('current-user-display');
-            const taskbarUser = document.getElementById('taskbar-username');
+        // Clock update
+        setInterval(() => {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${hours}:${minutes}`;
+        }, 1000);
 
-            if (isLoggedIn === 'true' && savedUser) {
-                if (startMenuUser) startMenuUser.innerText = savedUser;
-                if (taskbarUser) taskbarUser.innerText = savedUser;
-            }
-        }
-
-        function openApp(appId) {
-            let contentUrl = "https://www.google.com";
-
-            if (appId === 'zozen' || appId === 'store') {
-                contentUrl = "https://zozen.vercel.app";
-            } else if (appId === 'browser') contentUrl = "https://www.google.com";
-            else if (appId === 'gemini') contentUrl = "https://gemini.google.com";
-            else if (appId === 'youtube') contentUrl = "https://www.youtube.com";
-            else if (appId === 'telegram') contentUrl = "https://web.telegram.org";
-            else if (appId === 'facebook') contentUrl = "https://www.facebook.com";
-            else if (appId === 'tiktok') contentUrl = "https://www.tiktok.com";
-            else if (appId === 'instagram') contentUrl = "https://www.instagram.com";
-            else if (appId === 'whatsapp') contentUrl = "https://web.whatsapp.com";
-            else if (appId === 'installer') {
-                startIsoDownloadSimulation();
-                return;
-            } else if (appId === 'settings') {
-                openAuthModal();
-                return;
-            }
-
-            const win = window.open(contentUrl, '_blank', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=' + screen.width + ',height=' + screen.height);
-            if (win) win.focus();
-        }
-
-        function toggleStartMenu() {
-            const menu = document.getElementById('start-menu');
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function openAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function handleAuthSubmit() {
-            const user = document.getElementById('auth-user').value.trim();
-            if (!user) return;
-            localStorage.setItem('doors_os_user', user);
-            localStorage.setItem('doors_os_logged_in', 'true');
-            initSystemSession();
-            closeAuthModal();
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('doors_os_user');
-            localStorage.setItem('doors_os_logged_in', 'false');
-            location.reload();
-        }
-
-        function startIsoDownloadSimulation() {
-            const notif = document.getElementById('os-notification');
-            const progress = document.getElementById('notif-progress');
-            const btn = document.getElementById('notif-btn');
-            if (notif) notif.classList.remove('hidden');
-            let w = 0;
-            const interval = setInterval(() => {
-                w += 10;
-                if (progress) progress.style.width = w + '%';
-                if (w >= 100) {
-                    clearInterval(interval);
-                    if (btn) btn.classList.remove('hidden');
-                }
-            }, 250);
-        }
-
-        function closeOsNotification() {
-            const notif = document.getElementById('os-notification');
-            if (notif) notif.classList.add('hidden');
-        }
-
-        // تحديث الساعة وتشييك النظام عند التحميل
-        window.addEventListener('DOMContentLoaded', () => {
+        // Init on load
+        window.onload = function() {
             renderDesktopGrid();
-            applySavedWallpaper();
-            initSystemSession();
-
-            setInterval(() => {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const clock = document.getElementById('clock');
-                if (clock) clock.innerText = timeString;
-            }, 1000);
-        });
+            const savedUser = localStorage.getItem('doors_os_user');
+            if (savedUser) updateUserUI(savedUser);
+            const savedBg = localStorage.getItem('doors_os_wallpaper');
+            if (savedBg) document.getElementById('os-body').style.backgroundImage = `url('${savedBg}')`;
+        };
     </script>
 </body>
 </html>
