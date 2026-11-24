@@ -1,38 +1,37 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doors OS v2.0 - Sovereign Desktop Ecosystem</title>
-    <!-- Supabase & Tailwind & FontAwesome -->
+    <title>Doors OS v4.0 - Doors Code, 50 Profiles & Zeno AI</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-        :root {
-            --doors-accent: #ea580c;
-        }
+        * { box-sizing: border-box; }
 
         body {
-            font-family: 'Cairo', 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;
             user-select: none;
             overflow: hidden;
             margin: 0;
             padding: 0;
             width: 100vw;
             height: 100vh;
-            transition: background 0.4s ease;
+            transition: background 0.35s ease;
         }
 
-        /* تفعيل المؤشر الخاص وإخفاء مؤشر النظام التقليدي */
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
         body.custom-cursor-active,
         body.custom-cursor-active * {
             cursor: none !important;
         }
 
-        /* تصميم مؤشر Doors الخاص */
         #doors-cursor {
             position: fixed;
             top: 0;
@@ -40,7 +39,6 @@
             pointer-events: none;
             z-index: 999999;
             transform: translate(-3px, -3px);
-            transition: opacity 0.15s ease, transform 0.05s linear;
             will-change: left, top;
         }
 
@@ -50,25 +48,24 @@
             left: -8px;
             width: 22px;
             height: 22px;
-            border: 1.5px solid rgba(234, 88, 12, 0.45);
+            border: 1.5px solid rgba(234, 88, 12, 0.5);
             border-radius: 50%;
-            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+            transition: transform 0.14s ease, border-color 0.14s ease, background 0.14s ease;
         }
 
         #doors-cursor.hovering .cursor-ring {
-            transform: scale(1.45);
-            border-color: rgba(234, 88, 12, 0.9);
-            background: rgba(234, 88, 12, 0.12);
+            transform: scale(1.42);
+            border-color: rgba(234, 88, 12, 0.95);
+            background: rgba(234, 88, 12, 0.14);
         }
 
         #doors-cursor.clicking svg {
             transform: scale(0.86);
         }
 
-        /* عناصر سطح المكتب */
         .desktop-item {
             position: absolute;
-            width: 92px;
+            width: 96px;
             padding: 8px 4px;
             border-radius: 14px;
             transition: background 0.15s ease, box-shadow 0.15s ease;
@@ -76,25 +73,24 @@
         }
 
         .desktop-item:hover {
-            background: rgba(255, 255, 255, 0.28);
+            background: rgba(255, 255, 255, 0.32);
             backdrop-filter: blur(6px);
         }
 
         .desktop-item.selected {
-            background: rgba(234, 88, 12, 0.18);
-            box-shadow: inset 0 0 0 1.5px rgba(234, 88, 12, 0.65);
+            background: rgba(234, 88, 12, 0.2);
+            box-shadow: inset 0 0 0 1.5px rgba(234, 88, 12, 0.75);
         }
 
-        /* النوافذ */
         .os-window {
             position: absolute;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35);
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.38);
             display: flex;
             flex-direction: column;
-            min-width: 380px;
-            min-height: 280px;
+            min-width: 440px;
+            min-height: 300px;
             resize: both;
         }
 
@@ -110,10 +106,9 @@
             pointer-events: none !important;
         }
 
-        /* القائمة المنبثقة بالزر الأيمن */
         .context-menu {
             position: fixed;
-            min-width: 225px;
+            min-width: 245px;
             z-index: 99990;
             animation: popIn 0.12s ease-out;
         }
@@ -127,15 +122,14 @@
             display: block;
         }
 
-        /* شريط التمرير */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.65); border-radius: 10px; }
     </style>
 </head>
 <body class="custom-cursor-active relative bg-slate-100 text-slate-800">
 
-    <!-- ==================== مؤشر الماوس الخاص بالنظام ==================== -->
+    <!-- Custom System Cursor -->
     <div id="doors-cursor" style="opacity: 0;">
         <div class="cursor-ring"></div>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.28)); transition: transform 0.1s ease;">
@@ -144,135 +138,153 @@
         </svg>
     </div>
 
-    <!-- ==================== شاشة الحساب وتسجيل الدخول ==================== -->
+    <!-- Account & Session Screen -->
     <div id="auth-screen" class="fixed inset-0 z-[90000] hidden items-center justify-center p-4" style="background: radial-gradient(circle at top left, #fff7ed 0%, #f1f5f9 45%, #e2e8f0 100%);">
-        <div dir="rtl" class="w-full max-w-md bg-white/90 backdrop-blur-2xl border border-slate-200 rounded-3xl shadow-2xl p-7">
-            <div class="flex flex-col items-center text-center mb-6">
+        <div class="w-full max-w-xl bg-white/92 backdrop-blur-2xl border border-slate-200 rounded-3xl shadow-2xl p-7 max-h-[94vh] overflow-y-auto">
+            <div class="flex flex-col items-center text-center mb-5">
                 <div class="w-16 h-16 bg-orange-600 text-white rounded-2xl flex items-center justify-center text-3xl shadow-xl shadow-orange-600/30 mb-3">
                     <i class="fa-solid fa-door-open"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold text-slate-900">نظام Doors OS</h1>
-                <p class="text-xs text-slate-500 mt-1">سجّل دخولك أو أنشئ حسابك الشخصي لحفظ ملفاتك وجلستك دائماً</p>
+                <h1 class="text-2xl font-extrabold text-slate-900">Doors OS v4.0</h1>
+                <p class="text-xs text-slate-500 mt-1">Persistent Session • Doors Code Editor • 50 Custom Profiles • Zeno AI</p>
             </div>
 
-            <!-- أزرار التبديل -->
             <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl mb-5 text-xs font-bold">
-                <button id="tab-login" onclick="switchAuthTab('login')" class="py-2 rounded-lg bg-white text-orange-600 shadow-sm transition">تسجيل الدخول</button>
-                <button id="tab-register" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-slate-500 hover:text-slate-800 transition">إنشاء حساب جديد</button>
+                <button id="tab-login" onclick="switchAuthTab('login')" class="py-2 rounded-lg bg-white text-orange-600 shadow-sm transition">Sign In</button>
+                <button id="tab-register" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-slate-500 hover:text-slate-800 transition">Create Account</button>
             </div>
 
-            <!-- نموذج تسجيل الدخول -->
+            <!-- Login Form -->
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-3.5 text-xs">
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">اسم المستخدم أو البريد الإلكتروني</label>
-                    <input type="text" id="login-username" required placeholder="مثال: mustafa" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
+                    <label class="block font-bold text-slate-700 mb-1">Username</label>
+                    <input type="text" id="login-username" required placeholder="e.g. mustafa" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
                 </div>
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">كلمة المرور</label>
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
                     <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
                 </div>
-                <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" id="login-remember" checked class="accent-orange-600 rounded">
-                        <span>حفظ الجلسة تلقائياً (عدم تسجيل الخروج)</span>
-                    </label>
-                </div>
+                <label class="flex items-center gap-2 text-[11px] text-slate-500 pt-1">
+                    <input type="checkbox" id="login-remember" checked class="accent-orange-600 rounded">
+                    <span>Keep session saved automatically</span>
+                </label>
                 <p id="login-error" class="text-red-600 font-semibold hidden"></p>
                 <button type="submit" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-orange-600/25 transition text-sm">
-                    دخول إلى النظام <i class="fa-solid fa-arrow-left mr-1"></i>
+                    Enter Doors OS <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
 
-            <!-- نموذج إنشاء حساب -->
+            <!-- Register Form with 50 Profiles, Language & Country -->
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3.5 text-xs hidden">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">الاسم الظاهر في النظام</label>
-                    <input type="text" id="reg-fullname" required placeholder="مثال: مصطفى" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Display Name</label>
+                        <input type="text" id="reg-fullname" required placeholder="e.g. Mustafa" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Username</label>
+                        <input type="text" id="reg-username" required placeholder="e.g. mustafa2026" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
+                    </div>
                 </div>
+
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">اسم المستخدم (لتسجيل الدخول)</label>
-                    <input type="text" id="reg-username" required placeholder="مثال: mustafa2026" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="reg-password" required minlength="4" placeholder="At least 4 characters" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
                 </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Preferred Language</label>
+                        <select id="reg-language" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500"></select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Country of Residence</label>
+                        <select id="reg-country" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500"></select>
+                    </div>
+                </div>
+
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">كلمة المرور</label>
-                    <input type="password" id="reg-password" required minlength="4" placeholder="4 أحرف على الأقل" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="font-bold text-slate-700">Choose Your Doors Profile (50 Custom Profiles)</label>
+                        <span id="reg-selected-profile-label" class="text-[11px] font-bold text-orange-600">Profile #01</span>
+                    </div>
+                    <input type="hidden" id="reg-profile-id" value="1">
+                    <div id="reg-profiles-grid" class="grid grid-cols-10 gap-1.5 max-h-36 overflow-y-auto p-2 bg-slate-50 border border-slate-200 rounded-2xl"></div>
                 </div>
+
                 <p id="reg-error" class="text-red-600 font-semibold hidden"></p>
                 <button type="submit" class="w-full bg-slate-900 hover:bg-orange-600 text-white font-bold py-3 rounded-xl shadow-lg transition text-sm">
-                    إنشاء الحساب وفتح Doors <i class="fa-solid fa-user-plus mr-1"></i>
+                    Create Account & Launch Doors <i class="fa-solid fa-user-plus ml-1"></i>
                 </button>
             </form>
 
-            <!-- قائمة الحسابات المسجلة مسبقاً للدخول السريع -->
+            <!-- Saved Accounts -->
             <div id="saved-accounts-box" class="mt-5 pt-4 border-t border-slate-100 hidden">
-                <p class="text-[11px] font-bold text-slate-500 mb-2">حسابات محفوظة على هذا الجهاز:</p>
+                <p class="text-[11px] font-bold text-slate-500 mb-2">Saved Accounts on This Device:</p>
                 <div id="saved-accounts-list" class="flex flex-wrap gap-2"></div>
             </div>
         </div>
     </div>
 
-    <!-- ==================== سطح المكتب ==================== -->
+    <!-- Desktop Area -->
     <div id="desktop-area" class="absolute inset-0 bottom-16 z-0 overflow-hidden"></div>
 
-    <!-- ==================== حاوية النوافذ الداخلية (Iframe + المجلدات + المستندات) ==================== -->
+    <!-- Windows Layer -->
     <div id="windows-layer" class="absolute inset-0 bottom-16 pointer-events-none z-20"></div>
 
-    <!-- ==================== قائمة Doors (الزر البرتقالي أسفل اليسار) ==================== -->
-    <div id="doors-start-menu" dir="rtl" class="fixed bottom-20 left-3 w-[360px] max-w-[94vw] bg-white/92 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-2xl hidden flex-col z-[80000] overflow-hidden">
-        <!-- رأس القائمة ومعلومات الحساب -->
-        <div class="p-4 bg-gradient-to-l from-orange-600 to-amber-500 text-white flex items-center justify-between">
+    <!-- Doors Start Menu -->
+    <div id="doors-start-menu" class="fixed bottom-20 left-3 w-[380px] max-w-[94vw] bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-2xl hidden flex-col z-[80000] overflow-hidden">
+        <div class="p-4 bg-gradient-to-r from-orange-600 to-amber-500 text-white flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div id="start-user-avatar" class="w-11 h-11 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center font-extrabold text-lg border border-white/30">M</div>
+                <div id="start-user-avatar" class="w-11 h-11 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-xl border border-white/30">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                </div>
                 <div>
-                    <div id="start-user-name" class="font-bold text-sm">المستخدم</div>
-                    <div class="text-[10px] text-orange-100 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 inline-block"></span>
-                        <span>جلسة Doors محفوظة</span>
-                    </div>
+                    <div id="start-user-name" class="font-bold text-sm">User</div>
+                    <div id="start-user-meta" class="text-[10px] text-orange-100">Profile #01 • English • Iraq</div>
                 </div>
             </div>
-            <button onclick="openIframeWindow('settings'); toggleStartMenu(false);" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/30 flex items-center justify-center transition" title="الإعدادات">
+            <button onclick="openIframeWindow('settings'); toggleStartMenu(false);" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/30 flex items-center justify-center transition" title="Settings">
                 <i class="fa-solid fa-gear"></i>
             </button>
         </div>
 
-        <!-- بحث سريع داخل القائمة -->
         <div class="p-3 border-b border-slate-100">
             <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-slate-400 text-xs"></i>
-                <input type="text" id="start-search-input" oninput="filterStartApps()" placeholder="ابحث في التطبيقات والملفات..." class="w-full bg-slate-100 border border-slate-200 rounded-xl pr-9 pl-3 py-2 text-xs focus:outline-none focus:border-orange-500">
+                <i class="fa-solid fa-magnifying-glass left-3 top-3 absolute text-slate-400 text-xs"></i>
+                <input type="text" id="start-search-input" oninput="filterStartApps()" placeholder="Search apps, code files, folders..." class="w-full bg-slate-100 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-orange-500">
             </div>
         </div>
 
-        <!-- التطبيقات المثبتة -->
-        <div class="p-3 max-h-64 overflow-y-auto">
-            <div class="text-[11px] font-bold text-slate-400 mb-2 px-1">التطبيقات</div>
+        <div class="p-3 max-h-60 overflow-y-auto">
+            <div class="text-[11px] font-bold text-slate-400 mb-2 px-1">Installed & Default Apps</div>
             <div id="start-apps-grid" class="grid grid-cols-3 gap-2"></div>
         </div>
 
-        <!-- اختصارات إنشاء سريع -->
-        <div class="px-3 pb-3 grid grid-cols-2 gap-2 text-[11px] font-bold">
-            <button onclick="createNewItemPrompt('folder', 'desktop'); toggleStartMenu(false);" class="flex items-center justify-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 py-2 rounded-xl border border-amber-200 transition">
-                <i class="fa-solid fa-folder-plus"></i> مجلد جديد
+        <div class="px-3 pb-3 grid grid-cols-3 gap-1.5 text-[11px] font-bold">
+            <button onclick="createNewItemPrompt('folder', 'desktop'); toggleStartMenu(false);" class="flex items-center justify-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-700 py-2 rounded-xl border border-amber-200 transition">
+                <i class="fa-solid fa-folder-plus"></i> Folder
             </button>
-            <button onclick="createNewItemPrompt('doc', 'desktop'); toggleStartMenu(false);" class="flex items-center justify-center gap-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 py-2 rounded-xl border border-sky-200 transition">
-                <i class="fa-solid fa-file-circle-plus"></i> مستند شخصي
+            <button onclick="createNewItemPrompt('code', 'desktop'); toggleStartMenu(false);" class="flex items-center justify-center gap-1 bg-sky-50 hover:bg-sky-100 text-sky-700 py-2 rounded-xl border border-sky-200 transition">
+                <i class="fa-solid fa-code"></i> Code File
+            </button>
+            <button onclick="createNewItemPrompt('html', 'desktop'); toggleStartMenu(false);" class="flex items-center justify-center gap-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-2 rounded-xl border border-emerald-200 transition">
+                <i class="fa-brands fa-html5"></i> .html
             </button>
         </div>
 
-        <!-- أسفل القائمة -->
         <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
             <button onclick="openIframeWindow('store'); toggleStartMenu(false);" class="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1.5">
-                <i class="fa-solid fa-store"></i> متجر زوزين
+                <i class="fa-solid fa-store"></i> Zozen Store
             </button>
             <button onclick="logoutSession()" class="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
             </button>
         </div>
     </div>
 
-    <!-- ==================== مربع بحث زوزين الذكي ==================== -->
-    <div id="zozen-search-modal" dir="rtl" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-start justify-center pt-20 z-[85000]">
+    <!-- Zozen Search Modal -->
+    <div id="zozen-search-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-start justify-center pt-20 z-[85000]">
         <div class="bg-white border border-slate-200 w-[600px] max-w-[94vw] rounded-2xl p-5 shadow-2xl text-slate-800">
             <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
                 <div class="flex items-center gap-2 font-bold text-sm text-orange-600">
@@ -280,97 +292,134 @@
                 </div>
                 <button onclick="toggleZozenSearch()" class="text-slate-400 hover:text-slate-700 text-base"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="relative mb-4">
-                <input type="text" id="zozen-search-input" oninput="executeZozenSearch()" placeholder="ابحث عن تطبيق، مجلد، أو مستند داخل Doors..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800">
-            </div>
+            <input type="text" id="zozen-search-input" oninput="executeZozenSearch()" placeholder="Search apps, Zeno AI, Doors Code files, folders..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-orange-500 text-slate-800 mb-4">
             <div id="zozen-search-results" class="max-h-72 overflow-y-auto space-y-2 text-xs"></div>
         </div>
     </div>
 
-    <!-- ==================== القائمة المخصصة بالزر الأيمن ==================== -->
-    <div id="context-menu" dir="rtl" class="context-menu hidden bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl py-2 text-xs text-slate-700"></div>
+    <!-- Custom Right-Click Context Menu -->
+    <div id="context-menu" class="context-menu hidden bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl py-2 text-xs text-slate-700"></div>
 
-    <!-- ==================== نافذة الخصائص / إنشاء اختصار ==================== -->
-    <div id="system-dialog" dir="rtl" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-[95000] p-4">
+    <!-- System Dialog -->
+    <div id="system-dialog" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-[95000] p-4">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
             <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                <h3 id="dialog-title" class="font-bold text-sm text-slate-800">نافذة النظام</h3>
+                <h3 id="dialog-title" class="font-bold text-sm text-slate-800">System Dialog</h3>
                 <button onclick="closeDialog()" class="w-7 h-7 rounded-lg hover:bg-slate-200 text-slate-500 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="dialog-body" class="p-5 text-xs"></div>
         </div>
     </div>
 
-    <!-- ==================== شريط المهام (اليسار: رمز الباب المفتوح البرتقالي) ==================== -->
-    <div id="taskbar" dir="ltr" class="h-16 bg-white/85 backdrop-blur-xl border-t border-slate-200/80 px-3 flex items-center justify-between z-[70000] fixed bottom-0 left-0 right-0 text-slate-800 shadow-[0_-4px_25px_rgba(0,0,0,0.06)]">
-        <!-- الجانب الأيسر: رمز الباب المفتوح بخلفية برتقالية + أزرار سريعة + النوافذ المفتوحة -->
+    <!-- Taskbar: Orange Open-Door Icon on the Left -->
+    <div id="taskbar" class="h-16 bg-white/85 backdrop-blur-xl border-t border-slate-200/80 px-3 flex items-center justify-between z-[70000] fixed bottom-0 left-0 right-0 text-slate-800 shadow-[0_-4px_25px_rgba(0,0,0,0.06)]">
         <div class="flex items-center gap-2 overflow-x-auto">
-            <!-- زر Doors الرئيسي على اليسار تحديداً بخلفية برتقالية ورمز باب مفتوح -->
-            <button id="doors-start-btn" onclick="toggleStartMenu()" title="قائمة Doors" class="w-11 h-11 shrink-0 bg-orange-600 hover:bg-orange-500 active:scale-95 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-orange-600/35 transition">
+            <button id="doors-start-btn" onclick="toggleStartMenu()" title="Doors Menu" class="w-11 h-11 shrink-0 bg-orange-600 hover:bg-orange-500 active:scale-95 text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-orange-600/35 transition">
                 <i class="fa-solid fa-door-open"></i>
             </button>
 
             <div class="h-7 w-[1px] bg-slate-200 mx-0.5 shrink-0"></div>
 
-            <!-- زر البحث -->
-            <button onclick="toggleZozenSearch()" class="h-10 px-3.5 shrink-0 bg-slate-100 hover:bg-orange-50 hover:text-orange-600 border border-slate-200 rounded-xl font-bold flex items-center gap-2 transition text-xs text-slate-700">
+            <button onclick="openDoorsCodeEditor()" class="h-10 px-3 shrink-0 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-xl font-bold flex items-center gap-2 transition text-xs text-sky-900" title="Doors Code Editor">
+                <i class="fa-solid fa-code text-sky-600"></i>
+                <span class="hidden sm:inline">Doors Code</span>
+            </button>
+
+            <button onclick="openInternalChromeWindow('https://www.google.com', 'Google Chrome')" class="h-10 px-3 shrink-0 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-xl font-bold flex items-center gap-2 transition text-xs text-slate-800" title="Google Chrome">
+                <i class="fa-brands fa-chrome text-orange-600 text-base"></i>
+                <span class="hidden md:inline">Chrome</span>
+            </button>
+
+            <button onclick="launchApp('zeno_ai')" class="h-10 px-3 shrink-0 bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded-xl font-bold flex items-center gap-2 transition text-xs text-violet-900" title="Zeno AI">
+                <i class="fa-solid fa-sparkles text-violet-600"></i>
+                <span class="hidden lg:inline">Zeno AI</span>
+            </button>
+
+            <button onclick="toggleZozenSearch()" class="h-10 px-3 shrink-0 bg-slate-100 hover:bg-orange-50 hover:text-orange-600 border border-slate-200 rounded-xl font-bold flex items-center gap-2 transition text-xs text-slate-700">
                 <i class="fa-solid fa-magnifying-glass text-orange-600"></i>
-                <span class="hidden sm:inline">Nice Search</span>
+                <span class="hidden xl:inline">Nice Search</span>
             </button>
 
-            <!-- زر المتجر -->
-            <button onclick="openIframeWindow('store')" class="h-10 px-3.5 shrink-0 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold flex items-center gap-2 shadow-md transition text-white text-xs">
+            <button onclick="openIframeWindow('store')" class="h-10 px-3 shrink-0 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold flex items-center gap-2 shadow-md transition text-white text-xs">
                 <i class="fa-solid fa-store"></i>
-                <span class="hidden sm:inline">Zozen Store</span>
+                <span class="hidden xl:inline">Zozen Store</span>
             </button>
 
-            <!-- زر الإعدادات -->
-            <button onclick="openIframeWindow('settings')" class="h-10 w-10 shrink-0 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center shadow-md transition text-white text-sm" title="الإعدادات">
+            <button onclick="openIframeWindow('settings')" class="h-10 w-10 shrink-0 bg-slate-800 hover:bg-slate-700 rounded-xl flex items-center justify-center shadow-md transition text-white text-sm" title="Settings">
                 <i class="fa-solid fa-gear"></i>
             </button>
 
-            <!-- النوافذ النشطة في شريط المهام -->
             <div id="taskbar-windows" class="flex items-center gap-1.5 ml-2"></div>
         </div>
 
-        <!-- الجانب الأيمن: الحساب والوقت -->
         <div class="flex items-center gap-2 shrink-0">
             <button onclick="openIframeWindow('settings')" class="hidden md:flex items-center gap-2 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 px-3 py-1.5 rounded-xl transition">
-                <span id="taskbar-user-name" class="text-xs font-bold text-slate-700">مستخدم</span>
-                <span id="taskbar-user-dot" class="w-6 h-6 rounded-lg bg-orange-600 text-white text-[11px] font-bold flex items-center justify-center">U</span>
+                <span id="taskbar-user-name" class="text-xs font-bold text-slate-700">User</span>
+                <span id="taskbar-user-badge" class="w-6 h-6 rounded-lg bg-orange-600 text-white text-xs flex items-center justify-center"><i class="fa-solid fa-user-astronaut"></i></span>
             </button>
             <div class="bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-center leading-tight">
                 <div id="clock-time" class="text-xs font-bold text-slate-800">00:00</div>
-                <div id="clock-date" class="text-[9px] text-slate-500">2026/11/24</div>
+                <div id="clock-date" class="text-[9px] text-slate-500">24/11/2026</div>
             </div>
         </div>
     </div>
 
     <script>
-        // =========================================================================
-        // 1. إعدادات Supabase والبيانات الأساسية
-        // =========================================================================
         const SUPABASE_URL = "https://lzvtnfdgynwczrkwlwhf.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6dnRuZmRneW53Y3pya3dsd2hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNDIxMTEsImV4cCI6MjEwNDcxODExMX0.w2hNlJ4SszyMBkUVjr1qiWNTTPxHMHkM9YOFtVP-pVI";
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // التطبيقات الافتراضية السبعة المحمية (لا يمكن حذفها أبداً)
+        // 50 Custom Profiles for Users
+        const PROFILE_ICONS = [
+            'fa-user-astronaut', 'fa-code', 'fa-bolt', 'fa-crown', 'fa-robot', 'fa-dragon', 'fa-rocket', 'fa-ghost', 'fa-meteor', 'fa-sparkles',
+            'fa-shield-halved', 'fa-gamepad', 'fa-headphones', 'fa-laptop-code', 'fa-terminal', 'fa-microchip', 'fa-compass', 'fa-mountain-sun', 'fa-fire', 'fa-snowflake',
+            'fa-moon', 'fa-sun', 'fa-star', 'fa-bolt-lightning', 'fa-atom', 'fa-satellite', 'fa-wand-magic-sparkles', 'fa-chess-knight', 'fa-feather', 'fa-key',
+            'fa-lock', 'fa-eye', 'fa-heart', 'fa-gem', 'fa-trophy', 'fa-medal', 'fa-flag', 'fa-globe', 'fa-earth-americas', 'fa-paper-plane',
+            'fa-camera', 'fa-palette', 'fa-music', 'fa-book', 'fa-graduation-cap', 'fa-briefcase', 'fa-seedling', 'fa-leaf', 'fa-paw', 'fa-cat'
+        ];
+
+        const PROFILE_COLORS = [
+            'bg-orange-600', 'bg-indigo-600', 'bg-emerald-600', 'bg-rose-600', 'bg-violet-600', 'bg-sky-600', 'bg-amber-600', 'bg-teal-600', 'bg-fuchsia-600', 'bg-slate-800'
+        ];
+
+        const CUSTOM_PROFILES = Array.from({ length: 50 }, (_, idx) => {
+            const id = idx + 1;
+            const label = `Profile #${String(id).padStart(2, '0')}`;
+            return {
+                id,
+                name: label,
+                icon: PROFILE_ICONS[idx % PROFILE_ICONS.length],
+                bg: PROFILE_COLORS[idx % PROFILE_COLORS.length]
+            };
+        });
+
+        const LANGUAGES = [
+            'English', 'Arabic', 'Spanish', 'French', 'German', 'Turkish', 'Japanese', 'Korean', 'Portuguese', 'Russian'
+        ];
+
+        const COUNTRIES = [
+            'Iraq', 'United States', 'United Kingdom', 'Saudi Arabia', 'United Arab Emirates', 'Egypt', 'Jordan', 'Germany', 'France', 'Canada', 'Turkey', 'Japan'
+        ];
+
         const DEFAULT_APPS = [
-            { id: 'youtube', title: 'يوتيوب', enTitle: 'YouTube', type: 'url', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube', bg: 'bg-red-600', company: 'Google', desc: 'منصة الفيديوهات العالمية', isDefault: true },
-            { id: 'tiktok', title: 'تيك توك', enTitle: 'TikTok', type: 'url', url: 'https://www.tiktok.com', icon: 'fa-brands fa-tiktok', bg: 'bg-neutral-900', company: 'ByteDance', desc: 'منصة الفيديوهات القصيرة', isDefault: true },
-            { id: 'zozen', title: 'زوزين', enTitle: 'Zozen', type: 'url', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt', bg: 'bg-orange-600', company: 'Zozen Ecosystem', desc: 'منصة زوزين الرسمية', isDefault: true },
-            { id: 'store', title: 'متجر زوزين', enTitle: 'Zozen Store', type: 'iframe_store', icon: 'fa-solid fa-store', bg: 'bg-indigo-600', company: 'Zozen Corp', desc: 'متجر التطبيقات السحابي وبوابة المطورين', isDefault: true },
-            { id: 'settings', title: 'الإعدادات', enTitle: 'Settings', type: 'iframe_settings', icon: 'fa-solid fa-gear', bg: 'bg-slate-700', company: 'Doors OS', desc: 'إعدادات النظام والحساب والمظهر', isDefault: true },
-            { id: 'steam', title: 'ستيم', enTitle: 'Steam', type: 'url', url: 'https://store.steampowered.com', icon: 'fa-brands fa-steam', bg: 'bg-slate-900', company: 'Valve Corporation', desc: 'منصة الألعاب العالمية', isDefault: true },
-            { id: 'facebook', title: 'فيسبوك', enTitle: 'Facebook', type: 'url', url: 'https://www.facebook.com', icon: 'fa-brands fa-facebook-f', bg: 'bg-blue-600', company: 'Meta', desc: 'منصة التواصل الاجتماعي', isDefault: true }
+            { id: 'doors_code', title: 'Doors Code', enTitle: 'Doors Code', type: 'doors_code', icon: 'fa-solid fa-code', bg: 'bg-sky-600', company: 'Doors Studio', desc: 'Built-in code and text editor for Doors OS', isDefault: true },
+            { id: 'chrome', title: 'Google Chrome', enTitle: 'Google Chrome', type: 'internal_chrome', url: 'https://www.google.com', icon: 'fa-brands fa-chrome', bg: 'bg-gradient-to-br from-red-500 via-amber-400 to-emerald-500', company: 'Google LLC', desc: 'Internal Google Chrome browser & .html runner', isDefault: true },
+            { id: 'zeno_ai', title: 'Zeno AI', enTitle: 'Zeno AI', type: 'url', url: 'https://zenoai-five.vercel.app', icon: 'fa-solid fa-sparkles', bg: 'bg-violet-600', company: 'Zeno AI', desc: 'Zeno AI Assistant (https://zenoai-five.vercel.app)', isDefault: true },
+            { id: 'youtube', title: 'YouTube', enTitle: 'YouTube', type: 'url', url: 'https://www.youtube.com', icon: 'fa-brands fa-youtube', bg: 'bg-red-600', company: 'Google', desc: 'Video streaming platform', isDefault: true },
+            { id: 'tiktok', title: 'TikTok', enTitle: 'TikTok', type: 'url', url: 'https://www.tiktok.com', icon: 'fa-brands fa-tiktok', bg: 'bg-neutral-900', company: 'ByteDance', desc: 'Short video platform', isDefault: true },
+            { id: 'zozen', title: 'Zozen', enTitle: 'Zozen', type: 'url', url: 'https://zozen.vercel.app', icon: 'fa-solid fa-bolt', bg: 'bg-orange-600', company: 'Zozen Ecosystem', desc: 'Official Zozen platform', isDefault: true },
+            { id: 'store', title: 'Zozen Store', enTitle: 'Zozen Store', type: 'iframe_store', icon: 'fa-solid fa-store', bg: 'bg-indigo-600', company: 'Zozen Corp', desc: 'Cloud app store & developer portal', isDefault: true },
+            { id: 'settings', title: 'Settings', enTitle: 'Settings', type: 'iframe_settings', icon: 'fa-solid fa-gear', bg: 'bg-slate-700', company: 'Doors OS', desc: 'Account, 50 profiles, language, country & appearance', isDefault: true },
+            { id: 'steam', title: 'Steam', enTitle: 'Steam', type: 'url', url: 'https://store.steampowered.com', icon: 'fa-brands fa-steam', bg: 'bg-slate-900', company: 'Valve Corporation', desc: 'Gaming platform', isDefault: true },
+            { id: 'facebook', title: 'Facebook', enTitle: 'Facebook', type: 'url', url: 'https://www.facebook.com', icon: 'fa-brands fa-facebook-f', bg: 'bg-blue-600', company: 'Meta', desc: 'Social network', isDefault: true }
         ];
 
         const WALLPAPERS = {
-            sovereign: { name: 'سحابي فاتح', css: 'radial-gradient(circle at top left, #fff7ed 0%, #f1f5f9 45%, #dbeafe 100%)', textDark: true },
-            sunset: { name: 'غروب Doors البرتقالي', css: 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 40%, #fdba74 100%)', textDark: true },
-            midnight: { name: 'ليلي فاخر', css: 'radial-gradient(circle at top right, #1e293b 0%, #0f172a 60%, #020617 100%)', textDark: false },
-            aurora: { name: 'شفق رقمي', css: 'linear-gradient(135deg, #0f172a 0%, #312e81 50%, #7c2d12 100%)', textDark: false },
-            emerald: { name: 'أخضر هادئ', css: 'radial-gradient(circle at center, #ecfdf5 0%, #d1fae5 55%, #a7f3d0 100%)', textDark: true }
+            sovereign: { name: 'Sovereign Light', css: 'radial-gradient(circle at top left, #fff7ed 0%, #f1f5f9 45%, #dbeafe 100%)', textDark: true },
+            sunset: { name: 'Doors Sunset', css: 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 40%, #fdba74 100%)', textDark: true },
+            midnight: { name: 'Midnight Slate', css: 'radial-gradient(circle at top right, #1e293b 0%, #0f172a 60%, #020617 100%)', textDark: false },
+            aurora: { name: 'Digital Aurora', css: 'linear-gradient(135deg, #0f172a 0%, #312e81 50%, #7c2d12 100%)', textDark: false },
+            emerald: { name: 'Emerald Calm', css: 'radial-gradient(circle at center, #ecfdf5 0%, #d1fae5 55%, #a7f3d0 100%)', textDark: true }
         };
 
         let currentUser = null;
@@ -379,34 +428,91 @@
         let openWindows = {};
         let selectedItemId = null;
 
+        // Populate Language, Country & 50 Profiles in Register Form
+        function initAuthFormOptions() {
+            const langSel = document.getElementById('reg-language');
+            const countrySel = document.getElementById('reg-country');
+            const profGrid = document.getElementById('reg-profiles-grid');
+
+            langSel.innerHTML = LANGUAGES.map(l => `<option value="${l}">${l}</option>`).join('');
+            countrySel.innerHTML = COUNTRIES.map(c => `<option value="${c}">${c}</option>`).join('');
+
+            profGrid.innerHTML = '';
+            CUSTOM_PROFILES.forEach(p => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.title = p.name;
+                btn.dataset.pid = p.id;
+                btn.className = `reg-prof-btn h-8 rounded-lg ${p.bg} text-white text-xs flex items-center justify-center transition ${p.id === 1 ? 'ring-2 ring-orange-600 ring-offset-2 scale-105' : 'opacity-80 hover:opacity-100'}`;
+                btn.innerHTML = `<i class="fa-solid ${p.icon}"></i>`;
+                btn.onclick = () => selectRegisterProfile(p.id);
+                profGrid.appendChild(btn);
+            });
+        }
+
+        function selectRegisterProfile(pid) {
+            document.getElementById('reg-profile-id').value = pid;
+            document.getElementById('reg-selected-profile-label').textContent = `Profile #${String(pid).padStart(2, '0')}`;
+            document.querySelectorAll('.reg-prof-btn').forEach(b => {
+                const active = Number(b.dataset.pid) === Number(pid);
+                b.classList.toggle('ring-2', active);
+                b.classList.toggle('ring-orange-600', active);
+                b.classList.toggle('ring-offset-2', active);
+                b.classList.toggle('scale-105', active);
+                b.classList.toggle('opacity-80', !active);
+            });
+        }
+
+        function getProfileById(id) {
+            return CUSTOM_PROFILES.find(p => p.id === Number(id)) || CUSTOM_PROFILES[0];
+        }
+
         // =========================================================================
-        // 2. نظام الحسابات وحفظ الجلسة الدائم (LocalStorage Session)
+        // Account & Persistent Session
         // =========================================================================
         function getAccountsDB() {
-            return JSON.parse(localStorage.getItem('doors_accounts_db_v2')) || {};
+            return JSON.parse(localStorage.getItem('doors_accounts_db_v4')) || {};
         }
 
         function saveAccountsDB(db) {
-            localStorage.setItem('doors_accounts_db_v2', JSON.stringify(db));
+            localStorage.setItem('doors_accounts_db_v4', JSON.stringify(db));
         }
 
-        function createDefaultUserData(account) {
+        function createDefaultUserData() {
             return {
                 customApps: [],
                 fsItems: [
                     {
-                        id: 'folder_personal_init',
+                        id: 'folder_workspace',
                         parentId: 'desktop',
                         type: 'folder',
-                        name: 'ملفاتي الشخصية',
+                        name: 'Workspace',
                         createdAt: new Date().toISOString()
                     },
                     {
-                        id: 'doc_welcome_init',
+                        id: 'file_hello_html',
                         parentId: 'desktop',
-                        type: 'doc',
-                        name: 'ملاحظات Doors.doc',
-                        content: 'مرحباً بك في نظام Doors OS v2.0!\n\n- يمكنك الضغط بالزر الأيمن في أي مكان فارغ لإنشاء مجلدات أو مستندات شخصية.\n- يتم حفظ جلستك وملفاتك تلقائياً بحسابك.\n- التطبيقات الافتراضية السبعة محمية من الحذف.',
+                        type: 'html',
+                        name: 'welcome.html',
+                        content: `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Doors OS + Google Chrome</title>\n</head>\n<body style="font-family:sans-serif;padding:32px;background:#fff7ed;color:#0f172a;">\n  <h1 style="color:#ea580c;">Opened in Google Chrome inside Doors OS</h1>\n  <p>Edit this file anytime using <b>Doors Code</b>.</p>\n</body>\n</html>`,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'file_script_js',
+                        parentId: 'desktop',
+                        type: 'code',
+                        name: 'app.js',
+                        content: `// Doors Code sample script\nfunction greetDoors(user) {\n  return "Welcome to Doors OS, " + user;\n}\nconsole.log(greetDoors("Developer"));`,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'file_run_bat',
+                        parentId: 'desktop',
+                        type: 'exe',
+                        name: 'build.bat',
+                        content: `@echo off\necho Building Doors project...\necho Doors Code: Ready\necho Build succeeded.`,
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     }
@@ -421,36 +527,33 @@
         }
 
         function loadUserData(username) {
-            const key = 'doors_userdata_v2_' + username;
+            const key = 'doors_userdata_v4_' + username;
             const stored = localStorage.getItem(key);
-            if (stored) {
-                return JSON.parse(stored);
-            }
-            const fresh = createDefaultUserData(username);
+            if (stored) return JSON.parse(stored);
+            const fresh = createDefaultUserData();
             localStorage.setItem(key, JSON.stringify(fresh));
             return fresh;
         }
 
         function saveUserData() {
             if (!currentUser || !userData) return;
-            localStorage.setItem('doors_userdata_v2_' + currentUser.username, JSON.stringify(userData));
+            localStorage.setItem('doors_userdata_v4_' + currentUser.username, JSON.stringify(userData));
         }
 
         function checkSessionOnBoot() {
-            const savedSession = localStorage.getItem('doors_active_session_v2') || sessionStorage.getItem('doors_active_session_v2');
+            const saved = localStorage.getItem('doors_active_session_v4') || sessionStorage.getItem('doors_active_session_v4');
             const db = getAccountsDB();
-
-            if (savedSession && db[savedSession]) {
-                startUserSession(db[savedSession], true);
+            if (saved && db[saved]) {
+                startUserSession(db[saved], true);
             } else {
                 showAuthScreen();
             }
         }
 
         function showAuthScreen() {
-            const authEl = document.getElementById('auth-screen');
-            authEl.classList.remove('hidden');
-            authEl.classList.add('flex');
+            const el = document.getElementById('auth-screen');
+            el.classList.remove('hidden');
+            el.classList.add('flex');
             renderSavedAccountsList();
         }
 
@@ -459,7 +562,7 @@
             const keys = Object.keys(db);
             const box = document.getElementById('saved-accounts-box');
             const list = document.getElementById('saved-accounts-list');
-            if (keys.length === 0) {
+            if (!keys.length) {
                 box.classList.add('hidden');
                 return;
             }
@@ -467,10 +570,11 @@
             list.innerHTML = '';
             keys.forEach(u => {
                 const acc = db[u];
+                const prof = getProfileById(acc.profileId);
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'flex items-center gap-2 bg-slate-100 hover:bg-orange-50 border border-slate-200 hover:border-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold transition';
-                btn.innerHTML = `<span class="w-5 h-5 rounded-md bg-orange-600 text-white text-[10px] flex items-center justify-center">${(acc.fullname || u)[0].toUpperCase()}</span><span>${acc.fullname}</span>`;
+                btn.className = 'flex items-center gap-2 bg-slate-100 hover:bg-orange-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition';
+                btn.innerHTML = `<span class="w-5 h-5 rounded-md ${prof.bg} text-white text-[10px] flex items-center justify-center"><i class="fa-solid ${prof.icon}"></i></span><span>${acc.fullname}</span>`;
                 btn.onclick = () => {
                     switchAuthTab('login');
                     document.getElementById('login-username').value = u;
@@ -481,24 +585,11 @@
         }
 
         function switchAuthTab(tab) {
-            const loginForm = document.getElementById('login-form');
-            const regForm = document.getElementById('register-form');
-            const tabLogin = document.getElementById('tab-login');
-            const tabReg = document.getElementById('tab-register');
-            document.getElementById('login-error').classList.add('hidden');
-            document.getElementById('reg-error').classList.add('hidden');
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                regForm.classList.add('hidden');
-                tabLogin.className = 'py-2 rounded-lg bg-white text-orange-600 shadow-sm transition';
-                tabReg.className = 'py-2 rounded-lg text-slate-500 hover:text-slate-800 transition';
-            } else {
-                regForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-                tabReg.className = 'py-2 rounded-lg bg-white text-orange-600 shadow-sm transition';
-                tabLogin.className = 'py-2 rounded-lg text-slate-500 hover:text-slate-800 transition';
-            }
+            const isLogin = tab === 'login';
+            document.getElementById('login-form').classList.toggle('hidden', !isLogin);
+            document.getElementById('register-form').classList.toggle('hidden', isLogin);
+            document.getElementById('tab-login').className = isLogin ? 'py-2 rounded-lg bg-white text-orange-600 shadow-sm transition' : 'py-2 rounded-lg text-slate-500 hover:text-slate-800 transition';
+            document.getElementById('tab-register').className = !isLogin ? 'py-2 rounded-lg bg-white text-orange-600 shadow-sm transition' : 'py-2 rounded-lg text-slate-500 hover:text-slate-800 transition';
         }
 
         function handleRegister(e) {
@@ -506,32 +597,30 @@
             const fullname = document.getElementById('reg-fullname').value.trim();
             const username = document.getElementById('reg-username').value.trim().toLowerCase();
             const password = document.getElementById('reg-password').value;
+            const language = document.getElementById('reg-language').value;
+            const country = document.getElementById('reg-country').value;
+            const profileId = Number(document.getElementById('reg-profile-id').value) || 1;
             const errEl = document.getElementById('reg-error');
-
-            if (!fullname || !username || password.length < 4) {
-                errEl.textContent = 'يرجى تعبئة جميع الحقول بشكل صحيح.';
-                errEl.classList.remove('hidden');
-                return;
-            }
-
             const db = getAccountsDB();
+
             if (db[username]) {
-                errEl.textContent = 'اسم المستخدم هذا مستخدم مسبقاً، اختر اسماً آخر.';
+                errEl.textContent = 'Username already exists. Please choose another.';
                 errEl.classList.remove('hidden');
                 return;
             }
 
-            const newAcc = {
+            const acc = {
                 username,
                 fullname,
                 password,
+                language,
+                country,
+                profileId,
                 createdAt: new Date().toISOString()
             };
-            db[username] = newAcc;
+            db[username] = acc;
             saveAccountsDB(db);
-
-            // حفظ الجلسة تلقائياً بعد الإنشاء
-            startUserSession(newAcc, true);
+            startUserSession(acc, true);
         }
 
         function handleLogin(e) {
@@ -540,32 +629,25 @@
             const password = document.getElementById('login-password').value;
             const remember = document.getElementById('login-remember').checked;
             const errEl = document.getElementById('login-error');
-
             const db = getAccountsDB();
             const acc = db[username];
 
             if (!acc || acc.password !== password) {
-                errEl.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+                errEl.textContent = 'Invalid username or password.';
                 errEl.classList.remove('hidden');
                 return;
             }
-
             startUserSession(acc, remember);
         }
 
         function startUserSession(account, persist) {
             currentUser = account;
             userData = loadUserData(account.username);
-
-            if (persist) {
-                localStorage.setItem('doors_active_session_v2', account.username);
-            } else {
-                sessionStorage.setItem('doors_active_session_v2', account.username);
-            }
+            if (persist) localStorage.setItem('doors_active_session_v4', account.username);
+            else sessionStorage.setItem('doors_active_session_v4', account.username);
 
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('auth-screen').classList.remove('flex');
-
             updateAccountUI();
             applySystemSettings();
             renderDesktop();
@@ -573,59 +655,63 @@
         }
 
         function logoutSession() {
-            localStorage.removeItem('doors_active_session_v2');
-            sessionStorage.removeItem('doors_active_session_v2');
-            // إغلاق كل النوافذ المفتوحة
+            localStorage.removeItem('doors_active_session_v4');
+            sessionStorage.removeItem('doors_active_session_v4');
             Object.keys(openWindows).forEach(id => closeWindow(id));
             toggleStartMenu(false);
             currentUser = null;
             userData = null;
-            document.getElementById('login-password').value = '';
             showAuthScreen();
         }
 
         function updateAccountUI() {
             if (!currentUser) return;
-            const initial = (currentUser.fullname || currentUser.username)[0].toUpperCase();
+            const prof = getProfileById(currentUser.profileId);
+            const lang = currentUser.language || 'English';
+            const country = currentUser.country || 'Iraq';
+
             document.getElementById('start-user-name').textContent = currentUser.fullname;
-            document.getElementById('start-user-avatar').textContent = initial;
+            document.getElementById('start-user-meta').textContent = `${prof.name} • ${lang} • ${country}`;
+            document.getElementById('start-user-avatar').className = `w-11 h-11 rounded-xl ${prof.bg} text-white flex items-center justify-center text-xl shadow border border-white/30`;
+            document.getElementById('start-user-avatar').innerHTML = `<i class="fa-solid ${prof.icon}"></i>`;
+
             document.getElementById('taskbar-user-name').textContent = currentUser.fullname;
-            document.getElementById('taskbar-user-dot').textContent = initial;
+            document.getElementById('taskbar-user-badge').className = `w-6 h-6 rounded-lg ${prof.bg} text-white text-xs flex items-center justify-center`;
+            document.getElementById('taskbar-user-badge').innerHTML = `<i class="fa-solid ${prof.icon}"></i>`;
         }
 
         function applySystemSettings() {
             if (!userData) return;
             const s = userData.settings;
-            const body = document.body;
-
             if (s.customWallpaperUrl) {
-                body.style.background = `url('${s.customWallpaperUrl}') center/cover no-repeat`;
+                document.body.style.background = `url('${s.customWallpaperUrl}') center/cover no-repeat`;
             } else {
                 const wp = WALLPAPERS[s.wallpaper] || WALLPAPERS.sovereign;
-                body.style.background = wp.css;
+                document.body.style.background = wp.css;
             }
-
-            if (s.customCursor !== false) {
-                body.classList.add('custom-cursor-active');
-                document.getElementById('doors-cursor').style.display = 'block';
-            } else {
-                body.classList.remove('custom-cursor-active');
-                document.getElementById('doors-cursor').style.display = 'none';
-            }
+            const customCursorOn = s.customCursor !== false;
+            document.body.classList.toggle('custom-cursor-active', customCursorOn);
+            document.getElementById('doors-cursor').style.display = customCursorOn ? 'block' : 'none';
             renderDesktop();
         }
 
         // =========================================================================
-        // 3. إدارة التطبيقات والملفات والمجلدات والمستندات
+        // Desktop & File Types
         // =========================================================================
         function getAllApps() {
-            const custom = (userData && userData.customApps) ? userData.customApps : [];
-            return [...DEFAULT_APPS, ...custom];
+            return [...DEFAULT_APPS, ...(userData?.customApps || [])];
         }
 
         function getDesktopFSItems() {
-            if (!userData || !userData.fsItems) return [];
-            return userData.fsItems.filter(item => item.parentId === 'desktop');
+            return (userData?.fsItems || []).filter(i => i.parentId === 'desktop');
+        }
+
+        function isHtmlExtension(name) {
+            return /\.(html?|xhtml)$/i.test(name || '');
+        }
+
+        function isExecutableExtension(name) {
+            return /\.(exe|bat|cmd|ps1|msi|vbs|sh)$/i.test(name || '');
         }
 
         function isWallpaperDark() {
@@ -640,24 +726,21 @@
             const area = document.getElementById('desktop-area');
             area.innerHTML = '';
 
-            const apps = getAllApps();
-            const fsItems = getDesktopFSItems();
-            const allDesktopEntities = [
-                ...apps.map(a => ({ kind: 'app', data: a, id: 'app_' + a.id })),
-                ...fsItems.map(f => ({ kind: 'fs', data: f, id: f.id }))
+            const entities = [
+                ...getAllApps().map(a => ({ kind: 'app', data: a, id: 'app_' + a.id })),
+                ...getDesktopFSItems().map(f => ({ kind: 'fs', data: f, id: f.id }))
             ];
 
-            const darkText = !isWallpaperDark();
-            const labelClass = darkText
-                ? 'text-slate-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]'
+            const labelClass = !isWallpaperDark()
+                ? 'text-slate-800 drop-shadow-[0_1px_1px_rgba(255,255,255,0.85)]'
                 : 'text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]';
 
-            const maxRows = Math.max(4, Math.floor((window.innerHeight - 100) / 108));
+            const maxRows = Math.max(4, Math.floor((window.innerHeight - 105) / 108));
 
-            allDesktopEntities.forEach((entity, index) => {
+            entities.forEach((entity, idx) => {
                 const pos = userData.positions[entity.id] || {
-                    x: 24 + (Math.floor(index / maxRows) * 102),
-                    y: 22 + ((index % maxRows) * 106)
+                    x: 24 + Math.floor(idx / maxRows) * 102,
+                    y: 22 + (idx % maxRows) * 106
                 };
 
                 const div = document.createElement('div');
@@ -677,24 +760,21 @@
                     `;
                 } else {
                     const item = entity.data;
-                    let iconHtml = '';
+                    let iconBox = '';
                     if (item.type === 'folder') {
-                        iconHtml = `<div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-folder"></i></div>`;
-                    } else if (item.type === 'note') {
-                        iconHtml = `<div class="w-14 h-14 bg-gradient-to-br from-yellow-300 to-amber-400 rounded-2xl flex items-center justify-center text-amber-900 text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-note-sticky"></i></div>`;
+                        iconBox = `<div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-folder"></i></div>`;
+                    } else if (item.type === 'html' || isHtmlExtension(item.name)) {
+                        iconBox = `<div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-rose-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-brands fa-html5"></i></div>`;
+                    } else if (item.type === 'exe' || isExecutableExtension(item.name)) {
+                        iconBox = `<div class="w-14 h-14 bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl flex items-center justify-center text-emerald-400 text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-terminal"></i></div>`;
                     } else {
-                        iconHtml = `<div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-file-lines"></i></div>`;
+                        iconBox = `<div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg mb-1.5 group-hover:scale-105 transition"><i class="fa-solid fa-code"></i></div>`;
                     }
-                    div.innerHTML = `
-                        ${iconHtml}
-                        <span class="text-[11px] font-bold text-center leading-tight line-clamp-2 px-1 ${labelClass}">${item.name}</span>
-                    `;
+                    div.innerHTML = `${iconBox}<span class="text-[11px] font-bold text-center leading-tight line-clamp-2 px-1 ${labelClass}">${item.name}</span>`;
                 }
 
-                // السحب والإفلات + الفتح بالنقر
                 enableDesktopIconDrag(div, entity);
 
-                // القائمة المخصصة بالزر الأيمن على العنصر
                 div.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -715,16 +795,13 @@
 
         function enableDesktopIconDrag(el, entity) {
             let startX, startY, origX, origY, moved = false;
-
             el.addEventListener('mousedown', (e) => {
                 if (e.button !== 0) return;
                 e.stopPropagation();
                 hideContextMenu();
                 toggleStartMenu(false);
-
                 selectedItemId = entity.id;
                 highlightSelectedDesktopIcon();
-
                 startX = e.clientX;
                 startY = e.clientY;
                 origX = parseInt(el.style.left, 10) || 0;
@@ -732,14 +809,10 @@
                 moved = false;
 
                 function onMove(ev) {
-                    const dx = ev.clientX - startX;
-                    const dy = ev.clientY - startY;
-                    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved = true;
+                    if (Math.abs(ev.clientX - startX) > 5 || Math.abs(ev.clientY - startY) > 5) moved = true;
                     if (moved) {
-                        const nx = Math.max(8, Math.min(window.innerWidth - 100, origX + dx));
-                        const ny = Math.max(8, Math.min(window.innerHeight - 165, origY + dy));
-                        el.style.left = nx + 'px';
-                        el.style.top = ny + 'px';
+                        el.style.left = Math.max(8, Math.min(window.innerWidth - 100, origX + ev.clientX - startX)) + 'px';
+                        el.style.top = Math.max(8, Math.min(window.innerHeight - 165, origY + ev.clientY - startY)) + 'px';
                     }
                 }
 
@@ -747,18 +820,12 @@
                     document.removeEventListener('mousemove', onMove);
                     document.removeEventListener('mouseup', onUp);
                     if (moved) {
-                        userData.positions[entity.id] = {
-                            x: parseInt(el.style.left, 10),
-                            y: parseInt(el.style.top, 10)
-                        };
+                        userData.positions[entity.id] = { x: parseInt(el.style.left, 10), y: parseInt(el.style.top, 10) };
                         saveUserData();
+                    } else if (entity.kind === 'app') {
+                        launchApp(entity.data.id);
                     } else {
-                        // نقرة واحدة للفتح السلس
-                        if (entity.kind === 'app') {
-                            launchApp(entity.data.id);
-                        } else {
-                            openFSItem(entity.data.id);
-                        }
+                        openFSItem(entity.data.id);
                     }
                 }
 
@@ -768,12 +835,20 @@
         }
 
         // =========================================================================
-        // 4. تشغيل التطبيقات: الإعدادات والمتجر عبر Iframe، والباقي نوافذ مستقلة (Chromeless)
+        // App Launching, Google Chrome & Doors Code Editor
         // =========================================================================
         function launchApp(appId, mode = 'default') {
             const app = getAllApps().find(a => a.id === appId);
             if (!app) return;
 
+            if (app.type === 'doors_code') {
+                openDoorsCodeEditor();
+                return;
+            }
+            if (app.type === 'internal_chrome') {
+                openInternalChromeWindow(app.url || 'https://www.google.com', app.title);
+                return;
+            }
             if (app.type === 'iframe_store') {
                 openIframeWindow('store');
                 return;
@@ -782,609 +857,666 @@
                 openIframeWindow('settings');
                 return;
             }
-
+            if (mode === 'chrome_internal') {
+                openInternalChromeWindow(app.url, `${app.title} - Google Chrome`);
+                return;
+            }
             if (mode === 'newtab') {
                 window.open(app.url, '_blank');
                 return;
             }
 
-            if (mode === 'iframe_preview') {
-                openGenericIframePreview(app);
-                return;
-            }
-
-            // فتح التطبيق في نافذة كروم مستقلة تماماً (بدون أشرطة متصفح وكأنه تطبيق نظام مستقل)
             const width = Math.min(1180, window.screen.availWidth - 70);
             const height = Math.min(760, window.screen.availHeight - 70);
             const left = Math.round((window.screen.availWidth - width) / 2);
             const top = Math.round((window.screen.availHeight - height) / 2);
-
-            const windowFeatures = [
-                'popup=yes',
-                `width=${width}`,
-                `height=${height}`,
-                `left=${left}`,
-                `top=${top}`,
-                'toolbar=no',
-                'menubar=no',
-                'location=no',
-                'directories=no',
-                'status=no',
-                'scrollbars=yes',
-                'resizable=yes'
-            ].join(',');
-
-            const winName = 'DoorsStandalone_' + app.id;
-            const openedWin = window.open(app.url, winName, windowFeatures);
-            if (openedWin) {
-                openedWin.focus();
-            } else {
-                showInfoDialog('تنبيه النوافذ المنبثقة', 'يرجى السماح بالنوافذ المنبثقة (Popups) في المتصفح ليتم تشغيل التطبيق في نافذة مستقلة خاصة بـ Doors.');
-            }
+            const features = ['popup=yes', `width=${width}`, `height=${height}`, `left=${left}`, `top=${top}`, 'toolbar=no', 'menubar=no', 'location=no', 'status=no', 'scrollbars=yes', 'resizable=yes'].join(',');
+            const win = window.open(app.url, 'DoorsStandalone_' + app.id, features);
+            if (win) win.focus();
+            else showInfoDialog('Popup Blocked', 'Please allow popups so apps open in their standalone window.');
         }
 
-        // =========================================================================
-        // 5. نظام النوافذ الداخلية (Draggable / Maximizable)
-        // =========================================================================
-        function createOSWindow({ id, title, icon, iconBg, width = 820, height = 560, contentHtml }) {
-            if (openWindows[id]) {
-                focusWindow(id);
-                openWindows[id].el.classList.remove('hidden');
-                return openWindows[id].el;
-            }
+        function openInternalChromeWindow(initialTarget = 'https://www.google.com', customTitle = 'Google Chrome', htmlContentOverride = null) {
+            const winId = 'doors_internal_chrome';
+            const existing = openWindows[winId];
 
-            const win = document.createElement('div');
-            win.id = 'win_' + id;
-            win.className = 'os-window pointer-events-auto bg-white/95 backdrop-blur-2xl border border-slate-200/90';
-
-            const w = Math.min(width, window.innerWidth - 40);
-            const h = Math.min(height, window.innerHeight - 100);
-            const offset = (Object.keys(openWindows).length % 5) * 26;
-            win.style.width = w + 'px';
-            win.style.height = h + 'px';
-            win.style.left = Math.max(20, (window.innerWidth - w) / 2 + offset) + 'px';
-            win.style.top = Math.max(16, (window.innerHeight - h - 70) / 2 + offset) + 'px';
-            win.style.zIndex = ++topZIndex;
-
-            win.innerHTML = `
-                <div class="win-header h-11 bg-slate-100/95 border-b border-slate-200 px-3.5 flex items-center justify-between shrink-0 select-none" dir="rtl">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-6 h-6 ${iconBg || 'bg-orange-600'} text-white rounded-lg flex items-center justify-center text-xs shadow-sm">
-                            <i class="${icon || 'fa-solid fa-window-maximize'}"></i>
+            const chromeHtml = `
+                <div class="h-full flex flex-col bg-slate-100" dir="ltr">
+                    <div class="bg-slate-200/90 px-2.5 pt-2 pb-1.5 border-b border-slate-300 flex items-center gap-2">
+                        <div class="flex items-center gap-1">
+                            <button id="chrome-back-btn" class="w-7 h-7 rounded-full hover:bg-slate-300/80 text-slate-700 flex items-center justify-center text-xs" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button id="chrome-forward-btn" class="w-7 h-7 rounded-full hover:bg-slate-300/80 text-slate-700 flex items-center justify-center text-xs" title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button id="chrome-reload-btn" class="w-7 h-7 rounded-full hover:bg-slate-300/80 text-slate-700 flex items-center justify-center text-xs" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+                            <button id="chrome-home-btn" class="w-7 h-7 rounded-full hover:bg-slate-300/80 text-slate-700 flex items-center justify-center text-xs" title="Home"><i class="fa-solid fa-house"></i></button>
                         </div>
-                        <span class="font-bold text-xs text-slate-800 win-title-text">${title}</span>
+                        <div class="flex-1 flex items-center bg-white rounded-full px-3.5 py-1.5 border border-slate-300 shadow-inner gap-2">
+                            <i class="fa-brands fa-chrome text-orange-600 text-sm"></i>
+                            <input id="chrome-url-bar" type="text" class="flex-1 text-xs text-slate-800 focus:outline-none bg-transparent" placeholder="Enter URL or system .html file path...">
+                            <button id="chrome-go-btn" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-0.5 rounded-full text-[11px] font-bold">Go</button>
+                        </div>
+                        <span class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full shrink-0">Google Chrome</span>
                     </div>
-                    <div class="flex items-center gap-1.5" dir="ltr">
-                        <button onclick="minimizeWindow('${id}')" class="w-7 h-7 rounded-lg hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs transition" title="تصغير"><i class="fa-solid fa-minus"></i></button>
-                        <button onclick="toggleMaximizeWindow('${id}')" class="w-7 h-7 rounded-lg hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs transition" title="تكبير"><i class="fa-regular fa-square"></i></button>
-                        <button onclick="closeWindow('${id}')" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white flex items-center justify-center text-xs transition" title="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="flex-1 relative bg-white overflow-hidden">
+                        <iframe id="chrome-internal-frame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups" class="w-full h-full border-0"></iframe>
                     </div>
                 </div>
-                <div class="win-body flex-1 w-full h-full overflow-hidden relative bg-white">${contentHtml}</div>
             `;
 
-            win.addEventListener('mousedown', () => focusWindow(id));
-
-            // سحب النافذة من الشريط العلوي
-            const header = win.querySelector('.win-header');
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.closest('button') || win.classList.contains('maximized')) return;
-                focusWindow(id);
-                document.body.classList.add('dragging-window');
-                const startX = e.clientX;
-                const startY = e.clientY;
-                const origL = win.offsetLeft;
-                const origT = win.offsetTop;
-
-                function onMove(ev) {
-                    win.style.left = Math.max(-win.offsetWidth + 120, origL + (ev.clientX - startX)) + 'px';
-                    win.style.top = Math.max(0, Math.min(window.innerHeight - 105, origT + (ev.clientY - startY))) + 'px';
-                }
-                function onUp() {
-                    document.body.classList.remove('dragging-window');
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                }
-                document.addEventListener('mousemove', onMove);
-                document.addEventListener('mouseup', onUp);
-            });
-
-            document.getElementById('windows-layer').appendChild(win);
-            openWindows[id] = { el: win, title, icon, iconBg };
-            renderTaskbarWindows();
-            return win;
-        }
-
-        function focusWindow(id) {
-            if (!openWindows[id]) return;
-            openWindows[id].el.style.zIndex = ++topZIndex;
-            openWindows[id].el.classList.remove('hidden');
-            renderTaskbarWindows();
-        }
-
-        function minimizeWindow(id) {
-            if (!openWindows[id]) return;
-            openWindows[id].el.classList.add('hidden');
-            renderTaskbarWindows();
-        }
-
-        function toggleMaximizeWindow(id) {
-            if (!openWindows[id]) return;
-            openWindows[id].el.classList.toggle('maximized');
-        }
-
-        function closeWindow(id) {
-            if (!openWindows[id]) return;
-            openWindows[id].el.remove();
-            delete openWindows[id];
-            renderTaskbarWindows();
-        }
-
-        function renderTaskbarWindows() {
-            const container = document.getElementById('taskbar-windows');
-            container.innerHTML = '';
-            Object.entries(openWindows).forEach(([id, info]) => {
-                const isHidden = info.el.classList.contains('hidden');
-                const btn = document.createElement('button');
-                btn.className = `h-9 px-3 rounded-xl border text-xs font-bold flex items-center gap-2 transition shrink-0 ${isHidden ? 'bg-slate-100 border-slate-200 text-slate-600' : 'bg-orange-50 border-orange-300 text-orange-700 shadow-sm'}`;
-                btn.innerHTML = `<i class="${info.icon}"></i><span class="max-w-[110px] truncate">${info.title}</span>`;
-                btn.onclick = () => {
-                    if (isHidden) focusWindow(id);
-                    else minimizeWindow(id);
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        // =========================================================================
-        // 6. نوافذ Iframe المستقلة (الإعدادات + متجر زوزين)
-        // =========================================================================
-        function getIframeCustomCursorCode() {
-            const enabled = userData?.settings?.customCursor !== false;
-            if (!enabled) return '';
-            return `
-                <style>
-                    *, *::before, *::after { cursor: none !important; }
-                    #inner-cursor { position: fixed; top:0; left:0; pointer-events:none; z-index:999999; transform: translate(-3px,-3px); opacity:0; transition: opacity .12s; }
-                </style>
-                <div id="inner-cursor">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.28));">
-                        <path d="M4 3L19.5 11.2L12.5 13.3L9.8 20.5L4 3Z" fill="#0f172a" stroke="#ea580c" stroke-width="1.8" stroke-linejoin="round"/>
-                        <circle cx="9.2" cy="9.2" r="1.5" fill="#fb923c"/>
-                    </svg>
-                </div>
-                <script>
-                    const ic = document.getElementById('inner-cursor');
-                    document.addEventListener('mousemove', e => {
-                        ic.style.opacity = '1';
-                        ic.style.left = e.clientX + 'px';
-                        ic.style.top = e.clientY + 'px';
-                    });
-                    document.addEventListener('mouseleave', () => ic.style.opacity = '0');
-                <\/script>
-            `;
-        }
-
-        function openIframeWindow(type) {
-            if (type === 'settings') {
-                const winId = 'app_settings_iframe';
-                if (openWindows[winId]) {
-                    focusWindow(winId);
-                    return;
-                }
-                const win = createOSWindow({
+            const win = existing
+                ? (focusWindow(winId), existing.el)
+                : createOSWindow({
                     id: winId,
-                    title: 'إعدادات نظام Doors',
-                    icon: 'fa-solid fa-gear',
-                    iconBg: 'bg-slate-700',
-                    width: 820,
+                    title: customTitle,
+                    icon: 'fa-brands fa-chrome',
+                    iconBg: 'bg-gradient-to-br from-red-500 via-amber-400 to-emerald-500',
+                    width: 960,
+                    height: 620,
+                    contentHtml: chromeHtml
+                });
+
+            if (openWindows[winId]) {
+                openWindows[winId].title = customTitle;
+                win.querySelector('.win-title-text').textContent = customTitle;
+                renderTaskbarWindows();
+            }
+
+            const frame = win.querySelector('#chrome-internal-frame');
+            const bar = win.querySelector('#chrome-url-bar');
+            const goBtn = win.querySelector('#chrome-go-btn');
+            const backBtn = win.querySelector('#chrome-back-btn');
+            const fwdBtn = win.querySelector('#chrome-forward-btn');
+            const reloadBtn = win.querySelector('#chrome-reload-btn');
+            const homeBtn = win.querySelector('#chrome-home-btn');
+
+            function navigateChrome(target, htmlDoc = null) {
+                bar.value = target;
+                if (htmlDoc !== null) {
+                    frame.removeAttribute('src');
+                    frame.srcdoc = htmlDoc;
+                } else {
+                    let finalUrl = target.trim();
+                    if (!/^https?:\/\//i.test(finalUrl)) finalUrl = 'https://' + finalUrl;
+                    frame.removeAttribute('srcdoc');
+                    frame.src = finalUrl;
+                }
+            }
+
+            goBtn.onclick = () => navigateChrome(bar.value);
+            bar.onkeydown = (e) => { if (e.key === 'Enter') navigateChrome(bar.value); };
+            backBtn.onclick = () => { try { frame.contentWindow.history.back(); } catch (_) {} };
+            fwdBtn.onclick = () => { try { frame.contentWindow.history.forward(); } catch (_) {} };
+            reloadBtn.onclick = () => {
+                if (frame.hasAttribute('srcdoc')) frame.srcdoc = frame.srcdoc;
+                else frame.src = frame.src;
+            };
+            homeBtn.onclick = () => navigateChrome('https://www.google.com');
+
+            navigateChrome(initialTarget, htmlContentOverride);
+        }
+
+        // Doors Code Editor (supports opening any editable file from desktop/folders or creating new code files)
+        function openDoorsCodeEditor(fileId = null) {
+            const winId = 'doors_code_studio';
+            const editableFiles = (userData?.fsItems || []).filter(i => i.type !== 'folder');
+            let activeFile = fileId ? editableFiles.find(f => f.id === fileId) : editableFiles[0];
+
+            const editorHtml = `
+                <div class="h-full flex flex-col bg-slate-900 text-slate-100" dir="ltr">
+                    <!-- Top Toolbar -->
+                    <div class="h-11 bg-slate-950 border-b border-slate-800 px-3 flex items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-sky-400 flex items-center gap-1.5"><i class="fa-solid fa-code"></i> Doors Code</span>
+                            <select id="dc-file-select" class="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-sky-500"></select>
+                            <button id="dc-new-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg font-semibold">+ New</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="dc-status" class="text-[11px] text-emerald-400 font-semibold">Saved</span>
+                            <button id="dc-save-btn" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1 rounded-lg font-bold">Save</button>
+                            <button id="dc-chrome-btn" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1 rounded-lg font-bold"><i class="fa-brands fa-chrome mr-1"></i> Run in Google Chrome</button>
+                        </div>
+                    </div>
+
+                    <!-- Editor Body -->
+                    <div class="flex-1 flex overflow-hidden">
+                        <div id="dc-line-numbers" class="w-12 bg-slate-950/70 text-slate-500 code-font text-xs py-4 text-right pr-2.5 select-none overflow-hidden leading-6 border-r border-slate-800">1</div>
+                        <textarea id="dc-textarea" spellcheck="false" class="flex-1 bg-slate-900 text-emerald-300 code-font text-xs p-4 leading-6 focus:outline-none resize-none" placeholder="Write your code here in Doors Code..."></textarea>
+                    </div>
+                </div>
+            `;
+
+            const win = openWindows[winId]
+                ? (focusWindow(winId), openWindows[winId].el)
+                : createOSWindow({
+                    id: winId,
+                    title: 'Doors Code - Code Editor',
+                    icon: 'fa-solid fa-code',
+                    iconBg: 'bg-sky-600',
+                    width: 860,
                     height: 560,
-                    contentHtml: `<iframe id="iframe-settings" class="w-full h-full border-0"></iframe>`
+                    contentHtml: editorHtml
                 });
-                const iframe = win.querySelector('#iframe-settings');
-                iframe.srcdoc = buildSettingsIframeHTML();
-                attachIframeMouseBridge(iframe);
-            } else if (type === 'store') {
-                const winId = 'app_store_iframe';
-                if (openWindows[winId]) {
-                    focusWindow(winId);
+
+            const sel = win.querySelector('#dc-file-select');
+            const ta = win.querySelector('#dc-textarea');
+            const linesEl = win.querySelector('#dc-line-numbers');
+            const statusEl = win.querySelector('#dc-status');
+            const saveBtn = win.querySelector('#dc-save-btn');
+            const chromeBtn = win.querySelector('#dc-chrome-btn');
+            const newBtn = win.querySelector('#dc-new-btn');
+
+            function refreshFileSelector(currentId) {
+                const files = (userData?.fsItems || []).filter(i => i.type !== 'folder');
+                sel.innerHTML = files.map(f => `<option value="${f.id}" ${f.id === currentId ? 'selected' : ''}>${f.name}</option>`).join('');
+            }
+
+            function updateLineNumbers() {
+                const count = (ta.value || '').split('\n').length;
+                linesEl.innerHTML = Array.from({ length: count }, (_, i) => i + 1).join('<br>');
+            }
+
+            function loadFileIntoEditor(id) {
+                activeFile = (userData?.fsItems || []).find(f => f.id === id);
+                if (!activeFile) {
+                    ta.value = '';
+                    updateLineNumbers();
                     return;
                 }
-                const win = createOSWindow({
-                    id: winId,
-                    title: 'Zozen Store - متجر النظام السحابي',
-                    icon: 'fa-solid fa-store',
-                    iconBg: 'bg-indigo-600',
-                    width: 920,
-                    height: 600,
-                    contentHtml: `<iframe id="iframe-store" class="w-full h-full border-0"></iframe>`
-                });
-                const iframe = win.querySelector('#iframe-store');
-                iframe.srcdoc = buildStoreIframeHTML();
-                attachIframeMouseBridge(iframe);
+                ta.value = activeFile.content || '';
+                updateLineNumbers();
+                win.querySelector('.win-title-text').textContent = `Doors Code — ${activeFile.name}`;
+                if (openWindows[winId]) {
+                    openWindows[winId].title = `Doors Code — ${activeFile.name}`;
+                    renderTaskbarWindows();
+                }
+            }
+
+            function saveCurrentCode() {
+                if (!activeFile) return;
+                activeFile.content = ta.value;
+                activeFile.updatedAt = new Date().toISOString();
+                saveUserData();
+                statusEl.textContent = 'Saved ✓';
+            }
+
+            ta.oninput = () => {
+                updateLineNumbers();
+                saveCurrentCode();
+            };
+
+            ta.onscroll = () => {
+                linesEl.scrollTop = ta.scrollTop;
+            };
+
+            sel.onchange = () => loadFileIntoEditor(sel.value);
+            saveBtn.onclick = saveCurrentCode;
+
+            chromeBtn.onclick = () => {
+                saveCurrentCode();
+                const name = activeFile ? activeFile.name : 'preview.html';
+                const htmlCode = isHtmlExtension(name)
+                    ? ta.value
+                    : `<!DOCTYPE html><html><body style="font-family:monospace;padding:24px;background:#0f172a;color:#38bdf8;"><h2>${escapeHtml(name)}</h2><pre>${escapeHtml(ta.value)}</pre></body></html>`;
+                openInternalChromeWindow(`doors://code/${name}`, `${name} - Google Chrome`, htmlCode);
+            };
+
+            newBtn.onclick = () => {
+                closeWindow(winId);
+                createNewItemPrompt('code', 'desktop');
+            };
+
+            refreshFileSelector(activeFile?.id);
+            if (activeFile) loadFileIntoEditor(activeFile.id);
+            else { ta.value = ''; updateLineNumbers(); }
+        }
+
+        function openFSItem(itemId) {
+            const item = userData.fsItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (item.type === 'folder') {
+                openFolderWindow(item.id);
+            } else if (item.type === 'html' || isHtmlExtension(item.name)) {
+                openInternalChromeWindow(`doors://system/${item.name}`, `${item.name} - Google Chrome`, item.content || '<h1>Empty HTML File</h1>');
+            } else if (item.type === 'exe' || isExecutableExtension(item.name)) {
+                runWindowsLikeExecutable(item);
+            } else {
+                // Any editable code/text file opens in Doors Code by default
+                openDoorsCodeEditor(item.id);
             }
         }
 
-        function openGenericIframePreview(app) {
-            const winId = 'preview_' + app.id;
-            const win = createOSWindow({
+        function runWindowsLikeExecutable(item) {
+            const winId = 'win_runner_' + item.id;
+            const lines = (item.content || `Executing ${item.name}...`)
+                .split('\n')
+                .filter(Boolean)
+                .map(l => l.replace(/^@?echo\s+/i, ''));
+
+            const html = `
+                <div dir="ltr" class="h-full bg-slate-950 text-emerald-400 code-font p-4 text-xs overflow-y-auto space-y-1.5">
+                    <div class="text-slate-400">Doors Windows-Compat Runtime [v4.0]</div>
+                    <div class="pt-2 text-amber-300">C:\\Doors\\${escapeHtml(currentUser.username)}&gt; ${escapeHtml(item.name)}</div>
+                    ${lines.map(line => `<div>&gt; ${escapeHtml(line)}</div>`).join('')}
+                    <div class="pt-2 text-emerald-300">[Process exited with code 0]</div>
+                </div>
+            `;
+
+            createOSWindow({
                 id: winId,
-                title: `${app.title} (عرض داخلي)`,
-                icon: app.icon,
-                iconBg: app.bg,
-                width: 940,
-                height: 600,
+                title: `Run: ${item.name}`,
+                icon: 'fa-solid fa-terminal',
+                iconBg: 'bg-slate-900',
+                width: 640,
+                height: 380,
+                contentHtml: html
+            });
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        // =========================================================================
+        // Folders, File Creation, Rename, Delete & Properties
+        // =========================================================================
+        function openFolderWindow(folderId) {
+            const folder = userData.fsItems.find(i => i.id === folderId);
+            if (!folder) return;
+            const winId = 'folder_' + folderId;
+            if (openWindows[winId]) { focusWindow(winId); renderFolderContents(folderId); return; }
+
+            createOSWindow({
+                id: winId,
+                title: folder.name,
+                icon: 'fa-solid fa-folder-open',
+                iconBg: 'bg-amber-500',
+                width: 700,
+                height: 470,
                 contentHtml: `
-                    <div class="w-full h-full flex flex-col">
-                        <div dir="rtl" class="px-3 py-1.5 bg-amber-50 border-b border-amber-200 text-[11px] text-amber-800 flex items-center justify-between">
-                            <span>بعض المواقع العالمية تمنع العرض داخل Iframe لأسباب أمنية.</span>
-                            <button onclick="launchApp('${app.id}')" class="bg-orange-600 text-white px-2.5 py-1 rounded-lg font-bold">فتح في نافذة مستقلة</button>
+                    <div dir="ltr" class="h-full flex flex-col bg-slate-50">
+                        <div class="p-3 bg-white border-b border-slate-200 flex items-center justify-between gap-2 text-xs">
+                            <div class="font-bold text-slate-600 flex items-center gap-2"><i class="fa-solid fa-folder text-amber-500"></i><span>${folder.name}</span></div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="createNewItemPrompt('folder', '${folderId}')" class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-2.5 py-1.5 rounded-xl font-bold">Folder</button>
+                                <button onclick="createNewItemPrompt('code', '${folderId}')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 px-2.5 py-1.5 rounded-xl font-bold">Code</button>
+                                <button onclick="createNewItemPrompt('html', '${folderId}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-2.5 py-1.5 rounded-xl font-bold">.html</button>
+                            </div>
                         </div>
-                        <iframe src="${app.url}" class="flex-1 w-full border-0"></iframe>
+                        <div id="folder-grid-${folderId}" class="flex-1 p-4 grid grid-cols-3 sm:grid-cols-5 gap-3 content-start overflow-y-auto"></div>
                     </div>
                 `
             });
-            attachIframeMouseBridge(win.querySelector('iframe'));
+            renderFolderContents(folderId);
         }
 
-        function attachIframeMouseBridge(iframe) {
-            if (!iframe) return;
-            iframe.addEventListener('mouseenter', () => {
-                document.getElementById('doors-cursor').style.opacity = '0';
+        function renderFolderContents(folderId) {
+            const grid = document.getElementById('folder-grid-' + folderId);
+            if (!grid) return;
+            const children = userData.fsItems.filter(i => i.parentId === folderId);
+            if (!children.length) {
+                grid.innerHTML = `<div class="col-span-full text-center py-14 text-slate-400 text-xs">This folder is empty.</div>`;
+                return;
+            }
+            grid.innerHTML = '';
+            children.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'flex flex-col items-center p-2.5 rounded-xl hover:bg-white border border-transparent hover:border-slate-200 transition text-center';
+                const isHtml = item.type === 'html' || isHtmlExtension(item.name);
+                const iconClass = item.type === 'folder' ? 'fa-solid fa-folder bg-amber-400'
+                    : isHtml ? 'fa-brands fa-html5 bg-orange-600'
+                    : 'fa-solid fa-code bg-sky-500';
+                const parts = iconClass.split(' ');
+                card.innerHTML = `<div class="w-12 h-12 ${parts[2]} text-white rounded-xl flex items-center justify-center text-xl mb-1.5 shadow"><i class="${parts[0]} ${parts[1]}"></i></div><span class="text-[11px] font-bold text-slate-700 line-clamp-2">${item.name}</span>`;
+                card.onclick = () => openFSItem(item.id);
+                card.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); showContextMenu(e.clientX, e.clientY, 'fs', item); };
+                grid.appendChild(card);
             });
         }
 
-        // بناء HTML مستقل تماماً لنافذة الإعدادات داخل Iframe
+        function createNewItemPrompt(type, parentId = 'desktop') {
+            const presets = {
+                folder: { title: 'New Folder', def: 'New Folder' },
+                code: { title: 'New Code File (Doors Code)', def: 'script.js' },
+                html: { title: 'New HTML File (Opens in Google Chrome)', def: 'index.html' },
+                exe: { title: 'New Executable Script', def: 'run.bat' }
+            };
+            const cfg = presets[type] || presets.code;
+            openDialog(cfg.title, `
+                <div class="space-y-4">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1.5">File or Folder Name</label>
+                        <input type="text" id="prompt-item-name" value="${cfg.def}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">Cancel</button>
+                        <button onclick="confirmCreateItem('${type}', '${parentId}')" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">Create</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function confirmCreateItem(type, parentId) {
+            const name = document.getElementById('prompt-item-name').value.trim();
+            if (!name) return;
+            const defaultContent = (type === 'html' || isHtmlExtension(name))
+                ? `<!DOCTYPE html>\n<html lang="en">\n<head><meta charset="UTF-8"><title>${name}</title></head>\n<body style="font-family:sans-serif;padding:24px;">\n  <h1>${name}</h1>\n  <p>Running in Google Chrome inside Doors OS.</p>\n</body>\n</html>`
+                : type === 'folder' ? '' : `// ${name} - Doors Code\n`;
+
+            const newItem = {
+                id: type + '_' + Date.now(),
+                parentId,
+                type,
+                name,
+                content: defaultContent,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            userData.fsItems.push(newItem);
+            saveUserData();
+            closeDialog();
+            if (parentId === 'desktop') renderDesktop();
+            else renderFolderContents(parentId);
+            if (type === 'code') openDoorsCodeEditor(newItem.id);
+        }
+
+        function openCreateShortcutDialog() {
+            openDialog('Add App Shortcut', `
+                <div class="space-y-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">App Name</label>
+                        <input type="text" id="sc-name" placeholder="e.g. My App" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">URL</label>
+                        <input type="url" id="sc-url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                    </div>
+                    <div class="flex justify-end gap-2 pt-2">
+                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">Cancel</button>
+                        <button onclick="confirmCreateShortcut()" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">Add</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function confirmCreateShortcut() {
+            const title = document.getElementById('sc-name').value.trim();
+            let url = document.getElementById('sc-url').value.trim();
+            if (!title || !url) return;
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            userData.customApps.push({
+                id: 'sc_' + Date.now(),
+                title,
+                type: 'url',
+                url,
+                company: 'Custom Shortcut',
+                desc: 'User-added application shortcut',
+                icon: 'fa-solid fa-globe',
+                bg: 'bg-teal-600',
+                isDefault: false
+            });
+            saveUserData();
+            closeDialog();
+            renderDesktop();
+            renderStartApps();
+        }
+
+        function renameFSItemPrompt(itemId) {
+            const item = userData.fsItems.find(i => i.id === itemId);
+            if (!item) return;
+            openDialog('Rename', `
+                <div class="space-y-4">
+                    <input type="text" id="rename-input" value="${item.name}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5">
+                    <div class="flex justify-end gap-2">
+                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">Cancel</button>
+                        <button onclick="confirmRenameFS('${itemId}')" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">Save</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function confirmRenameFS(itemId) {
+            const item = userData.fsItems.find(i => i.id === itemId);
+            const val = document.getElementById('rename-input').value.trim();
+            if (!item || !val) return;
+            item.name = val;
+            if (isHtmlExtension(val)) item.type = 'html';
+            else if (isExecutableExtension(val)) item.type = 'exe';
+            saveUserData();
+            closeDialog();
+            renderDesktop();
+            if (item.parentId !== 'desktop') renderFolderContents(item.parentId);
+        }
+
+        function deleteFSItem(itemId) {
+            const item = userData.fsItems.find(i => i.id === itemId);
+            if (!item) return;
+            const toDelete = new Set([itemId]);
+            let expanded = true;
+            while (expanded) {
+                expanded = false;
+                userData.fsItems.forEach(i => {
+                    if (toDelete.has(i.parentId) && !toDelete.has(i.id)) {
+                        toDelete.add(i.id);
+                        expanded = true;
+                    }
+                });
+            }
+            userData.fsItems = userData.fsItems.filter(i => !toDelete.has(i.id));
+            delete userData.positions[itemId];
+            saveUserData();
+            closeWindow('folder_' + itemId);
+            renderDesktop();
+            if (item.parentId !== 'desktop') renderFolderContents(item.parentId);
+        }
+
+        function deleteCustomApp(appId) {
+            const app = getAllApps().find(a => a.id === appId);
+            if (!app) return;
+            if (app.isDefault) {
+                showInfoDialog('Protected Default App', `"${app.title}" is a protected default app in Doors OS and cannot be deleted.`);
+                return;
+            }
+            userData.customApps = userData.customApps.filter(a => a.id !== appId);
+            delete userData.positions['app_' + appId];
+            saveUserData();
+            renderDesktop();
+            renderStartApps();
+        }
+
+        function showPropertiesDialog(kind, data) {
+            if (kind === 'app') {
+                openDialog(`Properties: ${data.title}`, `
+                    <div class="space-y-2 text-xs">
+                        <div class="font-bold text-sm">${data.title}</div>
+                        <div class="text-slate-500">${data.company || 'Doors OS'}</div>
+                        <div class="flex justify-between pt-2"><span class="text-slate-500">Protection:</span><span class="font-bold">${data.isDefault ? 'Default App (Protected)' : 'Installed / Custom'}</span></div>
+                        ${data.url ? `<div class="flex justify-between gap-3"><span class="text-slate-500">URL:</span><span class="font-mono text-[11px] truncate text-indigo-600">${data.url}</span></div>` : ''}
+                        <div class="bg-slate-50 p-3 rounded-xl text-slate-600 mt-2">${data.desc || ''}</div>
+                    </div>
+                `);
+            } else {
+                openDialog(`Properties: ${data.name}`, `
+                    <div class="space-y-2 text-xs">
+                        <div class="font-bold text-sm">${data.name}</div>
+                        <div class="flex justify-between"><span class="text-slate-500">Type:</span><span class="font-bold">${data.type}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Created:</span><span class="font-bold">${new Date(data.createdAt).toLocaleString()}</span></div>
+                    </div>
+                `);
+            }
+        }
+
+        // =========================================================================
+        // Iframe Windows: Settings (with 50 Profiles, Language, Country) & Store
+        // =========================================================================
+        function openIframeWindow(type) {
+            const isSettings = type === 'settings';
+            const winId = isSettings ? 'app_settings_iframe' : 'app_store_iframe';
+            if (openWindows[winId]) { focusWindow(winId); return; }
+
+            const win = createOSWindow({
+                id: winId,
+                title: isSettings ? 'Doors Settings' : 'Zozen Store',
+                icon: isSettings ? 'fa-solid fa-gear' : 'fa-solid fa-store',
+                iconBg: isSettings ? 'bg-slate-700' : 'bg-indigo-600',
+                width: isSettings ? 860 : 920,
+                height: isSettings ? 580 : 600,
+                contentHtml: `<iframe id="iframe-${type}" class="w-full h-full border-0"></iframe>`
+            });
+            const frame = win.querySelector('#iframe-' + type);
+            frame.srcdoc = isSettings ? buildSettingsIframeHTML() : buildStoreIframeHTML();
+            frame.addEventListener('mouseenter', () => { document.getElementById('doors-cursor').style.opacity = '0'; });
+        }
+
+        function getIframeCustomCursorCode() {
+            if (userData?.settings?.customCursor === false) return '';
+            return `
+                <style>*,*::before,*::after{cursor:none!important}#inner-cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:999999;transform:translate(-3px,-3px);opacity:0;transition:opacity .12s}</style>
+                <div id="inner-cursor"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 3L19.5 11.2L12.5 13.3L9.8 20.5L4 3Z" fill="#0f172a" stroke="#ea580c" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9.2" cy="9.2" r="1.5" fill="#fb923c"/></svg></div>
+                <script>const ic=document.getElementById('inner-cursor');document.addEventListener('mousemove',e=>{ic.style.opacity='1';ic.style.left=e.clientX+'px';ic.style.top=e.clientY+'px';});document.addEventListener('mouseleave',()=>ic.style.opacity='0');<\/script>
+            `;
+        }
+
         function buildSettingsIframeHTML() {
-            const wpCards = Object.entries(WALLPAPERS).map(([key, wp]) => `
-                <button onclick="setWallpaper('${key}')" class="group text-right border-2 ${userData.settings.wallpaper === key && !userData.settings.customWallpaperUrl ? 'border-orange-600' : 'border-slate-200'} rounded-2xl p-2 hover:border-orange-400 transition">
-                    <div class="h-16 rounded-xl mb-2 shadow-inner" style="background: ${wp.css};"></div>
-                    <div class="text-xs font-bold text-slate-700 px-1">${wp.name}</div>
+            const activeProfId = Number(currentUser.profileId) || 1;
+            const profilesHtml = CUSTOM_PROFILES.map(p => `
+                <button type="button" onclick="sendMsg('setProfile',{profileId:${p.id}})" title="${p.name}" class="h-9 rounded-xl ${p.bg} text-white text-xs flex items-center justify-center transition ${p.id === activeProfId ? 'ring-2 ring-orange-600 ring-offset-2 scale-105' : 'opacity-80 hover:opacity-100'}">
+                    <i class="fa-solid ${p.icon}"></i>
                 </button>
             `).join('');
 
-            const appsCount = getAllApps().length;
-            const foldersCount = userData.fsItems.filter(i => i.type === 'folder').length;
-            const docsCount = userData.fsItems.filter(i => i.type !== 'folder').length;
+            const langOptions = LANGUAGES.map(l => `<option value="${l}" ${(currentUser.language || 'English') === l ? 'selected' : ''}>${l}</option>`).join('');
+            const countryOptions = COUNTRIES.map(c => `<option value="${c}" ${(currentUser.country || 'Iraq') === c ? 'selected' : ''}>${c}</option>`).join('');
 
-            return `<!DOCTYPE html>
-            <html lang="ar" dir="rtl">
-            <head>
-                <meta charset="UTF-8">
-                <script src="https://cdn.tailwindcss.com"><\/script>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-                    body { font-family: 'Cairo', sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
-                </style>
-            </head>
+            const wpCards = Object.entries(WALLPAPERS).map(([k, wp]) => `
+                <button onclick="sendMsg('setWallpaper',{wallpaper:'${k}',customUrl:''})" class="text-left border-2 ${userData.settings.wallpaper === k && !userData.settings.customWallpaperUrl ? 'border-orange-600' : 'border-slate-200'} rounded-2xl p-2 hover:border-orange-400 transition">
+                    <div class="h-14 rounded-xl mb-1.5" style="background:${wp.css}"></div>
+                    <div class="text-xs font-bold text-slate-700">${wp.name}</div>
+                </button>
+            `).join('');
+
+            return `<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"><\/script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>body{font-family:'Inter',sans-serif;margin:0;background:#f8fafc;}</style></head>
             <body class="h-screen flex overflow-hidden">
-                <!-- الشريط الجانبي للإعدادات -->
-                <aside class="w-52 bg-white border-l border-slate-200 p-4 flex flex-col justify-between shrink-0">
-                    <div>
-                        <div class="flex items-center gap-2.5 pb-4 mb-4 border-b border-slate-100">
-                            <div class="w-9 h-9 bg-orange-600 text-white rounded-xl flex items-center justify-center text-base"><i class="fa-solid fa-door-open"></i></div>
-                            <div>
-                                <div class="font-extrabold text-sm">Doors Settings</div>
-                                <div class="text-[10px] text-slate-400">الإصدار 2.0 المستقل</div>
-                            </div>
-                        </div>
-                        <nav class="space-y-1 text-xs font-bold">
-                            <button onclick="showSection('account')" id="nav-account" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-orange-50 text-orange-600 transition"><i class="fa-solid fa-user-shield w-4"></i> الحساب والجلسة</button>
-                            <button onclick="showSection('appearance')" id="nav-appearance" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-palette w-4"></i> المظهر والمؤشر</button>
-                            <button onclick="showSection('storage')" id="nav-storage" class="nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-hard-drive w-4"></i> التخزين والنظام</button>
-                        </nav>
+                <aside class="w-52 bg-white border-r border-slate-200 p-4 flex flex-col justify-between text-xs font-bold">
+                    <div class="space-y-1">
+                        <div class="font-extrabold text-sm text-orange-600 pb-3 mb-3 border-b border-slate-100">Doors Settings</div>
+                        <button onclick="showSec('profile')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-orange-50 hover:text-orange-600">Profile & Region</button>
+                        <button onclick="showSec('appearance')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-orange-50 hover:text-orange-600">Appearance & Cursor</button>
                     </div>
-                    <button onclick="sendMsg('logout')" class="w-full py-2.5 rounded-xl bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-xs font-bold transition">
-                        <i class="fa-solid fa-right-from-bracket ml-1"></i> تسجيل الخروج
-                    </button>
+                    <button onclick="sendMsg('logout')" class="w-full py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition">Sign Out</button>
                 </aside>
-
-                <!-- محتوى الإعدادات -->
-                <main class="flex-1 p-6 overflow-y-auto">
-                    <!-- قسم الحساب -->
-                    <section id="sec-account" class="space-y-5">
-                        <h2 class="text-lg font-extrabold text-slate-800">الحساب وحفظ الجلسة</h2>
-                        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-14 h-14 bg-orange-600 text-white rounded-2xl flex items-center justify-center text-2xl font-extrabold">${(currentUser.fullname || currentUser.username)[0].toUpperCase()}</div>
-                                <div>
-                                    <div class="font-extrabold text-base">${currentUser.fullname}</div>
-                                    <div class="text-xs text-slate-500">@${currentUser.username}</div>
-                                    <span class="inline-flex items-center gap-1 mt-1 text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full">
-                                        <i class="fa-solid fa-circle-check"></i> الجلسة محفوظة تلقائياً
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
+                <main class="flex-1 p-6 overflow-y-auto space-y-5 text-xs">
+                    <section id="sec-profile" class="space-y-4">
                         <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-                            <h3 class="font-bold text-sm">تحديث الاسم الظاهر</h3>
+                            <h3 class="font-extrabold text-sm">Account & Display Name</h3>
                             <div class="flex gap-2">
-                                <input id="new-fullname" type="text" value="${currentUser.fullname}" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-orange-500">
-                                <button onclick="updateName()" class="bg-orange-600 hover:bg-orange-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition">حفظ التعديل</button>
-                            </div>
-                            <p id="save-name-msg" class="text-[11px] text-emerald-600 font-bold hidden">تم تحديث الاسم بنجاح!</p>
-                        </div>
-                    </section>
-
-                    <!-- قسم المظهر والمؤشر -->
-                    <section id="sec-appearance" class="space-y-5 hidden">
-                        <h2 class="text-lg font-extrabold text-slate-800">المظهر والمؤشر الخاص</h2>
-                        <div class="bg-white border border-slate-200 rounded-2xl p-5">
-                            <h3 class="font-bold text-sm mb-3">خلفيات Doors الجاهزة</h3>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${wpCards}</div>
-                        </div>
-
-                        <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-                            <h3 class="font-bold text-sm">خلفية مخصصة برابط صورة (URL)</h3>
-                            <div class="flex gap-2">
-                                <input id="custom-wp-url" type="url" value="${userData.settings.customWallpaperUrl || ''}" placeholder="https://example.com/wallpaper.jpg" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-orange-500">
-                                <button onclick="applyCustomWp()" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">تطبيق</button>
+                                <input id="fn" type="text" value="${currentUser.fullname}" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                                <button onclick="sendMsg('updateName',{fullname:document.getElementById('fn').value.trim()})" class="bg-orange-600 text-white px-4 py-2 rounded-xl font-bold">Save</button>
                             </div>
                         </div>
 
-                        <div class="bg-white border border-slate-200 rounded-2xl p-5 flex items-center justify-between">
+                        <div class="bg-white border border-slate-200 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <div class="font-bold text-sm">مؤشر Doors المخصص</div>
-                                <div class="text-xs text-slate-500">استبدال مؤشر الماوس التقليدي بمؤشر Doors البرتقالي الخاص</div>
+                                <label class="block font-bold text-slate-700 mb-1">Language</label>
+                                <select onchange="sendMsg('setLocale',{language:this.value,country:document.getElementById('st-country').value})" id="st-lang" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">${langOptions}</select>
                             </div>
-                            <input type="checkbox" id="toggle-cursor" ${userData.settings.customCursor !== false ? 'checked' : ''} onchange="toggleCursor(this.checked)" class="w-5 h-5 accent-orange-600">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Country of Residence</label>
+                                <select onchange="sendMsg('setLocale',{language:document.getElementById('st-lang').value,country:this.value})" id="st-country" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">${countryOptions}</select>
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                            <h3 class="font-extrabold text-sm mb-3">Custom Profiles (50 Available — Active: Profile #${String(activeProfId).padStart(2, '0')})</h3>
+                            <div class="grid grid-cols-10 gap-2 max-h-40 overflow-y-auto p-1">${profilesHtml}</div>
                         </div>
                     </section>
 
-                    <!-- قسم التخزين والنظام -->
-                    <section id="sec-storage" class="space-y-5 hidden">
-                        <h2 class="text-lg font-extrabold text-slate-800">معلومات النظام والتخزين</h2>
-                        <div class="grid grid-cols-3 gap-3 text-center">
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4">
-                                <div class="text-2xl font-extrabold text-indigo-600">${appsCount}</div>
-                                <div class="text-xs text-slate-500 mt-1">التطبيقات المثبتة</div>
-                            </div>
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4">
-                                <div class="text-2xl font-extrabold text-amber-500">${foldersCount}</div>
-                                <div class="text-xs text-slate-500 mt-1">المجلدات</div>
-                            </div>
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4">
-                                <div class="text-2xl font-extrabold text-sky-600">${docsCount}</div>
-                                <div class="text-xs text-slate-500 mt-1">المستندات والملفات</div>
-                            </div>
-                        </div>
-                        <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="text-slate-500">إصدار النواة:</span>
-                                <span class="font-bold">Doors Sovereign v2.0 (Iframe Engine)</span>
-                            </div>
-                            <div class="flex items-center justify-between text-xs">
-                                <span class="text-slate-500">حالة خادم Supabase:</span>
-                                <span class="font-bold text-emerald-600">متصل ونشط</span>
-                            </div>
-                            <div class="pt-2 border-t border-slate-100">
-                                <button onclick="sendMsg('resetPositions')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition">
-                                    <i class="fa-solid fa-table-cells ml-1"></i> إعادة ترتيب أيقونات سطح المكتب
-                                </button>
-                            </div>
+                    <section id="sec-appearance" class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 hidden">
+                        <h3 class="font-extrabold text-sm">Wallpapers</h3>
+                        <div class="grid grid-cols-3 gap-3">${wpCards}</div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+                            <span class="font-bold">Custom Doors Cursor</span>
+                            <input type="checkbox" ${userData.settings.customCursor !== false ? 'checked' : ''} onchange="sendMsg('toggleCursor',{enabled:this.checked})" class="w-4 h-4 accent-orange-600">
                         </div>
                     </section>
                 </main>
-
                 <script>
-                    function sendMsg(action, payload = {}) {
-                        window.parent.postMessage({ source: 'doors_settings', action, payload }, '*');
-                    }
-                    function showSection(name) {
-                        ['account', 'appearance', 'storage'].forEach(s => {
-                            document.getElementById('sec-' + s).classList.toggle('hidden', s !== name);
-                            const btn = document.getElementById('nav-' + s);
-                            btn.className = s === name
-                                ? 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-orange-50 text-orange-600 transition'
-                                : 'nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition';
-                        });
-                    }
-                    function updateName() {
-                        const val = document.getElementById('new-fullname').value.trim();
-                        if (!val) return;
-                        sendMsg('updateName', { fullname: val });
-                        document.getElementById('save-name-msg').classList.remove('hidden');
-                    }
-                    function setWallpaper(key) {
-                        sendMsg('setWallpaper', { wallpaper: key, customUrl: '' });
-                    }
-                    function applyCustomWp() {
-                        const url = document.getElementById('custom-wp-url').value.trim();
-                        sendMsg('setWallpaper', { wallpaper: 'sovereign', customUrl: url });
-                    }
-                    function toggleCursor(val) {
-                        sendMsg('toggleCursor', { enabled: val });
-                    }
+                    function sendMsg(action,payload={}){window.parent.postMessage({source:'doors_settings',action,payload},'*');}
+                    function showSec(id){['profile','appearance'].forEach(s=>document.getElementById('sec-'+s).classList.toggle('hidden',s!==id));}
                 <\/script>
                 ${getIframeCustomCursorCode()}
-            </body>
-            </html>`;
+            </body></html>`;
         }
 
-        // بناء HTML مستقل تماماً لمتجر زوزين داخل Iframe مع اتصال Supabase
         function buildStoreIframeHTML() {
-            return `<!DOCTYPE html>
-            <html lang="ar" dir="rtl">
-            <head>
-                <meta charset="UTF-8">
-                <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>
-                <script src="https://cdn.tailwindcss.com"><\/script>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-                    body { font-family: 'Cairo', sans-serif; margin:0; background:#f8fafc; color:#0f172a; }
-                </style>
-            </head>
+            return `<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="UTF-8"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script><script src="https://cdn.tailwindcss.com"><\/script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>body{font-family:'Inter',sans-serif;margin:0;background:#f8fafc;}</style></head>
             <body class="p-6 overflow-y-auto">
-                <div class="max-w-4xl mx-auto space-y-7">
-                    <!-- رأس المتجر -->
-                    <div class="bg-gradient-to-l from-indigo-600 to-violet-600 text-white rounded-2xl p-5 flex items-center justify-between shadow-lg">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl"><i class="fa-solid fa-store"></i></div>
-                            <div>
-                                <h1 class="text-lg font-extrabold">Zozen Store السحابي</h1>
-                                <p class="text-xs text-indigo-100">تثبيت التطبيقات مباشرة على سطح مكتب Doors وبوابة المطورين</p>
-                            </div>
-                        </div>
-                        <span class="text-[11px] bg-emerald-400/25 border border-emerald-300/40 px-3 py-1 rounded-full font-bold">
-                            <i class="fa-solid fa-cloud ml-1"></i> Supabase متصل
-                        </span>
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="bg-indigo-600 text-white rounded-2xl p-5 flex items-center justify-between">
+                        <div><h1 class="font-extrabold text-base">Zozen Store</h1><p class="text-xs text-indigo-100">Connected to Supabase</p></div>
+                        <button onclick="loadCloud()" class="bg-white/15 px-3 py-1.5 rounded-xl text-xs font-bold">Refresh</button>
                     </div>
-
-                    <!-- تطبيقات السحابة -->
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-cloud text-emerald-600"></i> تطبيقات السحابة (Supabase Cloud Hub)</h2>
-                            <button onclick="loadCloudApps()" class="text-xs font-bold text-indigo-600 hover:underline"><i class="fa-solid fa-rotate ml-1"></i> تحديث</button>
-                        </div>
-                        <div id="cloud-apps-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                            <div class="col-span-full text-center py-10 text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin text-xl mb-2 block"></i> جاري جلب التطبيقات من Supabase...</div>
-                        </div>
-                    </div>
-
-                    <!-- بوابة المطورين -->
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                        <h3 class="text-sm font-extrabold text-orange-600 mb-4 flex items-center gap-2"><i class="fa-solid fa-code"></i> بوابة المطورين (نشر تطبيق جديد إلى Supabase)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                            <div>
-                                <label class="block font-bold mb-1 text-slate-700">اسم التطبيق *</label>
-                                <input type="text" id="dev-app-name" placeholder="مثال: تطبيق زوزين الذكي" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div>
-                                <label class="block font-bold mb-1 text-slate-700">الشركة أو الجهة المطورة</label>
-                                <input type="text" id="dev-company-name" placeholder="مثال: Zozen Corp" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div>
-                                <label class="block font-bold mb-1 text-slate-700">اسم المطور الشخصي</label>
-                                <input type="text" id="dev-person-name" placeholder="اسمك" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div>
-                                <label class="block font-bold mb-1 text-slate-700">الإصدار (Version)</label>
-                                <input type="text" id="dev-app-version" value="1.0.0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block font-bold mb-1 text-slate-700">رابط التطبيق المباشر (URL) *</label>
-                                <input type="url" id="dev-app-url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block font-bold mb-1 text-slate-700">الوصف</label>
-                                <textarea id="dev-app-desc" rows="2" placeholder="وصف مختصر للتطبيق..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-orange-500"></textarea>
-                            </div>
-                        </div>
-                        <button onclick="publishApp()" id="publish-btn" class="mt-4 w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition shadow text-xs">
-                            <i class="fa-solid fa-cloud-arrow-up ml-1"></i> رفع ونشر التطبيق إلى Supabase
-                        </button>
+                    <div id="cloud-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">Loading cloud apps...</div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 text-xs">
+                        <h3 class="font-extrabold text-orange-600 text-sm">Developer Portal (Publish to Supabase)</h3>
+                        <input id="n" type="text" placeholder="App Name *" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                        <input id="u" type="url" placeholder="App URL (https://...) *" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                        <input id="d" type="text" placeholder="Description" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                        <button onclick="pub()" class="w-full bg-orange-600 text-white font-bold py-2.5 rounded-xl">Publish App</button>
                     </div>
                 </div>
-
                 <script>
-                    const sb = supabase.createClient("${SUPABASE_URL}", "${SUPABASE_ANON_KEY}");
-                    let fetchedCloudApps = [];
-
-                    async function loadCloudApps() {
-                        const grid = document.getElementById('cloud-apps-grid');
-                        grid.innerHTML = '<div class="col-span-full text-center py-8 text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin text-xl mb-2 block"></i> جاري الاتصال بـ Supabase...</div>';
-                        try {
-                            const { data: apps, error } = await sb.from('apps').select('*').order('id', { ascending: false });
-                            if (error) throw error;
-                            fetchedCloudApps = apps || [];
-
-                            if (fetchedCloudApps.length === 0) {
-                                grid.innerHTML = '<p class="col-span-full text-center text-slate-400 text-xs py-6">لا توجد تطبيقات سحابية حالياً.</p>';
-                                return;
-                            }
-
-                            grid.innerHTML = '';
-                            fetchedCloudApps.forEach((app, idx) => {
-                                const card = document.createElement('div');
-                                card.className = 'bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center justify-between gap-3';
-                                card.innerHTML = \`
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <div class="w-12 h-12 shrink-0 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-cloud"></i></div>
-                                        <div class="min-w-0">
-                                            <h4 class="font-bold text-sm text-slate-800 truncate">\${app.name || 'تطبيق سحابي'}</h4>
-                                            <p class="text-[11px] text-slate-500 truncate">\${app.developer || 'مطور سحابي'}</p>
-                                            <p class="text-[10px] text-emerald-600 truncate mt-0.5">\${app.description || 'تطبيق Doors السحابي'}</p>
-                                        </div>
-                                    </div>
-                                    <button onclick="installCloud(\${idx})" class="shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition shadow">تثبيت</button>
-                                \`;
-                                grid.appendChild(card);
+                    const sb = supabase.createClient("${SUPABASE_URL}","${SUPABASE_ANON_KEY}");
+                    let cloudList = [];
+                    async function loadCloud(){
+                        const g = document.getElementById('cloud-grid');
+                        try{
+                            const {data,error} = await sb.from('apps').select('*').order('id',{ascending:false});
+                            if(error) throw error;
+                            cloudList = data || [];
+                            g.innerHTML = cloudList.length ? '' : '<p class="text-slate-400">No cloud apps available.</p>';
+                            cloudList.forEach((a,i)=>{
+                                g.innerHTML += '<div class="bg-white border border-slate-200 p-4 rounded-2xl flex items-center justify-between"><div><div class="font-bold text-sm">'+(a.name||'Cloud App')+'</div><div class="text-slate-500">'+(a.description||'')+'</div></div><button onclick="installApp('+i+')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl font-bold">Install</button></div>';
                             });
-                        } catch (err) {
-                            grid.innerHTML = '<p class="col-span-full text-center text-red-500 text-xs py-6">فشل الاتصال بـ Supabase: ' + err.message + '</p>';
-                        }
+                        }catch(e){g.innerHTML='<p class="text-red-500">Connection error: '+e.message+'</p>';}
                     }
-
-                    function installCloud(idx) {
-                        const app = fetchedCloudApps[idx];
-                        if (!app) return;
-                        window.parent.postMessage({
-                            source: 'doors_store',
-                            action: 'installApp',
-                            payload: {
-                                name: app.name || 'تطبيق سحابي',
-                                url: app.exe_url || app.file_url || '#',
-                                developer: app.developer || 'مطور سحابي',
-                                desc: app.description || 'تطبيق سحابي من متجر زوزين'
-                            }
-                        }, '*');
+                    function installApp(i){
+                        const a = cloudList[i];
+                        window.parent.postMessage({source:'doors_store',action:'installApp',payload:{name:a.name||'Cloud App',url:a.exe_url||a.file_url||'#',developer:a.developer||'Developer',desc:a.description||''}},'*');
                     }
-
-                    async function publishApp() {
-                        const name = document.getElementById('dev-app-name').value.trim();
-                        const company = document.getElementById('dev-company-name').value.trim() || 'Zozen Developer';
-                        const person = document.getElementById('dev-person-name').value.trim();
-                        const version = document.getElementById('dev-app-version').value.trim() || '1.0';
-                        const url = document.getElementById('dev-app-url').value.trim();
-                        const desc = document.getElementById('dev-app-desc').value.trim();
-                        const btn = document.getElementById('publish-btn');
-
-                        if (!name || !url) {
-                            alert('يرجى إدخال اسم التطبيق والرابط المباشر.');
-                            return;
-                        }
-                        btn.disabled = true;
-                        btn.textContent = 'جاري الرفع...';
-                        try {
-                            const { error } = await sb.from('apps').insert([{
-                                name,
-                                developer: company + (person ? ' (' + person + ')' : ''),
-                                description: desc || 'إصدار v' + version,
-                                exe_url: url
-                            }]);
-                            if (error) throw error;
-                            alert('تم نشر التطبيق بنجاح في Supabase!');
-                            document.getElementById('dev-app-name').value = '';
-                            document.getElementById('dev-app-url').value = '';
-                            document.getElementById('dev-app-desc').value = '';
-                            loadCloudApps();
-                        } catch (err) {
-                            alert('فشل النشر: ' + err.message);
-                        } finally {
-                            btn.disabled = false;
-                            btn.textContent = 'رفع ونشر التطبيق إلى Supabase';
-                        }
+                    async function pub(){
+                        const name=document.getElementById('n').value.trim(), url=document.getElementById('u').value.trim(), desc=document.getElementById('d').value.trim();
+                        if(!name||!url) return alert('Enter name and URL');
+                        const {error}=await sb.from('apps').insert([{name,developer:'Zozen Dev',description:desc||'v1.0',exe_url:url}]);
+                        if(error) return alert(error.message);
+                        alert('Published!'); loadCloud();
                     }
-
-                    loadCloudApps();
+                    loadCloud();
                 <\/script>
                 ${getIframeCustomCursorCode()}
-            </body>
-            </html>`;
+            </body></html>`;
         }
 
-        // استقبال الرسائل من نوافذ الإعدادات والمتجر (postMessage)
         window.addEventListener('message', (e) => {
             const msg = e.data;
             if (!msg || !msg.source) return;
-
             if (msg.source === 'doors_settings') {
-                if (msg.action === 'updateName') {
-                    const db = getAccountsDB();
+                const db = getAccountsDB();
+                if (msg.action === 'updateName' && msg.payload.fullname) {
                     currentUser.fullname = msg.payload.fullname;
+                    db[currentUser.username] = currentUser;
+                    saveAccountsDB(db);
+                    updateAccountUI();
+                } else if (msg.action === 'setProfile') {
+                    currentUser.profileId = msg.payload.profileId;
+                    db[currentUser.username] = currentUser;
+                    saveAccountsDB(db);
+                    updateAccountUI();
+                    const f = document.getElementById('iframe-settings');
+                    if (f) f.srcdoc = buildSettingsIframeHTML();
+                } else if (msg.action === 'setLocale') {
+                    currentUser.language = msg.payload.language;
+                    currentUser.country = msg.payload.country;
                     db[currentUser.username] = currentUser;
                     saveAccountsDB(db);
                     updateAccountUI();
@@ -1397,373 +1529,26 @@
                     userData.settings.customCursor = msg.payload.enabled;
                     saveUserData();
                     applySystemSettings();
-                    // إعادة بناء الإعدادات لتطبيق تغيير المؤشر داخلها
-                    const iframe = document.getElementById('iframe-settings');
-                    if (iframe) iframe.srcdoc = buildSettingsIframeHTML();
-                } else if (msg.action === 'resetPositions') {
-                    userData.positions = {};
-                    saveUserData();
-                    renderDesktop();
+                    const f = document.getElementById('iframe-settings');
+                    if (f) f.srcdoc = buildSettingsIframeHTML();
                 } else if (msg.action === 'logout') {
                     logoutSession();
                 }
             }
-
             if (msg.source === 'doors_store' && msg.action === 'installApp') {
                 const { name, url, developer, desc } = msg.payload;
-                if (userData.customApps.some(a => a.url === url)) {
-                    showInfoDialog('مثبت مسبقاً', `التطبيق "${name}" موجود بالفعل على سطح مكتبك.`);
-                    return;
+                if (!userData.customApps.some(a => a.url === url)) {
+                    userData.customApps.push({ id: 'cloud_' + Date.now(), title: name, type: 'url', url, company: developer, desc, icon: 'fa-solid fa-cloud', bg: 'bg-emerald-600', isDefault: false });
+                    saveUserData();
+                    renderDesktop();
+                    renderStartApps();
+                    showInfoDialog('Installed', `"${name}" has been installed to your desktop.`);
                 }
-                userData.customApps.push({
-                    id: 'cloud_' + Date.now(),
-                    title: name,
-                    type: 'url',
-                    url,
-                    company: developer,
-                    desc,
-                    icon: 'fa-solid fa-cloud',
-                    bg: 'bg-emerald-600',
-                    isDefault: false
-                });
-                saveUserData();
-                renderDesktop();
-                renderStartApps();
-                showInfoDialog('تم التثبيت بنجاح', `تم تثبيت "${name}" على سطح مكتب Doors ويمكنك الآن تشغيله في نافذة مستقلة أو حذفه متى شئت.`);
             }
         });
 
         // =========================================================================
-        // 7. مستعرض المجلدات ومحرر المستندات الشخصية
-        // =========================================================================
-        function openFSItem(itemId) {
-            const item = userData.fsItems.find(i => i.id === itemId);
-            if (!item) return;
-
-            if (item.type === 'folder') {
-                openFolderWindow(item.id);
-            } else {
-                openDocumentWindow(item.id);
-            }
-        }
-
-        function openFolderWindow(folderId) {
-            const folder = userData.fsItems.find(i => i.id === folderId);
-            if (!folder) return;
-
-            const winId = 'folder_' + folderId;
-            if (openWindows[winId]) {
-                focusWindow(winId);
-                renderFolderContents(folderId);
-                return;
-            }
-
-            createOSWindow({
-                id: winId,
-                title: folder.name,
-                icon: 'fa-solid fa-folder-open',
-                iconBg: 'bg-amber-500',
-                width: 680,
-                height: 460,
-                contentHtml: `
-                    <div dir="rtl" class="h-full flex flex-col bg-slate-50">
-                        <div class="p-3 bg-white border-b border-slate-200 flex items-center justify-between gap-2 text-xs">
-                            <div class="font-bold text-slate-600 flex items-center gap-2">
-                                <i class="fa-solid fa-folder text-amber-500"></i>
-                                <span>سطح المكتب / ${folder.name}</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="createNewItemPrompt('folder', '${folderId}')" class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3 py-1.5 rounded-xl font-bold transition"><i class="fa-solid fa-folder-plus ml-1"></i> مجلد</button>
-                                <button onclick="createNewItemPrompt('doc', '${folderId}')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 px-3 py-1.5 rounded-xl font-bold transition"><i class="fa-solid fa-file-circle-plus ml-1"></i> مستند شخصي</button>
-                            </div>
-                        </div>
-                        <div id="folder-grid-${folderId}" class="flex-1 p-4 grid grid-cols-3 sm:grid-cols-5 gap-3 content-start overflow-y-auto"></div>
-                    </div>
-                `
-            });
-
-            renderFolderContents(folderId);
-        }
-
-        function renderFolderContents(folderId) {
-            const grid = document.getElementById('folder-grid-' + folderId);
-            if (!grid) return;
-            const children = userData.fsItems.filter(i => i.parentId === folderId);
-
-            if (children.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 text-slate-400 text-xs"><i class="fa-regular fa-folder-open text-3xl mb-2 block text-slate-300"></i>هذا المجلد فارغ. أنشئ مجلداً فرعياً أو مستنداً جديداً من الأعلى.</div>`;
-                return;
-            }
-
-            grid.innerHTML = '';
-            children.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'flex flex-col items-center p-2.5 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200 transition text-center';
-                const icon = item.type === 'folder'
-                    ? '<div class="w-12 h-12 bg-amber-400 text-white rounded-xl flex items-center justify-center text-xl mb-1.5 shadow"><i class="fa-solid fa-folder"></i></div>'
-                    : '<div class="w-12 h-12 bg-sky-500 text-white rounded-xl flex items-center justify-center text-xl mb-1.5 shadow"><i class="fa-solid fa-file-lines"></i></div>';
-
-                card.innerHTML = `${icon}<span class="text-[11px] font-bold text-slate-700 line-clamp-2">${item.name}</span>`;
-                card.onclick = () => openFSItem(item.id);
-                card.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    showContextMenu(e.clientX, e.clientY, 'fs', item);
-                };
-                grid.appendChild(card);
-            });
-        }
-
-        function openDocumentWindow(docId) {
-            const doc = userData.fsItems.find(i => i.id === docId);
-            if (!doc) return;
-
-            const winId = 'doc_' + docId;
-            if (openWindows[winId]) {
-                focusWindow(winId);
-                return;
-            }
-
-            createOSWindow({
-                id: winId,
-                title: doc.name,
-                icon: doc.type === 'note' ? 'fa-solid fa-note-sticky' : 'fa-solid fa-file-lines',
-                iconBg: doc.type === 'note' ? 'bg-amber-500' : 'bg-sky-600',
-                width: 660,
-                height: 490,
-                contentHtml: `
-                    <div dir="rtl" class="h-full flex flex-col bg-white">
-                        <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-2">
-                                <button onclick="saveDocumentContent('${docId}')" class="bg-orange-600 hover:bg-orange-500 text-white px-3.5 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-floppy-disk ml-1"></i> حفظ</button>
-                                <button onclick="downloadDocument('${docId}')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg font-bold transition"><i class="fa-solid fa-download ml-1"></i> تنزيل .txt</button>
-                            </div>
-                            <span id="doc-status-${docId}" class="text-[11px] text-emerald-600 font-bold">محفوظ في حسابك</span>
-                        </div>
-                        <textarea id="doc-editor-${docId}" oninput="autoSaveDocument('${docId}')" class="flex-1 w-full p-5 text-sm leading-relaxed text-slate-800 focus:outline-none resize-none ${doc.type === 'note' ? 'bg-amber-50/40' : 'bg-white'}" placeholder="اكتب مستندك الشخصي هنا..."></textarea>
-                    </div>
-                `
-            });
-
-            document.getElementById('doc-editor-' + docId).value = doc.content || '';
-        }
-
-        function autoSaveDocument(docId) {
-            const doc = userData.fsItems.find(i => i.id === docId);
-            const ta = document.getElementById('doc-editor-' + docId);
-            if (!doc || !ta) return;
-            doc.content = ta.value;
-            doc.updatedAt = new Date().toISOString();
-            saveUserData();
-            const statusEl = document.getElementById('doc-status-' + docId);
-            if (statusEl) statusEl.textContent = 'تم الحفظ تلقائياً ✓';
-        }
-
-        function saveDocumentContent(docId) {
-            autoSaveDocument(docId);
-            const statusEl = document.getElementById('doc-status-' + docId);
-            if (statusEl) statusEl.textContent = 'تم الحفظ بنجاح ✓';
-        }
-
-        function downloadDocument(docId) {
-            const doc = userData.fsItems.find(i => i.id === docId);
-            if (!doc) return;
-            const blob = new Blob([doc.content || ''], { type: 'text/plain;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = doc.name.endsWith('.txt') ? doc.name : doc.name + '.txt';
-            a.click();
-        }
-
-        // إنشاء مجلد / مستند / ملاحظة / اختصار تطبيق
-        function createNewItemPrompt(type, parentId = 'desktop') {
-            const labels = {
-                folder: { title: 'إنشاء مجلد جديد', placeholder: 'اسم المجلد...', def: 'مجلد جديد' },
-                doc: { title: 'إنشاء مستند شخصي جديد', placeholder: 'اسم المستند...', def: 'مستند جديد.doc' },
-                note: { title: 'إنشاء ملاحظة سريعة', placeholder: 'عنوان الملاحظة...', def: 'ملاحظة سريعة' }
-            };
-            const cfg = labels[type];
-
-            openDialog(cfg.title, `
-                <div class="space-y-4">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1.5">الاسم</label>
-                        <input type="text" id="prompt-item-name" value="${cfg.def}" placeholder="${cfg.placeholder}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">إلغاء</button>
-                        <button onclick="confirmCreateItem('${type}', '${parentId}')" class="px-5 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold">إنشاء</button>
-                    </div>
-                </div>
-            `);
-            setTimeout(() => {
-                const inp = document.getElementById('prompt-item-name');
-                if (inp) { inp.focus(); inp.select(); }
-            }, 30);
-        }
-
-        function confirmCreateItem(type, parentId) {
-            const name = document.getElementById('prompt-item-name').value.trim();
-            if (!name) return;
-
-            const newItem = {
-                id: type + '_' + Date.now(),
-                parentId,
-                type,
-                name,
-                content: '',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            userData.fsItems.push(newItem);
-            saveUserData();
-            closeDialog();
-
-            if (parentId === 'desktop') {
-                renderDesktop();
-            } else {
-                renderFolderContents(parentId);
-            }
-
-            if (type !== 'folder') openDocumentWindow(newItem.id);
-        }
-
-        function openCreateShortcutDialog() {
-            openDialog('إضافة اختصار تطبيق جديد', `
-                <div class="space-y-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">اسم التطبيق</label>
-                        <input type="text" id="sc-name" placeholder="مثال: شات جي بي تي" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">الرابط المباشر (URL)</label>
-                        <input type="url" id="sc-url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-orange-500">
-                    </div>
-                    <div class="flex justify-end gap-2 pt-2">
-                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">إلغاء</button>
-                        <button onclick="confirmCreateShortcut()" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">إضافة لسطح المكتب</button>
-                    </div>
-                </div>
-            `);
-        }
-
-        function confirmCreateShortcut() {
-            const title = document.getElementById('sc-name').value.trim();
-            const url = document.getElementById('sc-url').value.trim();
-            if (!title || !url) return;
-
-            userData.customApps.push({
-                id: 'shortcut_' + Date.now(),
-                title,
-                type: 'url',
-                url: url.startsWith('http') ? url : 'https://' + url,
-                company: 'تطبيق مضاف بواسطة المستخدم',
-                desc: 'اختصار مخصص يعمل في نافذة مستقلة',
-                icon: 'fa-solid fa-globe',
-                bg: 'bg-teal-600',
-                isDefault: false
-            });
-            saveUserData();
-            closeDialog();
-            renderDesktop();
-            renderStartApps();
-        }
-
-        // إعادة تسمية وحذف العناصر
-        function renameFSItemPrompt(itemId) {
-            const item = userData.fsItems.find(i => i.id === itemId);
-            if (!item) return;
-            openDialog('إعادة تسمية', `
-                <div class="space-y-4">
-                    <input type="text" id="rename-input" value="${item.name}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-orange-500">
-                    <div class="flex justify-end gap-2">
-                        <button onclick="closeDialog()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 font-bold">إلغاء</button>
-                        <button onclick="confirmRenameFS('${itemId}')" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">حفظ الاسم</button>
-                    </div>
-                </div>
-            `);
-        }
-
-        function confirmRenameFS(itemId) {
-            const item = userData.fsItems.find(i => i.id === itemId);
-            const newName = document.getElementById('rename-input').value.trim();
-            if (!item || !newName) return;
-            item.name = newName;
-            saveUserData();
-            closeDialog();
-            renderDesktop();
-            if (item.parentId !== 'desktop') renderFolderContents(item.parentId);
-        }
-
-        function deleteFSItem(itemId) {
-            const item = userData.fsItems.find(i => i.id === itemId);
-            if (!item) return;
-            // حذف العنصر وما بداخله إذا كان مجلداً
-            const idsToRemove = new Set([itemId]);
-            let added = true;
-            while (added) {
-                added = false;
-                userData.fsItems.forEach(i => {
-                    if (idsToRemove.has(i.parentId) && !idsToRemove.has(i.id)) {
-                        idsToRemove.add(i.id);
-                        added = true;
-                    }
-                });
-            }
-            userData.fsItems = userData.fsItems.filter(i => !idsToRemove.has(i.id));
-            delete userData.positions[itemId];
-            saveUserData();
-            closeWindow('folder_' + itemId);
-            closeWindow('doc_' + itemId);
-            renderDesktop();
-            if (item.parentId !== 'desktop') renderFolderContents(item.parentId);
-        }
-
-        function deleteCustomApp(appId) {
-            const app = getAllApps().find(a => a.id === appId);
-            if (!app) return;
-            if (app.isDefault) {
-                showInfoDialog('تطبيق نظام محمي', `التطبيق "${app.title}" من التطبيقات الافتراضية لنظام Doors ولا يمكن حذفه.`);
-                return;
-            }
-            userData.customApps = userData.customApps.filter(a => a.id !== appId);
-            delete userData.positions['app_' + appId];
-            saveUserData();
-            renderDesktop();
-            renderStartApps();
-        }
-
-        function showPropertiesDialog(kind, data) {
-            if (kind === 'app') {
-                openDialog(`خصائص: ${data.title}`, `
-                    <div class="space-y-2.5 text-xs">
-                        <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
-                            <div class="w-12 h-12 ${data.bg} text-white rounded-xl flex items-center justify-center text-xl"><i class="${data.icon}"></i></div>
-                            <div>
-                                <div class="font-extrabold text-sm">${data.title}</div>
-                                <div class="text-slate-500">${data.company || 'Doors Ecosystem'}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between"><span class="text-slate-500">الحالة:</span><span class="font-bold ${data.isDefault ? 'text-orange-600' : 'text-emerald-600'}">${data.isDefault ? 'تطبيق نظام افتراضي (محمي من الحذف)' : 'تطبيق خارجي / سحابي (قابل للحذف)'}</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500">طريقة التشغيل:</span><span class="font-bold">${data.type.startsWith('iframe') ? 'نافذة نظام داخلية (Iframe)' : 'نافذة تطبيق مستقلة'}</span></div>
-                        ${data.url ? `<div class="flex justify-between gap-4"><span class="text-slate-500 shrink-0">الرابط:</span><span class="font-mono text-[11px] truncate text-indigo-600">${data.url}</span></div>` : ''}
-                        <div class="pt-2 text-slate-600 bg-slate-50 p-3 rounded-xl">${data.desc || 'لا يوجد وصف إضافي.'}</div>
-                    </div>
-                `);
-            } else {
-                const countInside = data.type === 'folder' ? userData.fsItems.filter(i => i.parentId === data.id).length : null;
-                openDialog(`خصائص: ${data.name}`, `
-                    <div class="space-y-2.5 text-xs">
-                        <div class="flex justify-between"><span class="text-slate-500">النوع:</span><span class="font-bold">${data.type === 'folder' ? 'مجلد ملفات' : (data.type === 'note' ? 'ملاحظة سريعة' : 'مستند شخصي')}</span></div>
-                        ${countInside !== null ? `<div class="flex justify-between"><span class="text-slate-500">العناصر بداخله:</span><span class="font-bold">${countInside}</span></div>` : `<div class="flex justify-between"><span class="text-slate-500">عدد الأحرف:</span><span class="font-bold">${(data.content || '').length}</span></div>`}
-                        <div class="flex justify-between"><span class="text-slate-500">تاريخ الإنشاء:</span><span class="font-bold">${new Date(data.createdAt).toLocaleString('ar-EG')}</span></div>
-                    </div>
-                `);
-            }
-        }
-
-        // =========================================================================
-        // 8. القائمة المخصصة للزر الأيمن (سطح المكتب الفارغ / تطبيق / ملف أو مجلد)
+        // Context Menu ("Open With" -> Google Chrome, Doors Code, etc.)
         // =========================================================================
         function showContextMenu(x, y, targetType, data = null) {
             const menu = document.getElementById('context-menu');
@@ -1771,81 +1556,71 @@
 
             if (targetType === 'desktop') {
                 html = `
-                    <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400">خيارات سطح المكتب</div>
-                    <button onclick="hideContextMenu(); createNewItemPrompt('folder', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-folder-plus text-amber-500 w-4"></i> إنشاء مجلد جديد</button>
-                    <button onclick="hideContextMenu(); createNewItemPrompt('doc', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-file-circle-plus text-sky-500 w-4"></i> إنشاء مستند شخصي</button>
-                    <button onclick="hideContextMenu(); createNewItemPrompt('note', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-note-sticky text-yellow-500 w-4"></i> إنشاء ملاحظة سريعة</button>
-                    <button onclick="hideContextMenu(); openCreateShortcutDialog()" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-link text-teal-600 w-4"></i> إضافة اختصار تطبيق</button>
+                    <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400">Doors Desktop</div>
+                    <button onclick="hideContextMenu(); createNewItemPrompt('folder', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-folder-plus text-amber-500 w-4"></i> New Folder</button>
+                    <button onclick="hideContextMenu(); createNewItemPrompt('code', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-code text-sky-600 w-4"></i> New Code File (Doors Code)</button>
+                    <button onclick="hideContextMenu(); createNewItemPrompt('html', 'desktop')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold"><i class="fa-brands fa-html5 text-orange-600 w-4"></i> New .html File</button>
+                    <button onclick="hideContextMenu(); openCreateShortcutDialog()" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-link text-teal-600 w-4"></i> Add Shortcut</button>
                     <div class="my-1.5 border-t border-slate-100"></div>
-                    <button onclick="hideContextMenu(); userData.positions = {}; saveUserData(); renderDesktop();" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-table-cells text-slate-500 w-4"></i> ترتيب الأيقونات</button>
-                    <button onclick="hideContextMenu(); renderDesktop();" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-rotate text-slate-500 w-4"></i> تحديث</button>
-                    <div class="my-1.5 border-t border-slate-100"></div>
-                    <button onclick="hideContextMenu(); openIframeWindow('settings');" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-gear text-slate-700 w-4"></i> إعدادات النظام والمظهر</button>
+                    <button onclick="hideContextMenu(); userData.positions={}; saveUserData(); renderDesktop();" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-table-cells text-slate-500 w-4"></i> Arrange Icons</button>
+                    <button onclick="hideContextMenu(); openIframeWindow('settings');" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-gear text-slate-700 w-4"></i> Settings</button>
                 `;
             } else if (targetType === 'app') {
-                const isUrl = data.type === 'url';
-                const deleteRow = data.isDefault
-                    ? `<div class="w-full px-3.5 py-2 text-slate-400 flex items-center justify-between gap-2 cursor-not-allowed bg-slate-50/70"><span class="flex items-center gap-2.5"><i class="fa-solid fa-lock w-4"></i> حذف التطبيق</span><span class="text-[9px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded font-bold">افتراضي محمي</span></div>`
-                    : `<button onclick="hideContextMenu(); deleteCustomApp('${data.id}')" class="w-full px-3.5 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2.5 font-bold transition"><i class="fa-solid fa-trash w-4"></i> حذف التطبيق</button>`;
+                const delBtn = data.isDefault
+                    ? `<div class="w-full px-3.5 py-2 text-slate-400 flex items-center justify-between bg-slate-50/70 cursor-not-allowed"><span class="flex items-center gap-2.5"><i class="fa-solid fa-lock w-4"></i> Delete</span><span class="text-[9px] bg-slate-200 px-1.5 py-0.5 rounded font-bold">Default</span></div>`
+                    : `<button onclick="hideContextMenu(); deleteCustomApp('${data.id}')" class="w-full px-3.5 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2.5 font-bold"><i class="fa-solid fa-trash w-4"></i> Delete</button>`;
 
                 html = `
                     <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 truncate">${data.title}</div>
-                    <button onclick="hideContextMenu(); launchApp('${data.id}')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-bold transition"><i class="fa-solid fa-play text-orange-600 w-4"></i> فتح</button>
-                    ${isUrl ? `
+                    <button onclick="hideContextMenu(); launchApp('${data.id}')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-bold"><i class="fa-solid fa-play text-orange-600 w-4"></i> Open</button>
+                    ${data.type === 'url' ? `
                     <div class="relative submenu-trigger">
-                        <div class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center justify-between font-semibold transition">
-                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-arrow-up-right-from-square text-indigo-500 w-4"></i> فتح باستخدام...</span>
-                            <i class="fa-solid fa-chevron-left text-[10px] text-slate-400"></i>
+                        <div class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center justify-between font-semibold">
+                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-arrow-up-right-from-square text-indigo-500 w-4"></i> Open With...</span>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                         </div>
-                        <div class="submenu-panel hidden absolute top-0 right-full mr-1 w-52 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl py-1.5">
-                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'default')" class="w-full px-3 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2 font-semibold text-right"><i class="fa-solid fa-window-restore text-orange-500 w-4"></i> نافذة Doors المستقلة</button>
-                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'newtab')" class="w-full px-3 py-2 hover:bg-slate-100 flex items-center gap-2 font-semibold text-right"><i class="fa-brands fa-chrome text-blue-500 w-4"></i> تبويب كروم عادي</button>
-                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'iframe_preview')" class="w-full px-3 py-2 hover:bg-slate-100 flex items-center gap-2 font-semibold text-right"><i class="fa-solid fa-code text-slate-500 w-4"></i> معاينة داخلية (Iframe)</button>
+                        <div class="submenu-panel hidden absolute top-0 left-full ml-1 w-52 bg-white/95 border border-slate-200 rounded-xl shadow-xl py-1.5">
+                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'default')" class="w-full px-3 py-2 hover:bg-orange-50 flex items-center gap-2 font-semibold text-left"><i class="fa-solid fa-window-restore text-orange-500 w-4"></i> Standalone Window</button>
+                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'chrome_internal')" class="w-full px-3 py-2 hover:bg-amber-50 flex items-center gap-2 font-semibold text-left"><i class="fa-brands fa-chrome text-orange-600 w-4"></i> Google Chrome</button>
+                            <button onclick="hideContextMenu(); launchApp('${data.id}', 'newtab')" class="w-full px-3 py-2 hover:bg-slate-100 flex items-center gap-2 font-semibold text-left"><i class="fa-solid fa-up-right-from-square text-blue-500 w-4"></i> Browser Tab</button>
                         </div>
                     </div>` : ''}
-                    <button onclick="hideContextMenu(); showPropertiesDialog('app', getAllApps().find(a=>a.id==='${data.id}'))" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-circle-info text-slate-500 w-4"></i> خصائص</button>
+                    <button onclick="hideContextMenu(); showPropertiesDialog('app', getAllApps().find(a=>a.id==='${data.id}'))" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-circle-info text-slate-500 w-4"></i> Properties</button>
                     <div class="my-1.5 border-t border-slate-100"></div>
-                    ${deleteRow}
+                    ${delBtn}
                 `;
             } else if (targetType === 'fs') {
                 html = `
                     <div class="px-3 py-1.5 text-[10px] font-bold text-slate-400 truncate">${data.name}</div>
-                    <button onclick="hideContextMenu(); openFSItem('${data.id}')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-bold transition"><i class="fa-solid fa-folder-open text-orange-600 w-4"></i> فتح</button>
+                    <button onclick="hideContextMenu(); openFSItem('${data.id}')" class="w-full px-3.5 py-2 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 font-bold"><i class="fa-solid fa-folder-open text-orange-600 w-4"></i> Open</button>
                     ${data.type !== 'folder' ? `
                     <div class="relative submenu-trigger">
-                        <div class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center justify-between font-semibold transition">
-                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-pen-to-square text-sky-500 w-4"></i> فتح باستخدام...</span>
-                            <i class="fa-solid fa-chevron-left text-[10px] text-slate-400"></i>
+                        <div class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center justify-between font-semibold">
+                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-sliders text-sky-500 w-4"></i> Open With...</span>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
                         </div>
-                        <div class="submenu-panel hidden absolute top-0 right-full mr-1 w-48 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-xl shadow-xl py-1.5">
-                            <button onclick="hideContextMenu(); openDocumentWindow('${data.id}')" class="w-full px-3 py-2 hover:bg-sky-50 text-sky-700 flex items-center gap-2 font-semibold text-right"><i class="fa-solid fa-file-lines w-4"></i> محرر Doors</button>
-                            <button onclick="hideContextMenu(); downloadDocument('${data.id}')" class="w-full px-3 py-2 hover:bg-slate-100 flex items-center gap-2 font-semibold text-right"><i class="fa-solid fa-download w-4"></i> تصدير كملف نصي</button>
+                        <div class="submenu-panel hidden absolute top-0 left-full ml-1 w-52 bg-white/95 border border-slate-200 rounded-xl shadow-xl py-1.5">
+                            <button onclick="hideContextMenu(); openInternalChromeWindow('doors://open/${data.name}','${data.name} - Google Chrome',userData.fsItems.find(x=>x.id==='${data.id}').content)" class="w-full px-3 py-2 hover:bg-amber-50 flex items-center gap-2 font-semibold text-left"><i class="fa-brands fa-chrome text-orange-600 w-4"></i> Google Chrome</button>
+                            <button onclick="hideContextMenu(); openDoorsCodeEditor('${data.id}')" class="w-full px-3 py-2 hover:bg-sky-50 flex items-center gap-2 font-semibold text-left"><i class="fa-solid fa-code text-sky-600 w-4"></i> Doors Code</button>
                         </div>
                     </div>` : ''}
-                    <button onclick="hideContextMenu(); renameFSItemPrompt('${data.id}')" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-i-cursor text-slate-500 w-4"></i> إعادة تسمية</button>
-                    <button onclick="hideContextMenu(); showPropertiesDialog('fs', userData.fsItems.find(i=>i.id==='${data.id}'))" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold transition"><i class="fa-solid fa-circle-info text-slate-500 w-4"></i> خصائص</button>
+                    <button onclick="hideContextMenu(); renameFSItemPrompt('${data.id}')" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-i-cursor text-slate-500 w-4"></i> Rename</button>
+                    <button onclick="hideContextMenu(); showPropertiesDialog('fs', userData.fsItems.find(i=>i.id==='${data.id}'))" class="w-full px-3.5 py-2 hover:bg-slate-100 flex items-center gap-2.5 font-semibold"><i class="fa-solid fa-circle-info text-slate-500 w-4"></i> Properties</button>
                     <div class="my-1.5 border-t border-slate-100"></div>
-                    <button onclick="hideContextMenu(); deleteFSItem('${data.id}')" class="w-full px-3.5 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2.5 font-bold transition"><i class="fa-solid fa-trash w-4"></i> حذف</button>
+                    <button onclick="hideContextMenu(); deleteFSItem('${data.id}')" class="w-full px-3.5 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2.5 font-bold"><i class="fa-solid fa-trash w-4"></i> Delete</button>
                 `;
             }
 
             menu.innerHTML = html;
             menu.classList.remove('hidden');
-
-            // منع خروج القائمة خارج حدود الشاشة
-            const mw = menu.offsetWidth || 230;
+            const mw = menu.offsetWidth || 245;
             const mh = menu.offsetHeight || 260;
-            const posX = (x + mw > window.innerWidth) ? Math.max(8, x - mw) : x;
-            const posY = (y + mh > window.innerHeight - 64) ? Math.max(8, y - mh) : y;
-            menu.style.left = posX + 'px';
-            menu.style.top = posY + 'px';
+            menu.style.left = (x + mw > window.innerWidth ? Math.max(8, x - mw) : x) + 'px';
+            menu.style.top = (y + mh > window.innerHeight - 64 ? Math.max(8, y - mh) : y) + 'px';
         }
 
-        function hideContextMenu() {
-            document.getElementById('context-menu').classList.add('hidden');
-        }
+        function hideContextMenu() { document.getElementById('context-menu').classList.add('hidden'); }
 
-        // النقر بالزر الأيمن على المساحة الفارغة في سطح المكتب
         document.getElementById('desktop-area').addEventListener('contextmenu', (e) => {
             if (e.target.closest('.desktop-item')) return;
             e.preventDefault();
@@ -1857,138 +1632,144 @@
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#context-menu')) hideContextMenu();
             if (!e.target.closest('#doors-start-menu') && !e.target.closest('#doors-start-btn')) toggleStartMenu(false);
-            if (e.target.id === 'desktop-area') {
-                selectedItemId = null;
-                highlightSelectedDesktopIcon();
-            }
         });
 
-        // =========================================================================
-        // 9. قائمة Doors والبحث والحوارات
-        // =========================================================================
+        function createOSWindow({ id, title, icon, iconBg, width = 820, height = 560, contentHtml }) {
+            if (openWindows[id]) { focusWindow(id); openWindows[id].el.classList.remove('hidden'); return openWindows[id].el; }
+            const win = document.createElement('div');
+            win.id = 'win_' + id;
+            win.className = 'os-window pointer-events-auto bg-white/95 backdrop-blur-2xl border border-slate-200/90';
+            const w = Math.min(width, window.innerWidth - 40);
+            const h = Math.min(height, window.innerHeight - 100);
+            const offset = (Object.keys(openWindows).length % 5) * 26;
+            win.style.width = w + 'px';
+            win.style.height = h + 'px';
+            win.style.left = Math.max(20, (window.innerWidth - w) / 2 + offset) + 'px';
+            win.style.top = Math.max(16, (window.innerHeight - h - 70) / 2 + offset) + 'px';
+            win.style.zIndex = ++topZIndex;
+            win.innerHTML = `
+                <div class="win-header h-11 bg-slate-100/95 border-b border-slate-200 px-3.5 flex items-center justify-between shrink-0 select-none" dir="ltr">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-6 h-6 ${iconBg || 'bg-orange-600'} text-white rounded-lg flex items-center justify-center text-xs"><i class="${icon}"></i></div>
+                        <span class="font-bold text-xs text-slate-800 win-title-text">${title}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="minimizeWindow('${id}')" class="w-7 h-7 rounded-lg hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs"><i class="fa-solid fa-minus"></i></button>
+                        <button onclick="toggleMaximizeWindow('${id}')" class="w-7 h-7 rounded-lg hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs"><i class="fa-regular fa-square"></i></button>
+                        <button onclick="closeWindow('${id}')" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body flex-1 w-full h-full overflow-hidden relative bg-white">${contentHtml}</div>
+            `;
+            win.addEventListener('mousedown', () => focusWindow(id));
+            const header = win.querySelector('.win-header');
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button') || win.classList.contains('maximized')) return;
+                focusWindow(id);
+                document.body.classList.add('dragging-window');
+                const sx = e.clientX, sy = e.clientY, ol = win.offsetLeft, ot = win.offsetTop;
+                function onMove(ev) {
+                    win.style.left = Math.max(-win.offsetWidth + 120, ol + ev.clientX - sx) + 'px';
+                    win.style.top = Math.max(0, Math.min(window.innerHeight - 105, ot + ev.clientY - sy)) + 'px';
+                }
+                function onUp() {
+                    document.body.classList.remove('dragging-window');
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                }
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            });
+            document.getElementById('windows-layer').appendChild(win);
+            openWindows[id] = { el: win, title, icon, iconBg };
+            renderTaskbarWindows();
+            return win;
+        }
+
+        function focusWindow(id) { if (!openWindows[id]) return; openWindows[id].el.style.zIndex = ++topZIndex; openWindows[id].el.classList.remove('hidden'); renderTaskbarWindows(); }
+        function minimizeWindow(id) { if (!openWindows[id]) return; openWindows[id].el.classList.add('hidden'); renderTaskbarWindows(); }
+        function toggleMaximizeWindow(id) { if (!openWindows[id]) return; openWindows[id].el.classList.toggle('maximized'); }
+        function closeWindow(id) { if (!openWindows[id]) return; openWindows[id].el.remove(); delete openWindows[id]; renderTaskbarWindows(); }
+
+        function renderTaskbarWindows() {
+            const c = document.getElementById('taskbar-windows');
+            c.innerHTML = '';
+            Object.entries(openWindows).forEach(([id, info]) => {
+                const hidden = info.el.classList.contains('hidden');
+                const b = document.createElement('button');
+                b.className = `h-9 px-3 rounded-xl border text-xs font-bold flex items-center gap-2 transition shrink-0 ${hidden ? 'bg-slate-100 border-slate-200 text-slate-600' : 'bg-orange-50 border-orange-300 text-orange-700'}`;
+                b.innerHTML = `<i class="${info.icon}"></i><span class="max-w-[110px] truncate">${info.title}</span>`;
+                b.onclick = () => hidden ? focusWindow(id) : minimizeWindow(id);
+                c.appendChild(b);
+            });
+        }
+
         function toggleStartMenu(forceState) {
-            const menu = document.getElementById('doors-start-menu');
-            const shouldOpen = forceState !== undefined ? forceState : menu.classList.contains('hidden');
-            menu.classList.toggle('hidden', !shouldOpen);
-            menu.classList.toggle('flex', shouldOpen);
-            if (shouldOpen) {
-                document.getElementById('start-search-input').value = '';
-                renderStartApps();
-            }
+            const m = document.getElementById('doors-start-menu');
+            const open = forceState !== undefined ? forceState : m.classList.contains('hidden');
+            m.classList.toggle('hidden', !open);
+            m.classList.toggle('flex', open);
+            if (open) { document.getElementById('start-search-input').value = ''; renderStartApps(); }
         }
 
         function renderStartApps(filter = '') {
-            const grid = document.getElementById('start-apps-grid');
-            if (!grid) return;
+            const g = document.getElementById('start-apps-grid');
+            if (!g) return;
             const q = filter.trim().toLowerCase();
-            const list = getAllApps().filter(a => a.title.toLowerCase().includes(q) || (a.enTitle && a.enTitle.toLowerCase().includes(q)));
-
-            grid.innerHTML = '';
-            list.forEach(app => {
+            g.innerHTML = '';
+            getAllApps().filter(a => a.title.toLowerCase().includes(q) || (a.enTitle && a.enTitle.toLowerCase().includes(q))).forEach(app => {
                 const btn = document.createElement('button');
                 btn.className = 'flex flex-col items-center p-2.5 rounded-xl hover:bg-orange-50 transition';
-                btn.innerHTML = `
-                    <div class="w-10 h-10 ${app.bg} text-white rounded-xl flex items-center justify-center text-base shadow mb-1.5"><i class="${app.icon}"></i></div>
-                    <span class="text-[11px] font-bold text-slate-700 truncate w-full text-center">${app.title}</span>
-                `;
-                btn.onclick = () => {
-                    toggleStartMenu(false);
-                    launchApp(app.id);
-                };
-                grid.appendChild(btn);
+                btn.innerHTML = `<div class="w-10 h-10 ${app.bg} text-white rounded-xl flex items-center justify-center text-base shadow mb-1.5"><i class="${app.icon}"></i></div><span class="text-[11px] font-bold text-slate-700 truncate w-full text-center">${app.title}</span>`;
+                btn.onclick = () => { toggleStartMenu(false); launchApp(app.id); };
+                g.appendChild(btn);
             });
         }
 
-        function filterStartApps() {
-            renderStartApps(document.getElementById('start-search-input').value);
-        }
+        function filterStartApps() { renderStartApps(document.getElementById('start-search-input').value); }
 
         function toggleZozenSearch() {
-            const modal = document.getElementById('zozen-search-modal');
-            const opening = modal.classList.contains('hidden');
-            modal.classList.toggle('hidden', !opening);
-            modal.classList.toggle('flex', opening);
-            if (opening) {
-                const inp = document.getElementById('zozen-search-input');
-                inp.value = '';
-                inp.focus();
-                executeZozenSearch();
-            }
+            const m = document.getElementById('zozen-search-modal');
+            const open = m.classList.contains('hidden');
+            m.classList.toggle('hidden', !open);
+            m.classList.toggle('flex', open);
+            if (open) { const i = document.getElementById('zozen-search-input'); i.value = ''; i.focus(); executeZozenSearch(); }
         }
 
         function executeZozenSearch() {
-            const query = document.getElementById('zozen-search-input').value.trim().toLowerCase();
+            const q = document.getElementById('zozen-search-input').value.trim().toLowerCase();
             const res = document.getElementById('zozen-search-results');
-
-            const apps = getAllApps().filter(a => !query || a.title.toLowerCase().includes(query) || (a.enTitle && a.enTitle.toLowerCase().includes(query)));
-            const files = (userData?.fsItems || []).filter(f => !query || f.name.toLowerCase().includes(query));
-
             let html = '';
-            apps.forEach(app => {
-                html += `
-                    <div onclick="toggleZozenSearch(); launchApp('${app.id}')" class="p-3 bg-slate-50 hover:bg-orange-50 border border-slate-200 rounded-xl flex items-center justify-between transition">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 ${app.bg} text-white rounded-lg flex items-center justify-center text-xs"><i class="${app.icon}"></i></div>
-                            <div>
-                                <div class="font-bold text-slate-800">${app.title}</div>
-                                <div class="text-[10px] text-slate-500">${app.company || 'تطبيق Doors'}</div>
-                            </div>
-                        </div>
-                        <span class="bg-orange-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold">فتح</span>
-                    </div>`;
+            getAllApps().filter(a => !q || a.title.toLowerCase().includes(q) || (a.enTitle && a.enTitle.toLowerCase().includes(q))).forEach(a => {
+                html += `<div onclick="toggleZozenSearch(); launchApp('${a.id}')" class="p-3 bg-slate-50 hover:bg-orange-50 border border-slate-200 rounded-xl flex items-center justify-between"><div class="flex items-center gap-2.5"><div class="w-8 h-8 ${a.bg} text-white rounded-lg flex items-center justify-center text-xs"><i class="${a.icon}"></i></div><span class="font-bold text-slate-800">${a.title}</span></div><span class="bg-orange-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold">Open</span></div>`;
             });
-            files.forEach(item => {
-                html += `
-                    <div onclick="toggleZozenSearch(); openFSItem('${item.id}')" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-xl flex items-center justify-between transition">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 ${item.type === 'folder' ? 'bg-amber-500' : 'bg-sky-500'} text-white rounded-lg flex items-center justify-center text-xs"><i class="fa-solid ${item.type === 'folder' ? 'fa-folder' : 'fa-file-lines'}"></i></div>
-                            <div>
-                                <div class="font-bold text-slate-800">${item.name}</div>
-                                <div class="text-[10px] text-slate-500">${item.type === 'folder' ? 'مجلد' : 'مستند شخصي'}</div>
-                            </div>
-                        </div>
-                        <span class="bg-slate-800 text-white px-3 py-1 rounded-lg text-[10px] font-bold">عرض</span>
-                    </div>`;
+            (userData?.fsItems || []).filter(f => !q || f.name.toLowerCase().includes(q)).forEach(f => {
+                html += `<div onclick="toggleZozenSearch(); openFSItem('${f.id}')" class="p-3 bg-slate-50 hover:bg-amber-50 border border-slate-200 rounded-xl flex items-center justify-between"><div class="flex items-center gap-2.5"><div class="w-8 h-8 bg-amber-500 text-white rounded-lg flex items-center justify-center text-xs"><i class="fa-solid fa-file-code"></i></div><span class="font-bold text-slate-800">${f.name}</span></div><span class="bg-slate-800 text-white px-3 py-1 rounded-lg text-[10px] font-bold">Open</span></div>`;
             });
-
-            res.innerHTML = html || '<div class="text-center py-6 text-slate-400">لا توجد نتائج مطابقة</div>';
+            res.innerHTML = html || '<div class="text-center py-6 text-slate-400">No matching results</div>';
         }
 
         function openDialog(title, bodyHtml) {
             document.getElementById('dialog-title').textContent = title;
             document.getElementById('dialog-body').innerHTML = bodyHtml;
             const d = document.getElementById('system-dialog');
-            d.classList.remove('hidden');
-            d.classList.add('flex');
+            d.classList.remove('hidden'); d.classList.add('flex');
         }
-
         function showInfoDialog(title, message) {
-            openDialog(title, `
-                <p class="text-slate-600 leading-relaxed mb-4">${message}</p>
-                <div class="flex justify-end">
-                    <button onclick="closeDialog()" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">حسناً</button>
-                </div>
-            `);
+            openDialog(title, `<p class="text-slate-600 leading-relaxed mb-4">${message}</p><div class="flex justify-end"><button onclick="closeDialog()" class="px-5 py-2 rounded-xl bg-orange-600 text-white font-bold">OK</button></div>`);
         }
-
         function closeDialog() {
             const d = document.getElementById('system-dialog');
-            d.classList.add('hidden');
-            d.classList.remove('flex');
+            d.classList.add('hidden'); d.classList.remove('flex');
         }
 
-        // =========================================================================
-        // 10. محرك مؤشر الماوس الخاص + الساعة + الإقلاع
-        // =========================================================================
         const cursorEl = document.getElementById('doors-cursor');
         document.addEventListener('mousemove', (e) => {
             if (!document.body.classList.contains('custom-cursor-active')) return;
             cursorEl.style.opacity = '1';
             cursorEl.style.left = e.clientX + 'px';
             cursorEl.style.top = e.clientY + 'px';
-
-            const interactive = e.target.closest('button, a, input, textarea, .desktop-item, .submenu-trigger');
-            cursorEl.classList.toggle('hovering', Boolean(interactive));
+            cursorEl.classList.toggle('hovering', Boolean(e.target.closest('button, a, input, textarea, select, .desktop-item, .submenu-trigger')));
         });
         document.addEventListener('mousedown', () => cursorEl.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursorEl.classList.remove('clicking'));
@@ -2002,7 +1783,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // إقلاع النظام وفحص الجلسة المحفوظة
+        initAuthFormOptions();
         checkSessionOnBoot();
     </script>
 </body>
